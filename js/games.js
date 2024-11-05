@@ -90,13 +90,13 @@ async function createGames() {
 
 		let homeTeamLogoImg = document.createElement('img');
 		$(homeTeamLogoImg).attr('src', teamLogos[game.competitions[0].competitors[1].team.id] || `${game.competitions[0].competitors[1].team.logo}`);
-		$(homeTeamLogoImg).attr('title', game.competitions[0].competitors[1].team.displayName);
+		$(homeTeamLogoImg).attr('title', teamNames[game.competitions[0].competitors[1].team.id]);
 		$(homeTeamLogoImg).attr('draggable', false);
 		$(homeTeamLogo).append(homeTeamLogoImg);
 
 		let awayTeamLogoImg = document.createElement('img');
 		$(awayTeamLogoImg).attr('src', teamLogos[game.competitions[0].competitors[0].team.id] || `${game.competitions[0].competitors[0].team.logo}`);
-		$(awayTeamLogoImg).attr('title', game.competitions[0].competitors[0].team.displayName);
+		$(awayTeamLogoImg).attr('title', teamNames[game.competitions[0].competitors[0].team.id]);
 		$(awayTeamLogoImg).attr('draggable', false);
 		$(awayTeamLogo).append(awayTeamLogoImg);
 
