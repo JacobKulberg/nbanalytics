@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Game View</title>
+
+		<!-- jQuery -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+		<!-- cannon.js -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js" integrity="sha512-avLcnGxl5mqAX/wIKERdb1gFNkOLHh2W5JNCfJm5OugpEPBz7LNXJJ3BDjjwO00AxEY1MqdNjtEmiYhKC0ld7g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+		<!-- moment.js -->
+		<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.31/moment-timezone-with-data.js"></script>
+
+		<!-- Font Awesome -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+		<!-- Chart.js -->
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+		<link rel="stylesheet" href="../css/gameView.css" />
+	</head>
+	<body>
+		<div id="court">
+			<div class="play-text"></div>
+		</div>
+
+		<div class="scoreboard">
+			<div class="skip-replay">
+				<i class="fa-solid fa-forward"></i>
+			</div>
+			<div class="team away">
+				<img class="logo" draggable="false"></img>
+				<div class="name">
+					<div class="name-text"></div>
+					<div class="record"></div>
+				</div>
+				<div class="score"></div>
+			</div>
+			<div class="info">
+				<div class="live-status">
+					<div class="dot"></div>
+					<div class="text"></div>
+				</div>
+				<div class="time"></div>
+			</div>
+			<div class="team home">
+				<div class="score"></div>
+				<div class="name">
+					<div class="name-text"></div>
+					<div class="record"></div>
+				</div>
+				<img class="logo" draggable="false"></img>
+			</div>
+		</div>
+
+		<div class="game-options-container">
+			<div class="game-options">
+				<div class="game-play-by-play option active">Play-by-Play</div>
+				<div class="game-analysis option">Analysis</div>
+				<div class="game-away-team option">Away</div>
+				<div class="game-home-team option">Home</div>
+			</div>
+		</div>
+		
+
+		<div class="game-analysis-view">
+			<canvas id="myChart"></canvas>
+		</div>
+
+		<script src="../js/constants.js"></script>
+		<script src="../js/court.js" type="module"></script>
+		<script src="../js/gameView.js" type="module"></script>
+		<script src="../js/gameAnalysis.js" type="module"></script>
+	</body>
+</html>
