@@ -295,9 +295,23 @@ body {
 	overflow-x: hidden;
 }
 
-.game-play-by-play-view,
-.game-analysis-view,
-.game-away-team-view,
-.game-home-team-view {
+.game-view {
+	position: absolute;
+
+	opacity: 0;
+	transform: scaleY(0);
+	transform-origin: top;
+
+	transition: opacity 500ms ease-in-out, transform 500ms ease-out;
+}
+
+.game-view.active {
+	position: relative;
+
 	opacity: 1;
+	transform: scaleY(1);
+}
+
+.game-analysis-view {
+	height: 100vh;
 }

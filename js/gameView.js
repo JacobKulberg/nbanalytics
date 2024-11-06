@@ -332,4 +332,8 @@ $(window).on('resize orientationchange', () => {
 $('.game-options > .option').on('click', function () {
 	$('.game-options > .option').removeClass('active');
 	$(this).addClass('active');
+
+	let c = $(this).attr('class').split(' ')[0];
+	$('.game-view').removeClass('active');
+	$(`.${c}-view`).addClass('active');
 });
