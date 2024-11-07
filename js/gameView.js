@@ -1,4 +1,5 @@
 import { scene, world, playerGroup, ball, ballBody, redX, trajectoryTube, shootBasket, addPlayer, setCourtLogo, jumpBall, disableJumpBall, trajectoryPoints } from './court.js';
+import { updatePlayByPlay } from './gamePlayByPlay.js';
 import { updateAllCharts } from './gameAnalysis.js';
 
 let searchParams = new URLSearchParams(window.location.search);
@@ -39,6 +40,7 @@ $(async () => {
 		}
 
 		updateAllCharts(gameData, currentPlay);
+		updatePlayByPlay(gameData, currentPlay);
 	};
 
 	updateCourtRunner();

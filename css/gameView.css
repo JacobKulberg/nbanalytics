@@ -311,7 +311,3 @@ body {
 	opacity: 1;
 	transform: scaleY(1);
 }
-
-.game-analysis-view {
-	height: 100vh;
-}
