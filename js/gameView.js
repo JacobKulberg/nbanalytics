@@ -208,7 +208,7 @@ function updateScoreboard() {
 		}
 		$('.scoreboard > .info > .time').text(`${time}`);
 		return;
-	} else if (!play) {
+	} else if (!play && (!gameData.plays || gameData.plays.length == 0)) {
 		$('.scoreboard > .info > .live-status').addClass('pregame');
 		$('.scoreboard > .info > .live-status > .text').text('PREGAME');
 		$('.scoreboard > .info > .time').text('');
