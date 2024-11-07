@@ -274,9 +274,10 @@ body {
 .game-options > .option:after {
 	content: '';
 	display: block;
-	border-bottom: solid 3px #d4a017;
+	border-bottom: solid clamp(2px, 0.3vmax, 3px) #d4a017;
 	transform: scaleX(0);
 	transition: transform 250ms ease-in-out;
+	border-radius: 100px;
 }
 
 .game-options > .option.active:after {
