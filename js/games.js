@@ -6,12 +6,18 @@ let t1, t2;
 async function createGames() {
 	games = await getAllGames(date);
 
-	// move finished games to end
-	for (let i = games.length - 1; i >= 0; i--) {
+	// move finished games to end, latest to earliest
+	let finishedGames = [];
+	for (let i = 0; i < games.length; i++) {
 		if (games[i].status.type.completed) {
-			games.push(games.splice(i, 1)[0]);
+			finishedGames.push(games.splice(i, 1)[0]);
+			i--;
 		}
 	}
+	finishedGames.sort((a, b) => {
+		return new Date(a.date) - new Date(b.date);
+	});
+	games = games.concat(finishedGames);
 
 	// move postponed games to back
 	for (let i = games.length - 1; i >= 0; i--) {
