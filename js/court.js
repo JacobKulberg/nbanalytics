@@ -129,6 +129,8 @@ $(window).on('resize orientationchange', (e) => {
 	camera.updateProjectionMatrix();
 
 	renderer.setPixelRatio(window.devicePixelRatio * 2);
+
+	setCourtViewportHeight();
 });
 
 let playerGroup;
@@ -599,5 +601,19 @@ function distance(x1, y1, x2, y2) {
 function disableJumpBall() {
 	isJumpBall = false;
 }
+
+function setCourtViewportHeight() {
+	let point3D = new THREE.Vector3(0, 0, -7.5);
+
+	// Project the point onto the screen
+	let vector = point3D.clone();
+	vector.project(camera);
+
+	let pixelRatio = window.devicePixelRatio || 1;
+	let y = ((1 - (vector.y * 0.5 + 0.5)) * renderer.domElement.height) / pixelRatio;
+
+	$('#court').css('height', `${y + window.innerHeight / 20}px`);
+}
+setCourtViewportHeight();
 
 export { scene, world, playerGroup, ball, ballBody, redX, trajectoryTube, shootBasket, addPlayer, setCourtLogo, jumpBall, disableJumpBall, trajectoryPoints };

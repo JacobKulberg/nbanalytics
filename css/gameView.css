@@ -39,15 +39,14 @@ body {
 #court {
 	display: flex;
 	justify-content: center;
-	translate: 0 calc(-1 * (3vw - 2vh));
-	height: calc(min(min(100vh, 100vw * 15 / 28), 500px) - min(10vw, 13.75vh)) !important;
+	height: 500px;
 }
 
 .play-text {
 	position: absolute;
-	top: 20%;
+	top: calc(7dvh - 25px);
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translate(-50%, 0%);
 	font-size: calc(3 / 4 * min(max(2.5vw, 1.875vh), 40px));
 	background-color: rgba(126, 122, 230, 0.5);
 	padding: min(1.75vh, 1.25vw) max(1.75vh, 1.25vw);
