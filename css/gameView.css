@@ -97,7 +97,7 @@ body {
 
 .scoreboard {
 	position: sticky !important;
-	top: -1px;
+	top: 0px;
 	width: 100%;
 	height: 20vmin;
 	max-height: 175px;
@@ -242,7 +242,7 @@ body {
 
 .game-options-container {
 	position: sticky;
-	top: calc(min(20vmin, 175px) - 1px);
+	top: min(20vmin, 175px);
 	width: 100%;
 	height: 7vmin;
 	background-color: #030036;
@@ -290,24 +290,24 @@ body {
 }
 
 .game-views {
-	width: 100%;
+	position: relative;
 
-	overflow-x: hidden;
+	width: 100%;
+	min-height: calc(100vmin - min(20vmin, 175px) - 7vmin);
+
+	overflow: hidden;
+
+	transition: height 500ms ease-in-out;
 }
 
 .game-view {
 	position: absolute;
 
 	opacity: 0;
-	transform: scaleY(0);
-	transform-origin: top;
 
-	transition: opacity 500ms ease-in-out, transform 500ms ease-out;
+	transition: opacity 500ms ease-in-out;
 }
 
 .game-view.active {
-	position: relative;
-
 	opacity: 1;
-	transform: scaleY(1);
 }

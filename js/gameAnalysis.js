@@ -24,7 +24,8 @@ function updateAllCharts(gameData, currentPlay) {
 		scoreColors.push(`#${teamColors[playsUntilNow[i].team.id]}`);
 	}
 
-	const ctx = document.getElementById('myChart');
+	const ctx = $('#myChart');
+	ctx.height(500);
 
 	if (chart) {
 		chart.data.labels = labels;

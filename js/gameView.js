@@ -332,10 +332,24 @@ $(window).on('resize orientationchange', () => {
 });
 
 $('.game-options > .option').on('click', function () {
+	if ($(this).hasClass('active')) return;
+
+	// scroll to header
+	$('html, body').animate(
+		{
+			scrollTop: $('#court').height() + 1,
+		},
+		300
+	);
+
 	$('.game-options > .option').removeClass('active');
 	$(this).addClass('active');
 
-	let c = $(this).attr('class').split(' ')[0];
 	$('.game-view').removeClass('active');
+	let c = $(this).attr('class').split(' ')[0];
+
 	$(`.${c}-view`).addClass('active');
+
+	let height = $(`.${c}-view`).height();
+	$('.game-views').css('height', height + 'px');
 });
