@@ -99,7 +99,7 @@ body {
 	position: sticky !important;
 	top: 0px;
 	width: 100%;
-	height: 20vmin;
+	height: 20dvmin;
 	max-height: 175px;
 	display: flex !important;
 	background-color: #020026;
@@ -244,7 +244,7 @@ body {
 	position: sticky;
 	top: min(20vmin, 175px);
 	width: 100%;
-	height: 7vmin;
+	height: 8dvmin;
 	background-color: #030036;
 	display: flex;
 	justify-content: space-around;
@@ -293,7 +293,7 @@ body {
 	position: relative;
 
 	width: 100%;
-	min-height: calc(100vmin - min(20vmin, 175px) - 7vmin);
+	min-height: calc(100dvh - min(20dvmin, 175px) - 8dvmin);
 
 	overflow: hidden;
 
