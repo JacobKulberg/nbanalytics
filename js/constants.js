@@ -377,6 +377,10 @@ function getSpecificGameData(gameID) {
 }
 
 function getPlayerName(playerID) {
+	if (playerID === undefined) {
+		return 'N/A';
+	}
+
 	return new Promise((resolve, reject) => {
 		fetch(`http://sports.core.api.espn.com/v2/sports/basketball/leagues/nba/athletes/${playerID}`)
 			.then((response) => {
