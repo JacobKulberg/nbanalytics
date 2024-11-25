@@ -3,8 +3,8 @@ let players = {};
 async function updatePlayByPlay(gameData, currentPlay) {
 	let plays = gameData.plays.slice(0, currentPlay + 1);
 	let playByPlay = $('.game-play-by-play-view');
+	let playByPlayTemp = $('<div></div>').addClass('game-play-by-play-view');
 
-	playByPlay.empty();
 	let showTempPlays = true;
 	for (let i = plays.length - 1; i >= 0; i--) {
 		let play = plays[i];
@@ -40,8 +40,41 @@ async function updatePlayByPlay(gameData, currentPlay) {
 			playDiv.append(playSubSubText);
 		}
 
-		playByPlay.append(playDiv);
+		playByPlayTemp.append(playDiv);
 	}
+	// playByPlay.html(playByPlayTemp.html());
+
+	// for each play in playByPlayTemp, change playByPlay play if it's different. or add new plays if there are more in playByPlayTemp
+	let playByPlayItems = [...playByPlay.find('.game-play-by-play-item')].reverse();
+	let playByPlayTempItems = [...playByPlayTemp.find('.game-play-by-play-item')].reverse();
+
+	for (let i = 0; i < playByPlayTempItems.length; i++) {
+		let playByPlayItem = $(playByPlayItems[i]);
+		let playByPlayTempItem = $(playByPlayTempItems[i]);
+
+		if (playByPlayItem.html() != playByPlayTempItem.html()) {
+			console.log(playByPlayItem.html(), playByPlayTempItem.html());
+			playByPlayItem.replaceWith(playByPlayTempItem);
+
+			// remove all items after this one if they dont have the class "permanent"
+			if (!playByPlayTempItem.hasClass('permanent')) {
+				playByPlayItems = [...playByPlay.find('.game-play-by-play-item')].reverse();
+				for (let j = i + 1; j < playByPlayItems.length; j++) {
+					if (!$(playByPlayItems[j]).hasClass('permanent')) {
+						$(playByPlayItems[j]).remove();
+					}
+				}
+				break;
+			}
+		}
+	}
+
+	if (playByPlayItems.length < playByPlayTempItems.length) {
+		for (let i = playByPlayItems.length; i < playByPlayTempItems.length; i++) {
+			playByPlay.prepend($(playByPlayTempItems[i]));
+		}
+	}
+
 	playByPlay.addClass('filled');
 
 	if ($('.game-play-by-play-view').hasClass('active')) {

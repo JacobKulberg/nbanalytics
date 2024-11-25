@@ -34,6 +34,7 @@ body {
 	touch-action: manipulation;
 	background-color: #020026;
 	overflow-x: hidden;
+	overflow-anchor: none;
 }
 
 #court {
