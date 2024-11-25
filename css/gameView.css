@@ -263,7 +263,7 @@ body {
 	display: inline-flex;
 	flex-direction: column;
 	justify-content: center;
-	font-size: clamp(15px, max(2vw, 1vh), 40px);
+	font-size: clamp(15px, max(2dvw, 2.5dvh), 40px);
 	font-weight: bold;
 	text-shadow: 0 0 7px #000;
 	padding: 0px 7px;

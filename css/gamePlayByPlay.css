@@ -1,9 +1,57 @@
 .game-play-by-play-view {
+	width: 100%;
+
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
+
+	opacity: 0;
+	transition: opacity 300ms ease-in-out;
+}
+
+.game-play-by-play-view.active {
+	opacity: 0;
+}
+
+.game-play-by-play-view.active.filled {
+	opacity: 1;
 }
 
 .game-play-by-play-item {
-	color: white;
+	padding: 20px 20px;
+	margin: 5px 10dvw;
+	background-color: rgba(255, 255, 255, 0.15);
+	font-size: clamp(12px, max(2vw, 2.25vh), 40px);
+	font-weight: bold;
+	text-shadow: 0 0 7px #000;
+	border-radius: 15px;
+}
+
+.game-play-by-play-item:first-child {
+	margin-top: 20px;
+}
+
+.game-play-by-play-item:last-child {
+	margin-bottom: 20px;
+}
+
+@media (max-width: 1000px) {
+	.game-play-by-play-item {
+		margin: 0px 3vw;
+	}
+}
+
+.game-play-by-play-item-sub-text {
+	color: gainsboro;
+
+	font-size: clamp(10px, max(1.5vw, 1.75vh), 30px);
+	text-shadow: 0 0 5px #000;
+}
+
+.game-play-by-play-item-sub-sub-text {
+	color: darkgray;
+
+	font-size: clamp(8px, max(1.25vw, 1.5vh), 20px);
+	font-weight: bold;
+	text-shadow: 0 0 5px #000;
 }

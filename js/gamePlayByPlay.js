@@ -5,7 +5,8 @@ async function updatePlayByPlay(gameData, currentPlay) {
 	let playByPlay = $('.game-play-by-play-view');
 
 	playByPlay.empty();
-	for (let i = 0; i < plays.length; i++) {
+	let showTempPlays = true;
+	for (let i = plays.length - 1; i >= 0; i--) {
 		let play = plays[i];
 
 		let playDiv = $('<div></div>');
@@ -14,6 +15,9 @@ async function updatePlayByPlay(gameData, currentPlay) {
 		let playObject = await getPlayObject(play, i, plays);
 
 		if (playObject === null) continue;
+
+		if (!playObject.permanent && !showTempPlays) continue;
+		if (playObject.permanent) showTempPlays = false;
 
 		applyReplacements(playObject);
 
@@ -29,8 +33,16 @@ async function updatePlayByPlay(gameData, currentPlay) {
 			playDiv.append(playSubText);
 		}
 
-		playByPlay.prepend(playDiv);
+		if (playObject.subsubtext) {
+			let playSubSubText = $('<div></div>');
+			playSubSubText.addClass('game-play-by-play-item-sub-sub-text');
+			playSubSubText.text(playObject.subsubtext);
+			playDiv.append(playSubSubText);
+		}
+
+		playByPlay.append(playDiv);
 	}
+	playByPlay.addClass('filled');
 
 	if ($('.game-play-by-play-view').hasClass('active')) {
 		let height = $(`.game-play-by-play-view`).height();
@@ -53,7 +65,7 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 11:
 			playObject = {
-				permanent: false,
+				permanent: true,
 				text: 'Jump Ball: :player1: vs :player2:',
 				subtext: ':player3: gains possession',
 				replacements: {
@@ -85,10 +97,10 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: false,
 				text: 'Blocking foul on :player1:',
-				subtext: ':player2: draws the foul',
+				subtext: ':foulDrawn:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
-					':player2:': await _getPlayerName(play.participants[1]?.athlete.id),
+					':foulDrawn:': play.participants[1]?.athlete.id ? `${await _getPlayerName(play.participants[1]?.athlete.id)} draws the foul` : '',
 				},
 			};
 			break;
@@ -96,10 +108,10 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: false,
 				text: 'Personal take foul on :player1:',
-				subtext: ':player2: draws the foul',
+				subtext: ':foulDrawn:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
-					':player2:': await _getPlayerName(play.participants[1]?.athlete.id),
+					':foulDrawn:': play.participants[1]?.athlete.id ? `${await _getPlayerName(play.participants[1]?.athlete.id)} draws the foul` : '',
 				},
 			};
 			break;
@@ -107,10 +119,10 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: false,
 				text: 'Personal block foul on :player1:',
-				subtext: ':player2: draws the foul',
+				subtext: ':foulDrawn:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
-					':player2:': await _getPlayerName(play.participants[1]?.athlete.id),
+					':foulDrawn:': play.participants[1]?.athlete.id ? `${await _getPlayerName(play.participants[1]?.athlete.id)} draws the foul` : '',
 				},
 			};
 			break;
@@ -118,10 +130,10 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: false,
 				text: 'Personal charge foul on :player1:',
-				subtext: ':player2: draws the foul',
+				subtext: ':foulDrawn:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
-					':player2:': await _getPlayerName(play.participants[1]?.athlete.id),
+					':foulDrawn:': play.participants[1]?.athlete.id ? `${await _getPlayerName(play.participants[1]?.athlete.id)} draws the foul` : '',
 				},
 			};
 			break;
@@ -293,10 +305,11 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: bad pass',
-				subtext: 'Stolen by :player2:',
+				subtext: ':player2: ● :STL:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':player2:': await _getPlayerName(play.participants[1]?.athlete.id),
+					':STL:': `${getCurrentSteals(play.participants[1]?.athlete.id, playNum, plays)} STL`,
 				},
 			};
 			break;
@@ -304,16 +317,17 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: lost ball',
-				subtext: 'Stolen by :player2:',
+				subtext: ':player2: ● :STL:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':player2:': await _getPlayerName(play.participants[1]?.athlete.id),
+					':STL:': `${getCurrentSteals(play.participants[1]?.athlete.id, playNum, plays)} STL`,
 				},
 			};
 			break;
 		case 64:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: ':player1: traveling',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
@@ -322,7 +336,7 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 65:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: ':player1: double dribble',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
@@ -331,7 +345,7 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 66:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: ':player1: discontinued dribble',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
@@ -340,7 +354,7 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 67:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: ':player1: 3 second violation',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
@@ -349,31 +363,31 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 68:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: '5 second violation',
 			};
 			break;
 		case 69:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: '8 second violation',
 			};
 			break;
 		case 70:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: 'Shot clock violation',
 			};
 			break;
 		case 71:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: 'Inbound turnover',
 			};
 			break;
 		case 72:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: ':player1: backcourt violation',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
@@ -391,7 +405,7 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 74:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: ':player1: lane violation',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
@@ -400,7 +414,7 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 75:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: ':player1: jumpball violation',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
@@ -409,7 +423,7 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 76:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: ':player1: kicked ball violation',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
@@ -418,7 +432,7 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 77:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: ':player1: illegal assist',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
@@ -427,7 +441,7 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 78:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: ':player1: palming violation',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
@@ -436,7 +450,7 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 83:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: ':player1: illegal screen',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
@@ -445,7 +459,7 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 84:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: ':player1: offensive foul',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
@@ -472,7 +486,7 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 88:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: ':team1: excess timeout',
 				replacements: {
 					':team1:': teamNamesShort[play.team.id],
@@ -492,11 +506,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)}`,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -504,11 +525,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:jump shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -516,11 +544,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:hook shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -528,11 +563,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:tip shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -540,9 +582,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:layup',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -550,9 +598,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:dunk',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -680,9 +734,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:running layup',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -690,9 +750,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:driving layup',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -700,9 +766,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:alley-oop layup',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -710,9 +782,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:reverse layup',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -720,11 +798,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:running jump shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -732,11 +817,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:turnaround jump shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -744,9 +836,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:driving dunk',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -754,9 +852,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:running dunk',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -764,9 +868,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:reverse dunk',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -774,9 +884,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:alley-oop dunk',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -784,11 +900,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:driving hook shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -796,11 +919,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:turnaround hook shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -808,11 +938,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:fadeaway jump shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -820,11 +957,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:bank shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -832,11 +976,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:bank shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -844,9 +995,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:finger roll layup',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -854,9 +1011,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:putback layup',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -864,9 +1027,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:driving reverse layup',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -874,9 +1043,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:running reverse layup',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -884,9 +1059,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:driving finger roll layup',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -894,9 +1075,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:running finger roll layup',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -904,11 +1091,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:floater',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -916,11 +1110,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:pullup jump shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -928,11 +1129,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:step back jump shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -940,11 +1148,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:pullup bank shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -952,11 +1167,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:driving bank shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -964,11 +1186,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:fadeaway bank shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -976,11 +1205,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:turnaround bank shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -988,11 +1224,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:turnaround fadeaway jump shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1000,9 +1243,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:putback dunk',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1010,11 +1259,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:driving bank shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1022,11 +1278,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:turnaround bank shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1034,9 +1297,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:cutting layup',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1044,9 +1313,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:cutting finger roll layup',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1054,9 +1329,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:running alley-oop layup',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1064,11 +1345,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:driving floater',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1076,11 +1364,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:driving floater',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1088,11 +1383,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:running pullup jump shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1100,11 +1402,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:step back bank shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1112,11 +1421,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:turnaround fadeaway bank shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1124,9 +1440,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:running alley-oop dunk',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1134,9 +1456,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:tip dunk',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1144,9 +1472,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:cutting dunk',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1154,9 +1488,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:driving reverse dunk',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1164,9 +1504,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:running reverse dunk',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1204,11 +1550,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:bank shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1216,11 +1569,18 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade::dist::3pt:running bank shot',
+				subtext: ':FGMR::3PM:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
 					':dist:': getShotDistance(play.text),
 					':3pt:': play.scoreValue === 3 ? '3-pt ' : '',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':3PM:': play.scoreValue === 3 ? ` ● ${getCurrent3PM(play.participants[0]?.athlete.id, playNum, plays)}` : '',
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1228,9 +1588,15 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':player1: :isMade:putback dunk',
+				subtext: ':FGMR:',
+				subsubtext: ':REB::AST::BLK:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':isMade:': play.scoringPlay ? 'made ' : 'missed ',
+					':FGMR:': `${getCurrentFGMRatio(play.participants[0]?.athlete.id, playNum, plays)} `,
+					':REB:': await getReboundStr(playNum, plays),
+					':AST:': await getAssistStr(play.participants[1]?.athlete.id, playNum, plays),
+					':BLK:': await getBlockStr(play.participants[1]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1312,7 +1678,7 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 517:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: ':player1: ejected',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
@@ -1343,13 +1709,13 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 592:
 			playObject = {
-				permanent: true,
+				permanent: false,
 				text: 'Illegal pick turnover',
 			};
 			break;
 		case 615:
 			playObject = {
-				permanent: false,
+				permanent: true,
 				text: 'Jump Ball: :player1: vs :player2:',
 				subtext: ':player3: gains possession',
 				replacements: {
@@ -1389,6 +1755,85 @@ function getCurrentFreeThrows(playerId, playNum, plays) {
 	return made;
 }
 
+function getCurrentFGMRatio(playerId, playNum, plays) {
+	let shotPlays = plays.slice(0, playNum + 1).filter((play) => [91, 92, 93, 94, 95, 96, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 209, 210, 211].includes(parseInt(play.type.id)) && play.participants[0]?.athlete.id == playerId);
+
+	let made = shotPlays.filter((play) => play.scoringPlay).length;
+	let total = shotPlays.length;
+	return `${made}/${total} FGM`;
+}
+
+function getCurrent3PM(playerId, playNum, plays) {
+	let shotPlays = plays.slice(0, playNum + 1).filter((play) => [91, 92, 93, 94, 95, 96, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 209, 210, 211].includes(parseInt(play.type.id)) && play.scoreValue === 3 && play.participants[0]?.athlete.id == playerId);
+
+	let made = shotPlays.filter((play) => play.scoringPlay).length;
+	return `${made} three${made > 1 ? 's' : ''}`;
+}
+
+function getCurrentSteals(playerId, playNum, plays) {
+	let stealPlays = plays.slice(0, playNum + 1).filter((play) => [62, 63].includes(parseInt(play.type.id)) && play.participants[1]?.athlete.id == playerId);
+
+	let total = stealPlays.length;
+	return total;
+}
+
+async function getReboundStr(playNum, plays) {
+	// the current shot play is at playNum, go forward until you find a rebound play and return the string: [player] - [num] REB
+	// offensive or defensive does not matter
+
+	if (plays[playNum].scoringPlay || plays[playNum].participants[1]?.athlete.id) return '';
+
+	let shotPlays = plays.slice(playNum).filter((play) => [91, 92, 93, 94, 95, 96, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 209, 210, 211].includes(parseInt(play.type.id)));
+	let reboundPlays = plays.slice(playNum).filter((play) => [155, 156].includes(parseInt(play.type.id)));
+	if (reboundPlays.length == 0) {
+		return '';
+	}
+
+	let rebounder = null;
+	let reboundPlayIndex = null;
+	for (let i = 0; i < reboundPlays.length; i++) {
+		if (reboundPlays[i].participants?.[0].athlete) {
+			rebounder = reboundPlays[i].participants[0].athlete.id;
+			reboundPlayIndex = i;
+			break;
+		}
+	}
+	if (!rebounder) return '';
+
+	let endIndex = plays.indexOf(reboundPlays[reboundPlayIndex]);
+	let inbetween = plays.slice(playNum + 1, endIndex);
+	if (shotPlays.some((play) => inbetween.includes(play))) return '';
+
+	let rebounderName = await _getPlayerName(rebounder);
+
+	let reboundPlaysBefore = plays.slice(0, playNum + 1).filter((play) => [155, 156].includes(parseInt(play.type.id)));
+	let numRebs = reboundPlaysBefore.filter((play) => play.participants?.[0].athlete.id == rebounder).length + 1;
+
+	return `${rebounderName} ● ${numRebs} REB`;
+}
+
+async function getAssistStr(playerId, playNum, plays) {
+	if (!plays[playNum].scoringPlay || !playerId) return '';
+
+	let assisterName = await _getPlayerName(playerId);
+
+	let shotPlays = plays.slice(0, playNum + 1).filter((play) => [91, 92, 93, 94, 95, 96, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 209, 210, 211].includes(parseInt(play.type.id)));
+	let numAssists = shotPlays.filter((play) => play.scoringPlay && play.participants[1]?.athlete.id == playerId).length;
+
+	return `${assisterName} ● ${numAssists} AST`;
+}
+
+async function getBlockStr(playerId, playNum, plays) {
+	if (plays[playNum].scoringPlay || !playerId) return '';
+
+	let blockerName = await _getPlayerName(playerId);
+
+	let shotPlays = plays.slice(0, playNum + 1).filter((play) => [91, 92, 93, 94, 95, 96, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 209, 210, 211].includes(parseInt(play.type.id)));
+	let numBlocks = shotPlays.filter((play) => !play.scoringPlay && play.participants[1]?.athlete.id == playerId).length;
+
+	return `${blockerName} ● ${numBlocks} BLK`;
+}
+
 function getPeriodName(period) {
 	if (period == 1) period = '1st';
 	else if (period == 2) period = '2nd';
@@ -1415,6 +1860,14 @@ function applyReplacements(obj) {
 			subtext = subtext.replace(key, replacements[key]);
 		}
 		obj.subtext = subtext;
+	}
+
+	let subsubtext = obj.subsubtext;
+	if (subsubtext) {
+		for (let key in replacements) {
+			subsubtext = subsubtext.replace(key, replacements[key]);
+		}
+		obj.subsubtext = subsubtext;
 	}
 }
 

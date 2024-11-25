@@ -332,8 +332,6 @@ $(window).on('resize orientationchange', () => {
 });
 
 $('.game-options > .option').on('click', function () {
-	if ($(this).hasClass('active')) return;
-
 	// scroll to header
 	$('html, body').animate(
 		{
