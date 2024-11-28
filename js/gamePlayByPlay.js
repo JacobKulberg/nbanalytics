@@ -98,7 +98,6 @@ async function updatePlayByPlay(gameData, currentPlay) {
 			await playByPlay.prepend($(playByPlayTempItems[i]));
 
 			let heightDifference = (await $(playByPlayTempItems[i]).outerHeight()) + 20; /* gap */
-			console.log(heightDifference);
 
 			if ((await $('#court').outerHeight()) + 100 < window.scrollY) {
 				window.scrollBy(0, heightDifference);
