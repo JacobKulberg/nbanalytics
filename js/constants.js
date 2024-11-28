@@ -378,7 +378,7 @@ function getSpecificGameData(gameID) {
 
 function getPlayerName(playerID) {
 	if (playerID === undefined) {
-		return 'N/A';
+		return 'Unknown';
 	}
 
 	return new Promise((resolve, reject) => {

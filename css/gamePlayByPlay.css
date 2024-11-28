@@ -3,7 +3,7 @@
 
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 20px;
 
 	opacity: 0;
 	transition: opacity 300ms ease-in-out;
@@ -19,12 +19,20 @@
 
 .game-play-by-play-item {
 	padding: 20px 20px;
-	margin: 5px 10dvw;
+	margin: 0px 15dvw;
 	background-color: rgba(255, 255, 255, 0.15);
 	font-size: clamp(12px, max(2vw, 2.25vh), 40px);
 	font-weight: bold;
 	text-shadow: 0 0 7px #000;
 	border-radius: 15px;
+
+	display: flex;
+	align-items: center;
+}
+
+.game-play-by-play-item div:first-child img {
+	height: 85px;
+	translate: min(-0.5dvw, -8px) 0px;
 }
 
 .game-play-by-play-item:first-child {
@@ -44,14 +52,18 @@
 .game-play-by-play-item-sub-text {
 	color: gainsboro;
 
-	font-size: clamp(10px, max(1.5vw, 1.75vh), 30px);
+	font-size: clamp(10px, max(1.3vw, 1.6vh), 25px);
 	text-shadow: 0 0 5px #000;
+
+	margin-top: 3px;
 }
 
 .game-play-by-play-item-sub-sub-text {
 	color: darkgray;
 
-	font-size: clamp(8px, max(1.25vw, 1.5vh), 20px);
+	font-size: clamp(8px, max(1.1vw, 1.4vh), 20px);
 	font-weight: bold;
 	text-shadow: 0 0 5px #000;
+
+	margin-top: 3px;
 }
