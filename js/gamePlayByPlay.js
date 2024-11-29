@@ -676,120 +676,144 @@ async function getPlayObject(play, playNum, plays) {
 		case 97:
 			playObject = {
 				permanent: true,
-				text: ':player1: :freeThrowsMade:/1 free throws',
+				text: ':freeThrowsMade:/1 free throws',
+				subtext: ':player1: ● :FTMR:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':freeThrowsMade:': getCurrentFreeThrows(play.participants[0]?.athlete.id, playNum, plays),
+					':FTMR:': getCurrentFTMRatio(play.participants[0]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
 		case 98:
 			playObject = {
 				permanent: false,
-				text: ':player1: :freeThrowsMade:/1 free throws (of 2)',
+				text: ':freeThrowsMade:/1 free throws (of 2)',
+				subtext: ':player1: ● :FTMR:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':freeThrowsMade:': getCurrentFreeThrows(play.participants[0]?.athlete.id, playNum, plays),
+					':FTMR:': getCurrentFTMRatio(play.participants[0]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
 		case 99:
 			playObject = {
 				permanent: true,
-				text: ':player1: :freeThrowsMade:/2 free throws',
+				text: ':freeThrowsMade:/2 free throws',
+				subtext: ':player1: ● :FTMR:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':freeThrowsMade:': getCurrentFreeThrows(play.participants[0]?.athlete.id, playNum, plays),
+					':FTMR:': getCurrentFTMRatio(play.participants[0]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
 		case 100:
 			playObject = {
 				permanent: false,
-				text: ':player1: :freeThrowsMade:/1 free throws (of 3)',
+				text: ':freeThrowsMade:/1 free throws (of 3)',
+				subtext: ':player1: ● :FTMR:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':freeThrowsMade:': getCurrentFreeThrows(play.participants[0]?.athlete.id, playNum, plays),
+					':FTMR:': getCurrentFTMRatio(play.participants[0]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
 		case 101:
 			playObject = {
 				permanent: false,
-				text: ':player1: :freeThrowsMade:/2 free throws (of 3)',
+				text: ':freeThrowsMade:/2 free throws (of 3)',
+				subtext: ':player1: ● :FTMR:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':freeThrowsMade:': getCurrentFreeThrows(play.participants[0]?.athlete.id, playNum, plays),
+					':FTMR:': getCurrentFTMRatio(play.participants[0]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
 		case 102:
 			playObject = {
 				permanent: true,
-				text: ':player1: :freeThrowsMade:/3 free throws',
+				text: ':freeThrowsMade:/3 free throws',
+				subtext: ':player1: ● :FTMR:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':freeThrowsMade:': getCurrentFreeThrows(play.participants[0]?.athlete.id, playNum, plays),
+					':FTMR:': getCurrentFTMRatio(play.participants[0]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
 		case 103:
 			playObject = {
 				permanent: true,
-				text: ':player1: :freeThrowsMade:/1 technical free throws',
+				text: ':freeThrowsMade:/1 technical free throws',
+				subtext: ':player1: ● :FTMR:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':freeThrowsMade:': getCurrentFreeThrows(play.participants[0]?.athlete.id, playNum, plays),
+					':FTMR:': getCurrentFTMRatio(play.participants[0]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
 		case 104:
 			playObject = {
 				permanent: false,
-				text: ':player1: :freeThrowsMade:/1 flagrant free throws (of 2)',
+				text: ':freeThrowsMade:/1 flagrant free throws (of 2)',
+				subtext: ':player1: ● :FTMR:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':freeThrowsMade:': getCurrentFreeThrows(play.participants[0]?.athlete.id, playNum, plays),
+					':FTMR:': getCurrentFTMRatio(play.participants[0]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
 		case 105:
 			playObject = {
 				permanent: true,
-				text: ':player1: :freeThrowsMade:/2 flagrant free throws',
+				text: ':freeThrowsMade:/2 flagrant free throws',
+				subtext: ':player1: ● :FTMR:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':freeThrowsMade:': getCurrentFreeThrows(play.participants[0]?.athlete.id, playNum, plays),
+					':FTMR:': getCurrentFTMRatio(play.participants[0]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
 		case 106:
 			playObject = {
 				permanent: true,
-				text: ':player1: :freeThrowsMade:/1 flagrant free throws',
+				text: ':freeThrowsMade:/1 flagrant free throws',
+				subtext: ':player1: ● :FTMR:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':freeThrowsMade:': getCurrentFreeThrows(play.participants[0]?.athlete.id, playNum, plays),
+					':FTMR:': getCurrentFTMRatio(play.participants[0]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
 		case 107:
 			playObject = {
 				permanent: false,
-				text: ':player1: :freeThrowsMade:/1 free throws (of 2)',
+				text: ':freeThrowsMade:/1 free throws (of 2)',
+				subtext: ':player1: ● :FTMR:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':freeThrowsMade:': getCurrentFreeThrows(play.participants[0]?.athlete.id, playNum, plays),
+					':FTMR:': getCurrentFTMRatio(play.participants[0]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
 		case 108:
 			playObject = {
 				permanent: true,
-				text: ':player1: :freeThrowsMade:/2 free throws',
+				text: ':freeThrowsMade:/2 free throws',
+				subtext: ':player1: ● :FTMR:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':freeThrowsMade:': getCurrentFreeThrows(play.participants[0]?.athlete.id, playNum, plays),
+					':FTMR:': getCurrentFTMRatio(play.participants[0]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1582,30 +1606,36 @@ async function getPlayObject(play, playNum, plays) {
 		case 157:
 			playObject = {
 				permanent: false,
-				text: ':player1: :freeThrowsMade:/1 flagrant free throws (of 3)',
+				text: ':freeThrowsMade:/1 flagrant free throws (of 3)',
+				subtext: ':player1: ● :FTMR:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':freeThrowsMade:': getCurrentFreeThrows(play.participants[0]?.athlete.id, playNum, plays),
+					':FTMR:': getCurrentFTMRatio(play.participants[0]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
 		case 165:
 			playObject = {
 				permanent: false,
-				text: ':player1: :freeThrowsMade:/2 flagrant free throws (of 3)',
+				text: ':freeThrowsMade:/2 flagrant free throws (of 3)',
+				subtext: ':player1: ● :FTMR:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':freeThrowsMade:': getCurrentFreeThrows(play.participants[0]?.athlete.id, playNum, plays),
+					':FTMR:': getCurrentFTMRatio(play.participants[0]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
 		case 166:
 			playObject = {
 				permanent: true,
-				text: ':player1: :freeThrowsMade:/3 flagrant free throws',
+				text: ':freeThrowsMade:/3 flagrant free throws',
+				subtext: ':player1: ● :FTMR:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':freeThrowsMade:': getCurrentFreeThrows(play.participants[0]?.athlete.id, playNum, plays),
+					':FTMR:': getCurrentFTMRatio(play.participants[0]?.athlete.id, playNum, plays),
 				},
 			};
 			break;
@@ -1823,6 +1853,14 @@ function getCurrentFGMRatio(playerId, playNum, plays) {
 	let made = shotPlays.filter((play) => play.scoringPlay).length;
 	let total = shotPlays.length;
 	return `${made}/${total} FGM`;
+}
+
+function getCurrentFTMRatio(playerId, playNum, plays) {
+	let freeThrowPlays = plays.slice(0, playNum + 1).filter((play) => [97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 157, 165, 166].includes(parseInt(play.type.id)) && play.participants[0]?.athlete.id == playerId);
+
+	let made = freeThrowPlays.filter((play) => play.scoringPlay).length;
+	let total = freeThrowPlays.length;
+	return `${made}/${total} FTM`;
 }
 
 function getCurrent3PM(playerId, playNum, plays) {
