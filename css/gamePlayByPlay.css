@@ -30,6 +30,10 @@
 	align-items: center;
 }
 
+.game-play-by-play-item div:has(img) {
+	width: 117px;
+}
+
 .game-play-by-play-item div:first-child img {
 	height: 85px;
 	translate: min(-0.5dvw, -8px) 0px;
