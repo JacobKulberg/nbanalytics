@@ -68,9 +68,7 @@ async function updatePlayByPlay(gameData, currentPlay) {
 		if (playByPlayItem.html() != playByPlayTempItem.html()) {
 			$('body').append(playByPlayTempItem);
 			let heightDifference = (await playByPlayTempItem.outerHeight()) - (await playByPlayItem.outerHeight());
-			if ((await $('#court').outerHeight()) + 100 < window.scrollY) {
-				window.scrollBy(0, heightDifference);
-			}
+			await scroll(heightDifference);
 			playByPlayTempItem.remove();
 
 			playByPlayItem.html(playByPlayTempItem.html());
@@ -81,9 +79,7 @@ async function updatePlayByPlay(gameData, currentPlay) {
 				for (let j = i + 1; j < playByPlayItems.length; j++) {
 					if (!$(playByPlayItems[j]).hasClass('permanent')) {
 						heightDifference = (await $(playByPlayItems[j]).outerHeight()) + 20; /* gap */
-						if ((await $('#court').outerHeight()) + 100 < window.scrollY) {
-							window.scrollBy(0, -heightDifference);
-						}
+						await scroll(-heightDifference);
 
 						$(playByPlayItems[j]).remove();
 					}
@@ -98,10 +94,7 @@ async function updatePlayByPlay(gameData, currentPlay) {
 			await playByPlay.prepend($(playByPlayTempItems[i]));
 
 			let heightDifference = (await $(playByPlayTempItems[i]).outerHeight()) + 20; /* gap */
-
-			if ((await $('#court').outerHeight()) + 100 < window.scrollY) {
-				window.scrollBy(0, heightDifference);
-			}
+			await scroll(heightDifference);
 		}
 	}
 
@@ -110,6 +103,23 @@ async function updatePlayByPlay(gameData, currentPlay) {
 	if ($('.game-play-by-play-view').hasClass('active')) {
 		let height = $(`.game-play-by-play-view`).height();
 		$('.game-views').css('height', height + 'px');
+	}
+}
+
+async function scroll(distance) {
+	if ((await $('#court').outerHeight()) + 100 < window.scrollY) {
+		let scrollLimit = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
+
+		if (window.scrollY + window.innerHeight + distance > scrollLimit) {
+			await $('.game-views').css('transition', 'height 0ms linear');
+
+			requestAnimationFrame(async () => {
+				window.scrollBy(0, distance);
+				await $('.game-views').css('transition', '');
+			});
+		} else {
+			window.scrollBy(0, distance);
+		}
 	}
 }
 
@@ -129,8 +139,9 @@ async function getPlayObject(play, playNum, plays) {
 		case 11:
 			playObject = {
 				permanent: true,
-				text: 'Jump Ball: :player1: vs :player2:',
-				subtext: ':player3: gains possession',
+				text: 'Jump Ball',
+				subtext: ':player1: vs :player2:',
+				subsubtext: ':player3: gains possession',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':player2:': await _getPlayerName(play.participants[1]?.athlete.id),
@@ -1808,8 +1819,9 @@ async function getPlayObject(play, playNum, plays) {
 		case 615:
 			playObject = {
 				permanent: true,
-				text: 'Jump Ball: :player1: vs :player2:',
-				subtext: ':player3: gains possession',
+				text: 'Jump Ball',
+				subtext: ':player1: vs :player2:',
+				subsubtext: ':player3: gains possession',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants[0]?.athlete.id),
 					':player2:': await _getPlayerName(play.participants[1]?.athlete.id),
