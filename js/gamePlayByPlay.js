@@ -77,6 +77,45 @@ async function updatePlayByPlay(gameData, currentPlay) {
 			playTextDiv.append(playSubSubText);
 		}
 
+		if (play.shootingPlay) {
+			let gameInfoText = $('<div></div>');
+			gameInfoText.addClass('game-play-by-play-item-game-info');
+
+			let awayImage = $('<img></img>');
+			awayImage.addClass('game-play-by-play-item-game-info-image');
+			awayImage.attr('src', teamLogos[gameData.header.competitions[0].competitors[1].id]);
+			awayImage.attr('title', teamNames[gameData.header.competitions[0].competitors[1].id]);
+			gameInfoText.append(awayImage);
+
+			let scores = $('<div></div>');
+			scores.addClass('game-play-by-play-item-game-info-scores');
+			scores.html(`${play.awayScore} - ${play.homeScore}`);
+			let scoringPlay = play.scoringPlay || ([97, 99, 102, 103, 105, 106, 108, 166].includes(parseInt(play.type.id)) && getCurrentFreeThrows(play.participants?.[0]?.athlete.id, i, plays) > 0);
+			if (scoringPlay && play.team?.id === gameData.header.competitions[0].competitors[1].id) {
+				scores.html(`<u>${play.awayScore}</u> - ${play.homeScore}`);
+			} else if (scoringPlay && play.team?.id === gameData.header.competitions[0].competitors[0].id) {
+				scores.html(`${play.awayScore} - <u>${play.homeScore}</u>`);
+			}
+			gameInfoText.append(scores);
+
+			let homeImage = $('<img></img>');
+			homeImage.addClass('game-play-by-play-item-game-info-image');
+			homeImage.attr('src', teamLogos[gameData.header.competitions[0].competitors[0].id]);
+			homeImage.attr('title', teamNames[gameData.header.competitions[0].competitors[0].id]);
+			gameInfoText.append(homeImage);
+
+			let clock = $('<div></div>');
+			clock.addClass('game-play-by-play-item-game-info-clock');
+			let period = play.period.number;
+			if (period == 5) period = 'OT';
+			else if (period >= 6) period = `${period - 4}OT`;
+			else period = `Q${period}`;
+			clock.text(`${period} ${play.clock.displayValue}`);
+			gameInfoText.append(clock);
+
+			playTextDiv.prepend(gameInfoText);
+		}
+
 		playDiv.append(playImageDiv);
 		playDiv.append(playTextDiv);
 
