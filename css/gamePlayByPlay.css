@@ -44,7 +44,10 @@
 .game-play-by-play-item div:first-child img {
 	height: 85px;
 	translate: -5px 0px;
-	border-radius: 100%;
+	border-radius: 40%;
+
+	-webkit-filter: drop-shadow(1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(-1px 1px 0 white);
+	filter: drop-shadow(1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(-1px 1px 0 white);
 }
 
 .game-play-by-play-item:first-child {
@@ -91,10 +94,11 @@
 	object-fit: cover;
 	overflow-clip-margin: unset;
 	overflow: hidden;
-	bottom: -3px;
+	bottom: -1px;
 	right: -3px;
 
-	border-radius: 500px;
+	-webkit-filter: drop-shadow(1px 1px 0 black) drop-shadow(1px -1px 0 black) drop-shadow(-1px -1px 0 black) drop-shadow(-1px 1px 0 black) !important;
+	filter: drop-shadow(1px 1px 0 black) drop-shadow(1px -1px 0 black) drop-shadow(-1px -1px 0 black) drop-shadow(-1px 1px 0 black) !important;
 }
 
 .game-play-by-play-item-sub-image-secondary {
@@ -104,8 +108,9 @@
 	object-fit: cover;
 	overflow-clip-margin: unset;
 	overflow: hidden;
-	bottom: -3px;
+	bottom: -1px;
 	left: -3px;
 
-	border-radius: 500px;
+	-webkit-filter: drop-shadow(1px 1px 0 black) drop-shadow(1px -1px 0 black) drop-shadow(-1px -1px 0 black) drop-shadow(-1px 1px 0 black) !important;
+	filter: drop-shadow(1px 1px 0 black) drop-shadow(1px -1px 0 black) drop-shadow(-1px -1px 0 black) drop-shadow(-1px 1px 0 black) !important;
 }

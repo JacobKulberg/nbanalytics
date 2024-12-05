@@ -436,6 +436,11 @@ h1 {
 
 .game-highlight-img-big {
 	height: 100%;
+
+	-webkit-filter: drop-shadow(1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(-1px 1px 0 white);
+	filter: drop-shadow(1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(-1px 1px 0 white);
+
+	border-radius: 40%;
 }
 
 .game-highlight-img-small {
@@ -444,6 +449,9 @@ h1 {
 	right: 0;
 	bottom: 0;
 	translate: 20% 20%;
+
+	-webkit-filter: drop-shadow(1px 1px 0 black) drop-shadow(1px -1px 0 black) drop-shadow(-1px -1px 0 black) drop-shadow(-1px 1px 0 black);
+	filter: drop-shadow(1px 1px 0 black) drop-shadow(1px -1px 0 black) drop-shadow(-1px -1px 0 black) drop-shadow(-1px 1px 0 black);
 }
 
 @media (max-width: 520px) {
