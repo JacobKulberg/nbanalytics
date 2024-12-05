@@ -370,7 +370,6 @@ function getSpecificGameData(gameID) {
 				resolve(data);
 			})
 			.catch((error) => {
-				window.location.href = '/';
 				reject(error);
 			});
 	});
@@ -378,7 +377,7 @@ function getSpecificGameData(gameID) {
 
 function getPlayerName(playerID) {
 	if (playerID === undefined) {
-		return 'Unknown';
+		return '';
 	}
 
 	return new Promise((resolve, reject) => {

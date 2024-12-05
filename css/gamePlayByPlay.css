@@ -31,12 +31,20 @@
 }
 
 .game-play-by-play-item div:has(img) {
-	width: 117px;
+	width: 120px;
+	margin-right: 15px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	position: relative;
 }
 
 .game-play-by-play-item div:first-child img {
 	height: 85px;
-	translate: min(-0.5dvw, -8px) 0px;
+	translate: -5px 0px;
+	border-radius: 100%;
 }
 
 .game-play-by-play-item:first-child {
@@ -51,6 +59,10 @@
 	.game-play-by-play-item {
 		margin: 0px 3vw;
 	}
+}
+
+.game-play-by-play-item-main-text::first-letter {
+	text-transform: capitalize;
 }
 
 .game-play-by-play-item-sub-text {
@@ -70,4 +82,30 @@
 	text-shadow: 0 0 5px #000;
 
 	margin-top: 3px;
+}
+
+.game-play-by-play-item-sub-image {
+	position: absolute;
+	height: 45px !important;
+	width: 45px !important;
+	object-fit: cover;
+	overflow-clip-margin: unset;
+	overflow: hidden;
+	bottom: -3px;
+	right: -3px;
+
+	border-radius: 500px;
+}
+
+.game-play-by-play-item-sub-image-secondary {
+	position: absolute;
+	height: 45px !important;
+	width: 45px !important;
+	object-fit: cover;
+	overflow-clip-margin: unset;
+	overflow: hidden;
+	bottom: -3px;
+	left: -3px;
+
+	border-radius: 500px;
 }
