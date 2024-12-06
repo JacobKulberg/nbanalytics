@@ -69,22 +69,22 @@ async function updatePlayByPlay(gameData, currentPlay) {
 				} else if (play.team?.id) {
 					let playSubImage = $('<img></img>');
 					playSubImage.addClass('game-play-by-play-item-sub-image-secondary');
-					playSubImage.attr('src', teamLogos[play.team.id]);
-					playSubImage.attr('title', teamNames[play.team.id]);
+					playSubImage.attr('src', teamLogos[play.team?.id]);
+					playSubImage.attr('title', teamNames[play.team?.id]);
 					playImageDiv.append(playSubImage);
 				}
 			} else if (play.team?.id) {
 				let playSubImage = $('<img></img>');
 				playSubImage.addClass('game-play-by-play-item-sub-image');
-				playSubImage.attr('src', teamLogos[play.team.id]);
-				playSubImage.attr('title', teamNames[play.team.id]);
+				playSubImage.attr('src', teamLogos[play.team?.id]);
+				playSubImage.attr('title', teamNames[play.team?.id]);
 				playImageDiv.append(playSubImage);
 			}
 		} else if (play.team?.id) {
 			let playImage = $('<img></img>');
 			playImage.addClass('game-play-by-play-item-team-image');
-			playImage.attr('src', teamLogos[play.team.id]);
-			playImage.attr('title', teamNames[play.team.id]);
+			playImage.attr('src', teamLogos[play.team?.id]);
+			playImage.attr('title', teamNames[play.team?.id]);
 			playImageDiv.append(playImage);
 		}
 
@@ -141,7 +141,12 @@ async function updatePlayByPlay(gameData, currentPlay) {
 			if (period == 5) period = 'OT';
 			else if (period >= 6) period = `${period - 4}OT`;
 			else period = `Q${period}`;
-			clock.html(`${period} - ${play.clock.displayValue}`);
+			let seconds = play.clock.displayValue.split(':');
+			if (seconds.length == 1 && seconds[0] <= 45) {
+				clock.html(`${period} - <span style="color: red;">${play.clock.displayValue}</span>`);
+			} else {
+				clock.html(`${period} - ${play.clock.displayValue}`);
+			}
 			gameInfoText.append(clock);
 
 			playTextDiv.prepend(gameInfoText);
@@ -282,10 +287,10 @@ async function getPlayObject(gameData, play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':team: timeout',
-				team: play.team.id,
+				team: play.team?.id,
 				minified: true,
 				replacements: {
-					':team:': teamNamesShort[play.team.id],
+					':team:': teamNamesShort[play.team?.id],
 				},
 			};
 			break;
@@ -293,10 +298,10 @@ async function getPlayObject(gameData, play, playNum, plays) {
 			playObject = {
 				permanent: true,
 				text: ':team: timeout',
-				team: play.team.id,
+				team: play.team?.id,
 				minified: true,
 				replacements: {
-					':team:': teamNamesShort[play.team.id],
+					':team:': teamNamesShort[play.team?.id],
 				},
 			};
 			break;
@@ -349,7 +354,7 @@ async function getPlayObject(gameData, play, playNum, plays) {
 				permanent: false,
 				text: ':team: excess timeout technical',
 				replacements: {
-					':team:': teamNamesShort[play.team.id],
+					':team:': teamNamesShort[play.team?.id],
 				},
 			};
 			break;
@@ -733,7 +738,7 @@ async function getPlayObject(gameData, play, playNum, plays) {
 				permanent: false,
 				text: ':team: excess timeout',
 				replacements: {
-					':team:': teamNamesShort[play.team.id],
+					':team:': teamNamesShort[play.team?.id],
 				},
 			};
 			break;

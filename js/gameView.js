@@ -98,7 +98,7 @@ async function updateCourt() {
 		y *= 14 / 40;
 		x -= 7.5;
 
-		let isHomeTeam = play.team.id === gameData.header.competitions[0].competitors[0].team.id;
+		let isHomeTeam = play.team?.id === gameData.header.competitions[0].competitors[0].team.id;
 		let basket = isHomeTeam ? 1 : 0;
 		if (!isHomeTeam) {
 			x *= -1;
@@ -147,7 +147,7 @@ async function updateCourt() {
 		y *= 14 / 40;
 		x -= 7.5;
 
-		let isHomeTeam = play.team.id === gameData.header.competitions[0].competitors[0].team.id;
+		let isHomeTeam = play.team?.id === gameData.header.competitions[0].competitors[0].team.id;
 		if (!isHomeTeam) {
 			x *= -1;
 			y *= -1;
