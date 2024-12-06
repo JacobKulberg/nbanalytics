@@ -36,11 +36,11 @@
 	width: 100dvw;
 	align-self: center;
 	justify-content: center;
-	margin: 3vmax 0px !important;
+	margin: 4vmax 0px !important;
 }
 
 .game-play-by-play-item.minified:first-child {
-	margin: 4vmax 0px 3vmax !important;
+	margin: 5vmax 0px 4vmax !important;
 }
 
 .game-play-by-play-item.minified > div > div {
@@ -73,7 +73,7 @@
 	right: -3px;
 
 	background-color: #020026;
-	padding: 2vmin 0px 2vmin 2vmin;
+	padding: 0px 2vmin;
 }
 
 .game-play-by-play-item-minified-image-score {
