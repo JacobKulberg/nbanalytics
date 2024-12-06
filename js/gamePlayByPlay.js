@@ -1908,10 +1908,14 @@ async function getPlayObject(gameData, play, playNum, plays) {
 		case 411:
 			playObject = {
 				permanent: true,
-				text: 'Start of :period:',
+				text: 'Start of :period: (:awayImg::score1: - :score2::homeImg:)',
 				minified: true,
 				replacements: {
 					':period:': getPeriodName(play.period.number),
+					':score1:': play.awayScore,
+					':score2:': play.homeScore,
+					':awayImg:': `<img class="game-play-by-play-item-minified-image-score" src="${teamLogos[gameData.header.competitions[0].competitors[1].id]}" />`,
+					':homeImg:': `<img class="game-play-by-play-item-minified-image-score" src="${teamLogos[gameData.header.competitions[0].competitors[0].id]}" />`,
 				},
 			};
 			break;
