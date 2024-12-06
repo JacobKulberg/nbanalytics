@@ -203,7 +203,7 @@ const teamColors = {
 	23: '5a2d81', // Sacramento Kings
 	24: 'c2ccd2', // San Antonio Spurs
 	25: '007ac1', // Oklahoma City Thunder
-	26: 'fff21f', // Utah Jazz
+	26: '4e008e', // Utah Jazz
 	27: '002b5c', // Washington Wizards
 	28: 'd91244', // Toronto Raptors
 	29: '5d76a9', // Memphis Grizzles
@@ -235,8 +235,8 @@ const teamLogos = {
 	22: 'https://a.espncdn.com/i/teamlogos/nba/500/por.png', // Portland Trail Blazers
 	23: 'https://a.espncdn.com/i/teamlogos/nba/500/sac.png', // Sacramento Kings
 	24: 'https://a.espncdn.com/i/teamlogos/nba/500/sa.png', // San Antonio Spurs
-	25: 'https://a.espncdn.com/i/teamlogos/nba/500/okc.png', // Oklahoma City Thunder
-	26: 'https://a.espncdn.com/i/teamlogos/nba/500/utah.png', // Utah Jazz
+	25: 'https://cdn.nba.com/logos/nba/1610612760/primary/L/logo.svg', // Oklahoma City Thunder
+	26: 'https://logos.logofury.com/logo_src/20dba3b5841d7dc92dc0c589c08493f7.png', // Utah Jazz
 	27: 'https://a.espncdn.com/i/teamlogos/nba/500/wsh.png', // Washington Wizards
 	28: 'https://a.espncdn.com/i/teamlogos/nba/500/tor.png', // Toronto Raptors
 	29: 'https://a.espncdn.com/i/teamlogos/nba/500/mem.png', // Memphis Grizzles
