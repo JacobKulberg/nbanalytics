@@ -114,10 +114,6 @@
 	filter: drop-shadow(1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(-1px 1px 0 white);
 }
 
-.game-play-by-play-item:first-child {
-	margin-top: 20px;
-}
-
 .game-play-by-play-item:last-child {
 	margin-bottom: 20px;
 }

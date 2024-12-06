@@ -1,6 +1,8 @@
 let playerNames = {};
 let playerImages = {};
 
+let scrollTimeoutId = null;
+
 async function updatePlayByPlay(gameData, currentPlay) {
 	let plays = gameData.plays.slice(0, currentPlay + 1);
 	let playByPlay = $('.game-play-by-play-view');
@@ -160,12 +162,12 @@ async function updatePlayByPlay(gameData, currentPlay) {
 		let playByPlayTempItem = $(playByPlayTempItems[i]);
 
 		if (playByPlayItem.prop('outerHTML') != playByPlayTempItem.prop('outerHTML')) {
-			$('body').append(playByPlayTempItem);
-			let heightDifference = (await playByPlayTempItem.outerHeight()) - (await playByPlayItem.outerHeight());
-			await scroll(heightDifference);
-			playByPlayTempItem.remove();
+			await playByPlayItem.replaceWith(await playByPlayTempItem.prop('outerHTML'));
 
-			playByPlayItem.replaceWith(playByPlayTempItem.prop('outerHTML'));
+			await $('body').append(playByPlayTempItem);
+			let heightDifference = (await playByPlayTempItem.outerHeight()) - (await playByPlayItem.outerHeight());
+			await playByPlayTempItem.remove();
+			await scroll(heightDifference);
 
 			// remove all items after this one if they dont have the class "permanent"
 			if (!playByPlayTempItem.hasClass('permanent')) {
@@ -184,11 +186,37 @@ async function updatePlayByPlay(gameData, currentPlay) {
 	}
 
 	if (playByPlayItems.length < playByPlayTempItems.length) {
+		let numLoaded = 0;
+
 		for (let i = playByPlayItems.length; i < playByPlayTempItems.length; i++) {
+			clearTimeout(scrollTimeoutId);
+
 			await playByPlay.prepend($(playByPlayTempItems[i]));
 
 			let heightDifference = (await $(playByPlayTempItems[i]).outerHeight()) + 15; /* gap */
 			await scroll(heightDifference);
+
+			numLoaded++;
+
+			if ((await $('#court').outerHeight()) + 100 >= window.scrollY) {
+				await playByPlay.css('translate', `0px -${heightDifference}px`);
+
+				scrollTimeoutId = setTimeout(async () => {
+					await playByPlay.css('transition', 'translate 500ms ease-in-out, opacity 300ms ease-in-out');
+					scrollTimeoutId = setTimeout(async () => {
+						await playByPlay.css('translate', '');
+						scrollTimeoutId = setTimeout(async () => {
+							await playByPlay.css('transition', '');
+						}, 500);
+					}, 0);
+				}, 0);
+			}
+		}
+
+		if (numLoaded > 1) {
+			clearTimeout(scrollTimeoutId);
+			await playByPlay.css('transition', '');
+			await playByPlay.css('translate', '');
 		}
 	}
 
@@ -198,6 +226,13 @@ async function updatePlayByPlay(gameData, currentPlay) {
 		let height = $(`.game-play-by-play-view`).height();
 		$('.game-views').css('height', height + 'px');
 	}
+
+	$(window).on('resize orientationchange', async () => {
+		if ($('.game-play-by-play-view').hasClass('active')) {
+			let height = $(`.game-play-by-play-view`).height();
+			$('.game-views').css('height', height + 'px');
+		}
+	});
 }
 
 async function scroll(distance) {

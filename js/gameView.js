@@ -15,7 +15,7 @@ if (gameData.header.competitions[0].competitors[0].id < 1 || gameData.header.com
 	window.location.href = '/';
 }
 
-let currentPlay = gameData.plays?.length - 1 || -1;
+let currentPlay = -1; //gameData.plays?.length - 1 || -1;
 
 let updateCourtRunner;
 $(async () => {
@@ -115,7 +115,7 @@ async function updateCourt() {
 		x = Math.min(7, Math.max(-7, x));
 		y = Math.min(13.5, Math.max(-13.5, y));
 
-		let made = play.scoringPlay;
+		let made = play.scoringPlay || play.scoreValue > 0;
 
 		let playerID = play?.participants?.[0].athlete.id;
 		if (!playerID) return;
