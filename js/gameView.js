@@ -117,7 +117,7 @@ async function updateCourt() {
 
 		let made = play.scoringPlay;
 
-		let playerID = play?.participants[0].athlete.id;
+		let playerID = play?.participants?.[0].athlete.id;
 		if (!playerID) return;
 		let headshot = playerID;
 
@@ -198,6 +198,7 @@ function setScoreboard() {
 	}, 500);
 }
 
+let hasBeenLoaded = false;
 function updateScoreboard() {
 	let play = gameData.plays?.at(currentPlay);
 
@@ -271,11 +272,14 @@ function updateScoreboard() {
 		clock = `${period} - ${minutes}:${seconds}`;
 	}
 
-	if (play.type.id == 402) {
+	if (play.type.id == 402 && !hasBeenLoaded) {
 		$('.play-text').css('opacity', '0');
+
 		$('.scoreboard > .info > .live-status').css('transition', 'unset');
 		$('.scoreboard > .info > .time').css('transition', 'unset');
 	}
+
+	hasBeenLoaded = true;
 
 	$('.scoreboard > .info > .time').text(clock);
 
