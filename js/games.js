@@ -144,12 +144,12 @@ async function createGames() {
 		if (game.status.type.name == 'STATUS_SCHEDULED' || game.status.type.name == 'STATUS_POSTPONED') {
 			let homeTeamRecord = document.createElement('div');
 			$(homeTeamRecord).addClass('team-record');
-			$(homeTeamRecord).text(game.competitions[0].competitors[1].records[0].summary);
+			$(homeTeamRecord).text(game.competitions[0].competitors[1].records?.[0].summary);
 			$(homeTeam).append(homeTeamRecord);
 
 			let awayTeamRecord = document.createElement('div');
 			$(awayTeamRecord).addClass('team-record');
-			$(awayTeamRecord).text(game.competitions[0].competitors[0].records[0].summary);
+			$(awayTeamRecord).text(game.competitions[0].competitors[0].records?.[0].summary);
 			$(awayTeam).append(awayTeamRecord);
 		} else {
 			let homeTeamScore = document.createElement('div');
