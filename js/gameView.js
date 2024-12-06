@@ -15,7 +15,7 @@ if (gameData.header.competitions[0].competitors[0].id < 1 || gameData.header.com
 	window.location.href = '/';
 }
 
-let currentPlay = -1; //gameData.plays?.length - 1 || -1;
+let currentPlay = gameData.plays?.length - 1 || -1;
 
 let updateCourtRunner;
 $(async () => {
