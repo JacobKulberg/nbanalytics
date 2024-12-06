@@ -58,7 +58,13 @@ async function updatePlayByPlay(gameData, currentPlay) {
 				playSubImage.attr('title', await _getPlayerName(play.participants?.[1]?.athlete.id));
 				playImageDiv.append(playSubImage);
 
-				if (play.team?.id) {
+				if (play.participants?.[2]?.athlete.id) {
+					let playSubImage = $('<img></img>');
+					playSubImage.addClass('game-play-by-play-item-sub-image-secondary');
+					playSubImage.attr('src', await _getPlayerHeadshot(play.participants?.[2]?.athlete.id));
+					playSubImage.attr('title', await _getPlayerName(play.participants?.[2]?.athlete.id));
+					playImageDiv.append(playSubImage);
+				} else if (play.team?.id) {
 					let playSubImage = $('<img></img>');
 					playSubImage.addClass('game-play-by-play-item-sub-image-secondary');
 					playSubImage.attr('src', teamLogos[play.team.id]);
