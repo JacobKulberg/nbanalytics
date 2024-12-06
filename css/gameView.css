@@ -115,7 +115,8 @@ body {
 	justify-content: space-around;
 	position: relative;
 	overflow: hidden;
-	padding: 0 3vw;
+	padding: 0 2vw;
+	gap: 1vw;
 }
 
 .scoreboard > .team > .logo {
@@ -145,7 +146,7 @@ body {
 .scoreboard > .team > .name > .record {
 	font-size: clamp(12px, max(1.75vw, 1.5vh), 40px);
 	font-weight: bold;
-	line-height: 0.5vh;
+	line-height: 1vh;
 	text-shadow: 0 0 7px #000;
 	z-index: 2;
 }
