@@ -12,13 +12,36 @@ async function updatePlayByPlay(gameData, currentPlay) {
 		let playDiv = $('<div></div>');
 		playDiv.addClass('game-play-by-play-item');
 
-		let playObject = await getPlayObject(play, i, plays);
+		let playObject = await getPlayObject(gameData, play, i, plays);
 
 		if (playObject === null) continue;
 
 		if (!playObject.permanent && i != plays.length - 1) continue;
 
 		applyReplacements(playObject);
+
+		if (playObject.minified) {
+			playDiv.addClass('minified');
+
+			let playContainer = $('<div></div>');
+
+			if (playObject.team) {
+				let playImage = $('<img></img>');
+				playImage.addClass('game-play-by-play-item-minified-image');
+				playImage.attr('src', teamLogos[playObject.team]);
+				playImage.attr('title', teamNames[playObject.team]);
+				playContainer.append(playImage);
+			}
+
+			let playText = $('<div></div>');
+			playText.html(playObject.text);
+			playContainer.append(playText);
+
+			playDiv.append(playContainer);
+
+			playByPlayTemp.append(playDiv);
+			continue;
+		}
 
 		let playImageDiv = $('<div></div>');
 		if (play.participants?.[0]?.athlete.id) {
@@ -60,20 +83,20 @@ async function updatePlayByPlay(gameData, currentPlay) {
 		let playTextDiv = $('<div></div>');
 		let playText = $('<div></div>');
 		playText.addClass('game-play-by-play-item-main-text');
-		playText.text(playObject.text);
+		playText.html(playObject.text);
 		playTextDiv.append(playText);
 
 		if (playObject.subtext) {
 			let playSubText = $('<div></div>');
 			playSubText.addClass('game-play-by-play-item-sub-text');
-			playSubText.text(playObject.subtext);
+			playSubText.html(playObject.subtext);
 			playTextDiv.append(playSubText);
 		}
 
 		if (playObject.subsubtext) {
 			let playSubSubText = $('<div></div>');
 			playSubSubText.addClass('game-play-by-play-item-sub-sub-text');
-			playSubSubText.text(playObject.subsubtext);
+			playSubSubText.html(playObject.subsubtext);
 			playTextDiv.append(playSubSubText);
 		}
 
@@ -110,7 +133,7 @@ async function updatePlayByPlay(gameData, currentPlay) {
 			if (period == 5) period = 'OT';
 			else if (period >= 6) period = `${period - 4}OT`;
 			else period = `Q${period}`;
-			clock.text(`${period} ${play.clock.displayValue}`);
+			clock.html(`${period} - ${play.clock.displayValue}`);
 			gameInfoText.append(clock);
 
 			playTextDiv.prepend(gameInfoText);
@@ -130,20 +153,20 @@ async function updatePlayByPlay(gameData, currentPlay) {
 		let playByPlayItem = $(playByPlayItems[i]);
 		let playByPlayTempItem = $(playByPlayTempItems[i]);
 
-		if (playByPlayItem.html() != playByPlayTempItem.html()) {
+		if (playByPlayItem.prop('outerHTML') != playByPlayTempItem.prop('outerHTML')) {
 			$('body').append(playByPlayTempItem);
 			let heightDifference = (await playByPlayTempItem.outerHeight()) - (await playByPlayItem.outerHeight());
 			await scroll(heightDifference);
 			playByPlayTempItem.remove();
 
-			playByPlayItem.html(playByPlayTempItem.html());
+			playByPlayItem.replaceWith(playByPlayTempItem.prop('outerHTML'));
 
 			// remove all items after this one if they dont have the class "permanent"
 			if (!playByPlayTempItem.hasClass('permanent')) {
 				playByPlayItems = [...playByPlay.find('.game-play-by-play-item')].reverse();
 				for (let j = i + 1; j < playByPlayItems.length; j++) {
 					if (!$(playByPlayItems[j]).hasClass('permanent')) {
-						heightDifference = (await $(playByPlayItems[j]).outerHeight()) + 20; /* gap */
+						heightDifference = (await $(playByPlayItems[j]).outerHeight()) + 15; /* gap */
 						await scroll(-heightDifference);
 
 						$(playByPlayItems[j]).remove();
@@ -158,7 +181,7 @@ async function updatePlayByPlay(gameData, currentPlay) {
 		for (let i = playByPlayItems.length; i < playByPlayTempItems.length; i++) {
 			await playByPlay.prepend($(playByPlayTempItems[i]));
 
-			let heightDifference = (await $(playByPlayTempItems[i]).outerHeight()) + 20; /* gap */
+			let heightDifference = (await $(playByPlayTempItems[i]).outerHeight()) + 15; /* gap */
 			await scroll(heightDifference);
 		}
 	}
@@ -188,7 +211,7 @@ async function scroll(distance) {
 	}
 }
 
-async function getPlayObject(play, playNum, plays) {
+async function getPlayObject(gameData, play, playNum, plays) {
 	let playObject = null;
 
 	switch (parseInt(play.type.id)) {
@@ -216,8 +239,10 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 16:
 			playObject = {
-				permanent: false,
+				permanent: true,
 				text: ':team: timeout',
+				team: play.team.id,
+				minified: true,
 				replacements: {
 					':team:': teamNamesShort[play.team.id],
 				},
@@ -225,8 +250,10 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 17:
 			playObject = {
-				permanent: false,
+				permanent: true,
 				text: ':team: timeout',
+				team: play.team.id,
+				minified: true,
 				replacements: {
 					':team:': teamNamesShort[play.team.id],
 				},
@@ -1810,23 +1837,27 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: false,
 				text: 'Official Review',
+				minified: true,
 			};
 			break;
 		case 214:
 			playObject = {
 				permanent: false,
 				text: 'Official Review',
+				minified: true,
 			};
 		case 215:
 			playObject = {
 				permanent: false,
 				text: 'Official Review - Call Overturned',
+				minified: true,
 			};
 			break;
 		case 216:
 			playObject = {
 				permanent: false,
 				text: 'Official Review - Call Stands',
+				minified: true,
 			};
 			break;
 		case 257:
@@ -1844,30 +1875,35 @@ async function getPlayObject(play, playNum, plays) {
 			playObject = {
 				permanent: false,
 				text: 'Official Review',
+				minified: true,
 			};
 			break;
 		case 278:
 			playObject = {
 				permanent: false,
 				text: 'Official Review',
+				minified: true,
 			};
 			break;
 		case 279:
 			playObject = {
 				permanent: false,
 				text: 'Official Review - Call Overturned',
+				minified: true,
 			};
 			break;
 		case 280:
 			playObject = {
 				permanent: false,
 				text: 'Official Review - Call Stands',
+				minified: true,
 			};
 			break;
 		case 411:
 			playObject = {
 				permanent: true,
 				text: 'Start of :period:',
+				minified: true,
 				replacements: {
 					':period:': getPeriodName(play.period.number),
 				},
@@ -1876,11 +1912,14 @@ async function getPlayObject(play, playNum, plays) {
 		case 412:
 			playObject = {
 				permanent: true,
-				text: 'End of :period: (:score1:-:score2:)',
+				text: 'End of :period: (:awayImg::score1: - :score2::homeImg:)',
+				minified: true,
 				replacements: {
 					':period:': getPeriodName(play.period.number),
 					':score1:': play.awayScore,
 					':score2:': play.homeScore,
+					':awayImg:': `<img class="game-play-by-play-item-minified-image-score" src="${teamLogos[gameData.header.competitions[0].competitors[1].id]}" />`,
+					':homeImg:': `<img class="game-play-by-play-item-minified-image-score" src="${teamLogos[gameData.header.competitions[0].competitors[0].id]}" />`,
 				},
 			};
 			break;
@@ -1895,14 +1934,16 @@ async function getPlayObject(play, playNum, plays) {
 			break;
 		case 580:
 			playObject = {
-				permanent: false,
+				permanent: true,
 				text: 'TV Timeout',
+				minified: true,
 			};
 			break;
 		case 581:
 			playObject = {
-				permanent: false,
+				permanent: true,
 				text: 'Official Timeout',
+				minified: true,
 			};
 			break;
 		case 584:
