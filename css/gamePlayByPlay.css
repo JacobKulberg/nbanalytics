@@ -36,11 +36,11 @@
 	width: 100dvw;
 	align-self: center;
 	justify-content: center;
-	margin: 3dvmax 0px !important;
+	margin: 3vmax 0px !important;
 }
 
 .game-play-by-play-item.minified:first-child {
-	margin: 4dvmax 0px 3dvmax !important;
+	margin: 4vmax 0px 3vmax !important;
 }
 
 .game-play-by-play-item.minified > div > div {
