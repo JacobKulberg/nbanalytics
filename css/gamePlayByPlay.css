@@ -39,10 +39,6 @@
 	margin: 4vmax 0px !important;
 }
 
-.game-play-by-play-item.minified:first-child {
-	margin: 5vmax 0px 4vmax !important;
-}
-
 .game-play-by-play-item.minified > div > div {
 	background-color: #020026;
 	padding: 2vmin;

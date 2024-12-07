@@ -3,12 +3,7 @@ let playerImages = {};
 
 let scrollTimeoutId = null;
 
-let isUpdating = false;
-
 async function updatePlayByPlay(gameData, currentPlay) {
-	if (isUpdating) return;
-	isUpdating = true;
-
 	let plays = gameData.plays.slice(0, currentPlay + 1);
 	let playByPlay = $('.game-play-by-play-view');
 	let playByPlayTemp = $('<div></div>').addClass('game-play-by-play-view');
@@ -26,6 +21,10 @@ async function updatePlayByPlay(gameData, currentPlay) {
 		if (!playObject.permanent && i != plays.length - 1) continue;
 
 		applyReplacements(playObject);
+
+		if (playObject.permanent) {
+			playDiv.addClass('permanent');
+		}
 
 		if (playObject.minified) {
 			playDiv.addClass('minified');
@@ -236,8 +235,6 @@ async function updatePlayByPlay(gameData, currentPlay) {
 		let height = $(`.game-play-by-play-view`).height();
 		$('.game-views').css('height', height + 'px');
 	}
-
-	isUpdating = false;
 }
 
 $(window).on('resize orientationchange', async () => {
