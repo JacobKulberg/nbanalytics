@@ -15,7 +15,7 @@ if (gameData.header.competitions[0].competitors[0].id < 1 || gameData.header.com
 	window.location.href = '/';
 }
 
-let currentPlay = gameData.plays?.length - 1 || -1;
+let currentPlay = 50; //gameData.plays?.length - 1 || -1;
 
 let updateCourtRunner;
 $(async () => {
@@ -345,7 +345,10 @@ $(window).on('resize orientationchange', () => {
 	adjustTeamNameTextSize(teamNamesShort[gameData.header.competitions[0].competitors[0].team.id], $('.scoreboard > .team.home > .name').width(), '.scoreboard > .team.home > .name > .name-text');
 });
 
-$('.game-options > .option').on('click', function () {
+$('.game-options > .option').on('click', scrollToTop);
+$('.game-view-scroll-up').on('click touchstart', scrollToTop.bind(true));
+
+function scrollToTop(scrollOnly = false) {
 	// scroll to header
 	$('html, body').animate(
 		{
@@ -353,6 +356,8 @@ $('.game-options > .option').on('click', function () {
 		},
 		300
 	);
+
+	if (scrollOnly) return;
 
 	$('.game-options > .option').removeClass('active');
 	$(this).addClass('active');
@@ -364,4 +369,12 @@ $('.game-options > .option').on('click', function () {
 
 	let height = $(`.${c}-view`).height();
 	$('.game-views').css('height', height + 'px');
+}
+
+$(window).on('scroll', async () => {
+	if ((await $('#court').outerHeight(true)) + 500 >= window.scrollY) {
+		$('.game-view-scroll-up').css('display', 'none');
+	} else {
+		$('.game-view-scroll-up').css('display', 'flex');
+	}
 });

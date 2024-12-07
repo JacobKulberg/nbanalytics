@@ -173,8 +173,11 @@ async function updatePlayByPlay(gameData, currentPlay) {
 		if (playByPlayItem.prop('outerHTML') != playByPlayTempItem.prop('outerHTML')) {
 			await playByPlayItem.replaceWith(await playByPlayTempItem.prop('outerHTML'));
 
+			await $('body').append(playByPlayItem);
 			await $('body').append(playByPlayTempItem);
-			let heightDifference = (await playByPlayTempItem.outerHeight(true)) - (await playByPlayItem.outerHeight(true));
+			let heightDifference = (await playByPlayTempItem.outerHeight()) - (await playByPlayItem.outerHeight());
+
+			await playByPlayItem.remove();
 			await playByPlayTempItem.remove();
 			await scroll(heightDifference);
 
