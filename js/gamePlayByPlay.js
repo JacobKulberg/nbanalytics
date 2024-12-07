@@ -170,7 +170,7 @@ async function updatePlayByPlay(gameData, currentPlay) {
 			await playByPlayItem.replaceWith(await playByPlayTempItem.prop('outerHTML'));
 
 			await $('body').append(playByPlayTempItem);
-			let heightDifference = (await playByPlayTempItem.outerHeight()) - (await playByPlayItem.outerHeight());
+			let heightDifference = (await playByPlayTempItem.outerHeight(true)) - (await playByPlayItem.outerHeight(true));
 			await playByPlayTempItem.remove();
 			await scroll(heightDifference);
 
@@ -179,7 +179,7 @@ async function updatePlayByPlay(gameData, currentPlay) {
 				playByPlayItems = [...playByPlay.find('.game-play-by-play-item')].reverse();
 				for (let j = i + 1; j < playByPlayItems.length; j++) {
 					if (!$(playByPlayItems[j]).hasClass('permanent')) {
-						heightDifference = (await $(playByPlayItems[j]).outerHeight()) + 15; /* gap */
+						heightDifference = (await $(playByPlayItems[j]).outerHeight(true)) + 15; /* gap */
 						await scroll(-heightDifference);
 
 						$(playByPlayItems[j]).remove();
@@ -198,12 +198,12 @@ async function updatePlayByPlay(gameData, currentPlay) {
 
 			await playByPlay.prepend($(playByPlayTempItems[i]));
 
-			let heightDifference = (await $(playByPlayTempItems[i]).outerHeight()) + 15; /* gap */
+			let heightDifference = (await $(playByPlayTempItems[i]).outerHeight(true)) + 15; /* gap */
 			await scroll(heightDifference);
 
 			numLoaded++;
 
-			if ((await $('#court').outerHeight()) + 100 >= window.scrollY) {
+			if ((await $('#court').outerHeight(true)) + 100 >= window.scrollY) {
 				await playByPlay.css('translate', `0px -${heightDifference}px`);
 
 				scrollTimeoutId = setTimeout(async () => {
@@ -241,7 +241,7 @@ async function updatePlayByPlay(gameData, currentPlay) {
 }
 
 async function scroll(distance) {
-	if ((await $('#court').outerHeight()) + 100 < window.scrollY) {
+	if ((await $('#court').outerHeight(true)) + 100 < window.scrollY) {
 		let scrollLimit = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
 
 		if (window.scrollY + window.innerHeight + distance > scrollLimit) {
