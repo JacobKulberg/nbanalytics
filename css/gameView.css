@@ -299,7 +299,7 @@ body {
 	position: relative;
 
 	width: 100%;
-	min-height: calc(100dvh - min(20dvmin, 175px) - 8dvmin);
+	min-height: calc(100dvh - min(20dvmin, 175px) - 8dvmin - 20px);
 
 	overflow: hidden;
 
