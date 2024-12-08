@@ -248,6 +248,8 @@ $(window).on('resize orientationchange', async () => {
 });
 
 async function scroll(distance) {
+	if (!$('.game-play-by-play-view').hasClass('active')) return;
+
 	if ((await $('#court').outerHeight(true)) + 100 < window.scrollY) {
 		let scrollLimit = Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);
 

@@ -309,6 +309,8 @@ body {
 .game-view {
 	position: absolute;
 
+	background-color: #020026;
+
 	opacity: 0;
 
 	transition: opacity 300ms ease-in-out;
@@ -352,4 +354,52 @@ body {
 
 .game-view-scroll-up:active {
 	background-color: rgba(126, 122, 230, 0.4);
+}
+
+.loading {
+	z-index: -1;
+
+	height: 0px;
+	width: 0px;
+
+	position: absolute;
+	top: calc((100vh - min(20dvmin, 175px) - 8dvmin - 20px) / 2 - 20px);
+	left: 50%;
+
+	background-color: red;
+
+	transform: scale(0.4);
+}
+
+.loading img {
+	translate: -211px -311px;
+	position: absolute;
+}
+
+.loading img.spin {
+	z-index: -1;
+	translate: -191px -291px;
+	animation: loading 2.25s ease infinite;
+}
+
+.loading img.glass-filled {
+	z-index: -1;
+
+	-webkit-filter: drop-shadow(1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(-1px 1px 0 white);
+	filter: drop-shadow(1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(-1px 1px 0 white);
+}
+
+@keyframes loading {
+	from {
+		transform: rotate(-15deg);
+	}
+	15% {
+		transform: rotate(-15deg);
+	}
+	85% {
+		transform: rotate(345deg);
+	}
+	to {
+		transform: rotate(345deg);
+	}
 }
