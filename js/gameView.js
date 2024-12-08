@@ -217,6 +217,8 @@ function updateScoreboard() {
 		$('.scoreboard > .info > .time').text('');
 		$('.scoreboard > .info > .live-status > .dot').css('display', 'block');
 		return;
+	} else if (!play) {
+		return;
 	}
 
 	$('.scoreboard > .info > .live-status').removeClass('pregame');
@@ -346,9 +348,9 @@ $(window).on('resize orientationchange', () => {
 });
 
 $('.game-options > .option').on('click', scrollToTop);
-$('.game-view-scroll-up').on('click touchstart', scrollToTop.bind(true));
+$('.game-view-scroll-up').on('click touchstart', scrollToTop);
 
-function scrollToTop(scrollOnly = false) {
+function scrollToTop() {
 	// scroll to header
 	$('html, body').animate(
 		{
@@ -357,7 +359,7 @@ function scrollToTop(scrollOnly = false) {
 		300
 	);
 
-	if (scrollOnly) return;
+	if (!$(this).hasClass('option')) return;
 
 	$('.game-options > .option').removeClass('active');
 	$(this).addClass('active');
