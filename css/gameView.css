@@ -64,7 +64,7 @@ body {
 }
 
 .skip-replay {
-	background-color: rgba(255, 255, 255, 0.15);
+	background-color: #403d71;
 	border-radius: 2vmin;
 	position: absolute;
 	top: -5vmin;
@@ -326,21 +326,21 @@ body {
 	position: fixed;
 	top: calc(min(20dvmin, 175px) + 8dvmin + 20px + 1px + 5dvmin);
 	right: 5dvmin;
-	width: 12vmin;
-	height: 8vmin;
-	background-color: red;
+	width: 12vh;
+	height: 8vh;
 	display: none;
 	justify-content: center;
 	align-items: center;
 	z-index: 2;
 	cursor: pointer;
 
-	background-color: rgba(255, 255, 255, 0.15);
+	background-color: #403d71;
 	border-radius: 2vmin;
+	transition: background-color 200ms ease-in-out;
 }
 
 .game-view-scroll-up i {
-	font-size: calc(4 / 3 * min(max(2.5vw, 1.875vh), 40px));
+	font-size: calc(4 / 3 * min(max(2.5vw, 3.5vh), 40px));
 }
 
 @media (hover) {
