@@ -15,6 +15,24 @@ if (gameData.header.competitions[0].competitors[0].id < 1 || gameData.header.com
 	window.location.href = '/';
 }
 
+if (!window.location.hash) {
+	window.location.hash = '#play-by-play';
+}
+
+if (window.location.hash == '#play-by-play') {
+	$('.game-play-by-play').addClass('active');
+	$('.game-play-by-play-view').addClass('active');
+} else if (window.location.hash == '#analysis') {
+	$('.game-analysis').addClass('active');
+	$('.game-analysis-view').addClass('active');
+} else if (window.location.hash == '#away') {
+	$('.game-away-team').addClass('active');
+	$('.game-away-team-view').addClass('active');
+} else if (window.location.hash == '#home') {
+	$('.game-home-team').addClass('active');
+	$('.game-home-team-view').addClass('active');
+}
+
 let currentPlay = gameData.plays?.length - 1 || -1;
 
 let updateCourtRunner;
@@ -360,6 +378,21 @@ function scrollToTop() {
 	);
 
 	if (!$(this).hasClass('option')) return;
+
+	switch ($(this)[0].className.split(' ')[0]) {
+		case 'game-play-by-play':
+			window.location.hash = '#play-by-play';
+			break;
+		case 'game-analysis':
+			window.location.hash = '#analysis';
+			break;
+		case 'game-away-team':
+			window.location.hash = '#away';
+			break;
+		case 'game-home-team':
+			window.location.hash = '#home';
+			break;
+	}
 
 	$('.game-options > .option').removeClass('active');
 	$(this).addClass('active');

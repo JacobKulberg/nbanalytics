@@ -375,6 +375,10 @@ function getSpecificGameData(gameID) {
 			})
 			.catch((error) => {
 				reject(error);
+
+				if (error.toString().includes('404')) {
+					window.location.href = '/';
+				}
 			});
 	});
 }
