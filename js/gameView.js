@@ -16,8 +16,7 @@ if (gameData.header.competitions[0].competitors[0].id < 1 || gameData.header.com
 }
 
 if (!window.location.hash) {
-	window.location.hash = '#play-by-play';
-	history.replaceState(null, null, window.location.href);
+	history.replaceState(null, null, '#play-by-play');
 }
 
 if (window.location.hash == '#play-by-play') {
@@ -382,16 +381,16 @@ function scrollToTop() {
 
 	switch ($(this)[0].className.split(' ')[0]) {
 		case 'game-play-by-play':
-			window.location.hash = '#play-by-play';
+			history.replaceState(null, null, '#play-by-play');
 			break;
 		case 'game-analysis':
-			window.location.hash = '#analysis';
+			history.replaceState(null, null, '#analysis');
 			break;
 		case 'game-away-team':
-			window.location.hash = '#away';
+			history.replaceState(null, null, '#away');
 			break;
 		case 'game-home-team':
-			window.location.hash = '#home';
+			history.replaceState(null, null, '#home');
 			break;
 	}
 
@@ -419,8 +418,7 @@ $(window)
 		let hash = window.location.hash;
 
 		if (!hash) {
-			window.location.hash = '#play-by-play';
-			history.replaceState(null, null, window.location.href);
+			history.replaceState(null, null, '#play-by-play');
 			return;
 		}
 
