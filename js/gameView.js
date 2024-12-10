@@ -1,6 +1,6 @@
 import { scene, world, playerGroup, ball, ballBody, redX, trajectoryTube, shootBasket, addPlayer, setCourtLogo, jumpBall, disableJumpBall, trajectoryPoints } from './court.js';
 import { updatePlayByPlay } from './gamePlayByPlay.js';
-import { updateAllCharts } from './gameAnalysis.js';
+import { updateAnalysis } from './gameAnalysis.js';
 
 let searchParams = new URLSearchParams(window.location.search);
 let gameID = searchParams.get('id');
@@ -57,7 +57,7 @@ $(async () => {
 			$('.play-text').text(await playToText(parseInt(gameData.plays.at(currentPlay).type.id), gameData.plays.at(currentPlay).participants, gameData.plays.at(currentPlay).team, gameData.plays.at(currentPlay).text));
 		}
 
-		updateAllCharts(gameData, currentPlay);
+		updateAnalysis(gameData, currentPlay);
 		updatePlayByPlay(gameData, currentPlay);
 	};
 

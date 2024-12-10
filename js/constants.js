@@ -247,6 +247,39 @@ const teamLogos = {
 	30: 'https://a.espncdn.com/i/teamlogos/nba/500/cha.png', // Charlotte Hornets
 };
 
+const teamAbbrs = {
+	1: 'ATL', // Atlanta Hawks
+	2: 'BOS', // Boston Celtics
+	3: 'NOP', // New Orleans Pelicans
+	4: 'CHI', // Chicago Bulls
+	5: 'CLE', // Cleveland Cavaliers
+	6: 'DAL', // Dallas Mavericks
+	7: 'DEN', // Denver Nuggets
+	8: 'DET', // Detroit Pistons
+	9: 'GSW', // Golden State Warriors
+	10: 'HOU', // Houston Rockets
+	11: 'IND', // Indiana Pacers
+	12: 'LAC', // Los Angeles Clippers
+	13: 'LAL', // Los Angeles Lakers
+	14: 'MIA', // Miami Heat
+	15: 'MIL', // Milwaukee Bucks
+	16: 'MIN', // Minnesota Timberwolves
+	17: 'BKN', // Brooklyn Nets
+	18: 'NYK', // New York Knicks
+	19: 'ORL', // Orlando Magic
+	20: 'PHI', // Philadelphia 76ers
+	21: 'PHX', // Phoenix Suns
+	22: 'POR', // Portland Trail Blazers
+	23: 'SAC', // Sacramento Kings
+	24: 'SAS', // San Antonio Spurs
+	25: 'OKC', // Oklahoma City Thunder
+	26: 'UTA', // Utah Jazz
+	27: 'WAS', // Washington Wizards
+	28: 'TOR', // Toronto Raptors
+	29: 'MEM', // Memphis Grizzles
+	30: 'CHA', // Charlotte Hornets
+};
+
 async function playToText(playID, participants, team, description) {
 	playID = parseInt(playID);
 	switch (playID) {

@@ -307,6 +307,8 @@ body {
 }
 
 .game-view {
+	min-height: calc(100dvh - min(20dvmin, 175px) - 8dvmin - 20px);
+
 	position: absolute;
 
 	background-color: #020026;
@@ -369,6 +371,8 @@ body {
 	background-color: red;
 
 	transform: scale(0.4);
+
+	transition: opacity 300ms ease-in-out;
 }
 
 .loading img {
@@ -387,6 +391,10 @@ body {
 
 	-webkit-filter: drop-shadow(1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(-1px 1px 0 white);
 	filter: drop-shadow(1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(-1px 1px 0 white);
+}
+
+.game-views:has(.game-view.active.filled) .loading {
+	opacity: 0;
 }
 
 @keyframes loading {

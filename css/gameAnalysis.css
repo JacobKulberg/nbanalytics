@@ -1,0 +1,48 @@
+.game-analysis-view {
+	width: 100%;
+}
+
+.quarterly-score {
+	height: 100px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	transform: scale(calc(1vh / 1vw));
+}
+
+.quarterly-score table {
+	margin: 0 5dvw;
+
+	border-collapse: collapse;
+
+	font-weight: bold;
+}
+
+.quarterly-score table tr:not(:first-child) * {
+	padding-bottom: 5px;
+}
+
+.quarterly-score table tr:not(:last-child) * {
+	padding-top: 5px;
+}
+
+.quarterly-score table tr:first-child {
+	border-bottom: 1px solid gainsboro;
+}
+
+.quarterly-score table th:not(:first-child),
+.quarterly-score table td:not(:first-child) {
+	padding-left: 30px;
+}
+
+.quarterly-score table th:not(:first-child):not(:last-child),
+.quarterly-score table td:not(:first-child):not(:last-child) {
+	color: gainsboro;
+}
+
+.quarterly-score .away-team-score,
+.quarterly-score .home-team-score {
+	text-align: center;
+}
