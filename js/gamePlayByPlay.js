@@ -26,7 +26,7 @@ async function updatePlayByPlay(gameData, currentPlay) {
 			playDiv.addClass('permanent');
 		}
 
-		if (playObject.minified) {
+		if (playObject.minified || !(play.participants?.[0]?.athlete.id || play.team.id)) {
 			playDiv.addClass('minified');
 
 			let playContainer = $('<div></div>');
