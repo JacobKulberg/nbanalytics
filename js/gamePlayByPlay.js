@@ -284,11 +284,11 @@ async function getPlayObject(gameData, play, playNum, plays) {
 				permanent: true,
 				text: 'Jump Ball',
 				subtext: ':player1: vs :player2:',
-				subsubtext: ':player3: gains possession',
+				subsubtext: ':player3:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants?.[0]?.athlete.id),
 					':player2:': await _getPlayerName(play.participants?.[1]?.athlete.id),
-					':player3:': await _getPlayerName(play.participants?.[2]?.athlete.id),
+					':player3:': play.participants?.[2]?.athlete.id ? `${await _getPlayerName(play.participants?.[2]?.athlete.id)} gains possession` : '',
 				},
 			};
 			break;
@@ -2094,11 +2094,11 @@ async function getPlayObject(gameData, play, playNum, plays) {
 				permanent: true,
 				text: 'Jump Ball',
 				subtext: ':player1: vs :player2:',
-				subsubtext: ':player3: gains possession',
+				subsubtext: ':player3:',
 				replacements: {
 					':player1:': await _getPlayerName(play.participants?.[0]?.athlete.id),
 					':player2:': await _getPlayerName(play.participants?.[1]?.athlete.id),
-					':player3:': await _getPlayerName(play.participants?.[2]?.athlete.id),
+					':player3:': play.participants?.[2]?.athlete.id ? `${await _getPlayerName(play.participants?.[2]?.athlete.id)} gains possession` : '',
 				},
 			};
 			break;
