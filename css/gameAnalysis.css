@@ -27,23 +27,28 @@
 	font-weight: bold;
 }
 
-.quarterly-score table tr:not(:first-child) * {
-	padding-bottom: 5px;
-}
-
-.quarterly-score table tr:not(:last-child) * {
-	padding-top: 5px;
+.quarterly-score table tr * {
+	padding: 5px 0px;
 }
 
 .quarterly-score table tr:first-child {
 	border-bottom: 1px solid gainsboro;
 }
 
-.quarterly-score table *:not(:first-child) {
-	padding-left: 30px;
+.quarterly-score table *:not(:last-child) {
+	padding-right: 20px;
 }
 
-.quarterly-score table *:not(:first-child):not(:last-child) {
+.quarterly-score table tr *:first-child {
+	padding-left: 10px;
+}
+
+.quarterly-score table tr *:last-child {
+	padding: 0px 10px 0px 20px;
+	border-left: 1px solid gainsboro;
+}
+
+.quarterly-score table * {
 	color: gainsboro;
 }
 

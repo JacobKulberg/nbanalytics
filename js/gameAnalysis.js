@@ -92,14 +92,17 @@ function updateQuarterlyScore(gameData, currentPlay) {
 	let awayAbbr = teamAbbrs[gameData.header.competitions[0].competitors[1].team.id];
 	let homeAbbr = teamAbbrs[gameData.header.competitions[0].competitors[0].team.id];
 
+	let awayColor = teamColors[gameData.header.competitions[0].competitors[1].team.id];
+	let homeColor = teamColors[gameData.header.competitions[0].competitors[0].team.id];
+
 	$('.quarterly-score .away-team-abbr').text(awayAbbr);
 	$('.quarterly-score .home-team-abbr').text(homeAbbr);
 
 	// add periods
 	let period = parseInt(gameData.plays[currentPlay].period.number);
 	$('.quarterly-score tr:first-child').html('<th></th>');
-	$('.quarterly-score tr:nth-child(2)').html(`<th>${awayAbbr}</th>`);
-	$('.quarterly-score tr:nth-child(3)').html(`<th>${homeAbbr}</th>`);
+	$('.quarterly-score tr:nth-child(2)').html(`<th style="color: #${awayColor}; text-shadow: 0 0 3px #${awayColor};">${awayAbbr}</th>`);
+	$('.quarterly-score tr:nth-child(3)').html(`<th style="color: #${homeColor}; text-shadow: 0 0 3px #${homeColor};">${homeAbbr}</th>`);
 	for (let i = 1; i <= period; i++) {
 		let periodStr = i;
 		if (periodStr == 5) periodStr = 'OT';
@@ -141,8 +144,8 @@ function updateQuarterlyScore(gameData, currentPlay) {
 
 	let awayTotal = awayScores.reduce((a, b) => a + b, 0);
 	let homeTotal = homeScores.reduce((a, b) => a + b, 0);
-	$('.quarterly-score tr:nth-child(2)').append(`<td class="away-team-score"></td>`);
-	$('.quarterly-score tr:nth-child(3)').append(`<td class="home-team-score"></td>`);
+	$('.quarterly-score tr:nth-child(2)').append(`<td style="color: #${awayColor}; text-shadow: 0 0 3px #${awayColor};" class="away-team-score"></td>`);
+	$('.quarterly-score tr:nth-child(3)').append(`<td style="color: #${homeColor}; text-shadow: 0 0 3px #${homeColor};" class="home-team-score"></td>`);
 	$('.quarterly-score .away-team-score:last-child').text(awayTotal);
 	$('.quarterly-score .home-team-score:last-child').text(homeTotal);
 
