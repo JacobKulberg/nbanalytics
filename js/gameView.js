@@ -17,6 +17,7 @@ if (gameData.header.competitions[0].competitors[0].id < 1 || gameData.header.com
 
 if (!window.location.hash) {
 	window.location.hash = '#play-by-play';
+	history.replaceState(null, null, window.location.href);
 }
 
 if (window.location.hash == '#play-by-play') {
@@ -406,10 +407,36 @@ function scrollToTop() {
 	$('.game-views').css('height', height + 'px');
 }
 
-$(window).on('scroll', async () => {
-	if ((await $('#court').outerHeight(true)) + 500 >= window.scrollY) {
-		$('.game-view-scroll-up').css('display', 'none');
-	} else {
-		$('.game-view-scroll-up').css('display', 'flex');
-	}
-});
+$(window)
+	.on('scroll', async () => {
+		if ((await $('#court').outerHeight(true)) + 500 >= window.scrollY) {
+			$('.game-view-scroll-up').css('display', 'none');
+		} else {
+			$('.game-view-scroll-up').css('display', 'flex');
+		}
+	})
+	.on('popstate', () => {
+		let hash = window.location.hash;
+
+		if (!hash) {
+			window.location.hash = '#play-by-play';
+			history.replaceState(null, null, window.location.href);
+			return;
+		}
+
+		$('.game-options > .option').removeClass('active');
+		$('.game-view').removeClass('active');
+		if (hash == '#play-by-play') {
+			$('.game-play-by-play').addClass('active');
+			$('.game-play-by-play-view').addClass('active');
+		} else if (hash == '#analysis') {
+			$('.game-analysis').addClass('active');
+			$('.game-analysis-view').addClass('active');
+		} else if (hash == '#away') {
+			$('.game-away-team').addClass('active');
+			$('.game-away-team-view').addClass('active');
+		} else if (hash == '#home') {
+			$('.game-home-team').addClass('active');
+			$('.game-home-team-view').addClass('active');
+		}
+	});
