@@ -3,6 +3,7 @@ let chart = null;
 function updateAnalysis(gameData, currentPlay) {
 	updateQuarterlyScore(gameData, currentPlay);
 	// updateAllCharts(gameData, currentPlay);
+	adjustGameViewsHeight();
 }
 
 function updateAllCharts(gameData, currentPlay) {
@@ -147,5 +148,12 @@ function updateQuarterlyScore(gameData, currentPlay) {
 
 	$('.game-analysis-view').addClass('filled');
 }
+
+function adjustGameViewsHeight() {
+	let height = $('.game-analysis-view').outerHeight(true);
+	$('.game-views').css('height', `${height}px`);
+}
+
+$(window).on('resize orientationchange', adjustGameViewsHeight);
 
 export { updateAnalysis };
