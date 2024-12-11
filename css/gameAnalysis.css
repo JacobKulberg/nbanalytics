@@ -3,11 +3,11 @@
 	width: 100dvw;
 
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(55vmin, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(max(calc(50vw - 25px), 55vmin), 1fr));
 }
 
 .quarterly-score {
-	height: 150px;
+	height: 225px;
 	width: 100%;
 
 	display: flex;
@@ -17,6 +17,8 @@
 	transform: scale(1.75);
 
 	grid-column: 1 / -1;
+
+	pointer-events: none;
 }
 
 .quarterly-score table {
@@ -32,7 +34,7 @@
 }
 
 .quarterly-score table tr:first-child {
-	border-bottom: 1px solid gainsboro;
+	border-bottom: 1px solid white;
 }
 
 .quarterly-score table *:not(:last-child) {
@@ -45,11 +47,11 @@
 
 .quarterly-score table tr *:last-child {
 	padding: 0px 10px 0px 20px;
-	border-left: 1px solid gainsboro;
+	border-left: 1px solid white;
 }
 
 .quarterly-score table * {
-	color: gainsboro;
+	color: white;
 }
 
 .quarterly-score .away-team-score,
@@ -62,4 +64,81 @@
 		height: 100px;
 		transform: scale(1);
 	}
+}
+
+.game-analysis-view > h1 {
+	font-size: max(2.5vw, 3.5vh);
+	text-decoration: underline;
+	text-decoration-color: #d4a017;
+	text-align: center;
+
+	margin: 25px 0px 3px;
+
+	grid-column: 1 / -1;
+}
+
+.team-leaders {
+	width: 100%;
+	height: max(22vh, 150px);
+
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+.team-leaders .leader {
+	width: 30dvw;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.team-leaders .leader div:first-child:has(img) {
+	position: relative;
+}
+
+.team-leaders .leader img:first-child {
+	min-height: 80px;
+	height: 13vh;
+
+	border-radius: 40%;
+
+	-webkit-filter: drop-shadow(1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(-1px 1px 0 white);
+	filter: drop-shadow(1px 1px 0 white) drop-shadow(1px -1px 0 white) drop-shadow(-1px -1px 0 white) drop-shadow(-1px 1px 0 white);
+}
+
+.team-leaders .leader img:last-child {
+	position: absolute;
+	bottom: -0.2vw;
+	right: max(10px, 1vmin);
+
+	min-height: 20px;
+	height: 5.5vh;
+}
+
+.team-leaders .leader div:not(:first-child) {
+	width: 70%;
+
+	text-align: center;
+	font-weight: bold;
+
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow-x: hidden;
+
+	font-size: 1.5vmax;
+
+	text-shadow: 0px 0px 7px black;
+}
+
+.team-leaders .leader div:nth-child(2) {
+	margin-top: 5px;
+	padding: 0px 7px;
+}
+
+.team-leaders .leader div:last-child {
+	color: #d4a017;
+	font-size: max(1.75vw, 2vh);
 }

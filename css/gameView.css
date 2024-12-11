@@ -100,7 +100,7 @@ body {
 	position: sticky !important;
 	top: 0px;
 	width: 100%;
-	height: 20dvmin;
+	height: 20vmin;
 	max-height: 175px;
 	display: flex !important;
 	background-color: #020026;
@@ -249,7 +249,7 @@ body {
 	position: sticky;
 	top: min(20vmin, 175px);
 	width: 100%;
-	height: 8dvmin;
+	height: 8vmin;
 	background-color: #020026;
 	display: flex;
 	justify-content: space-around;
@@ -299,7 +299,7 @@ body {
 	position: relative;
 
 	width: 100%;
-	min-height: calc(100dvh - min(20dvmin, 175px) - 8dvmin - 20px);
+	min-height: calc(100dvh - min(20vmin, 175px) - 8vmin - 20px);
 
 	overflow: hidden;
 
@@ -307,7 +307,7 @@ body {
 }
 
 .game-view {
-	min-height: calc(100dvh - min(20dvmin, 175px) - 8dvmin - 20px);
+	min-height: calc(100dvh - min(20vmin, 175px) - 8vmin - 20px);
 
 	position: absolute;
 
@@ -328,8 +328,8 @@ body {
 
 .game-view-scroll-up {
 	position: fixed;
-	top: calc(min(20dvmin, 175px) + 8dvmin + 20px + 1px + 5dvmin);
-	right: 5dvmin;
+	top: calc(min(20vmin, 175px) + 8vmin + 20px + 1px + 5vmin);
+	right: 5vmin;
 	width: 12vh;
 	height: 8vh;
 	display: none;
@@ -365,7 +365,7 @@ body {
 	width: 0px;
 
 	position: absolute;
-	top: calc((100vh - min(20dvmin, 175px) - 8dvmin - 20px) / 2 - 20px);
+	top: calc((100vh - min(20vmin, 175px) - 8vmin - 20px) / 2 - 20px);
 	left: 50%;
 
 	background-color: red;

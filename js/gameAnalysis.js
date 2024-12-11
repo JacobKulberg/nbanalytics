@@ -1,7 +1,11 @@
+let playerNames = {};
+let playerImages = {};
+
 let chart = null;
 
 function updateAnalysis(gameData, currentPlay) {
 	updateQuarterlyScore(gameData, currentPlay);
+	updateTeamLeaders(gameData, currentPlay);
 	// updateAllCharts(gameData, currentPlay);
 	adjustGameViewsHeight();
 }
@@ -150,6 +154,188 @@ function updateQuarterlyScore(gameData, currentPlay) {
 	$('.quarterly-score .home-team-score:last-child').text(homeTotal);
 
 	$('.game-analysis-view').addClass('filled');
+}
+
+async function updateTeamLeaders(gameData, currentPlay) {
+	let leaders = getAllLeadersUntilNow(gameData, currentPlay);
+
+	$('.team-leaders .leader').empty();
+
+	let awayColor = teamColors[gameData.header.competitions[0].competitors[1].team.id];
+	let homeColor = teamColors[gameData.header.competitions[0].competitors[0].team.id];
+	$('.team-leaders.away').css('background', `linear-gradient(90deg, #${awayColor}91 0%, #${awayColor}1A 97%, transparent 100%)`);
+	$('.team-leaders.home').css('background', `linear-gradient(90deg, transparent 0%, #${homeColor}1A 3%, #${homeColor}91 100%)`);
+
+	// away
+	let awayPointLeader = leaders.points.find((leader) => leader.team == gameData.header.competitions[0].competitors[1].team.id);
+	let imageDiv = $('<div></div>');
+	imageDiv.append(`<img src="${await _getPlayerHeadshot(awayPointLeader.player)}">`);
+	imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[1].team.id]}">`);
+	$('.team-leaders.away .leader.points').append(imageDiv);
+	$('.team-leaders.away .leader.points').append(`<div>${await _getPlayerName(awayPointLeader.player)}</div>`);
+	$('.team-leaders.away .leader.points').append(`<div>${awayPointLeader.points} PTS</div>`);
+
+	let awayReboundLeader = leaders.rebounds.find((leader) => leader.team == gameData.header.competitions[0].competitors[1].team.id);
+	imageDiv = $('<div></div>');
+	imageDiv.append(`<img src="${await _getPlayerHeadshot(awayReboundLeader.player)}">`);
+	imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[1].team.id]}">`);
+	$('.team-leaders.away .leader.rebounds').append(imageDiv);
+	$('.team-leaders.away .leader.rebounds').append(`<div>${await _getPlayerName(awayReboundLeader.player)}</div>`);
+	$('.team-leaders.away .leader.rebounds').append(`<div>${awayReboundLeader.rebounds} REB</div>`);
+
+	let awayAssistLeader = leaders.assists.find((leader) => leader.team == gameData.header.competitions[0].competitors[1].team.id);
+	imageDiv = $('<div></div>');
+	imageDiv.append(`<img src="${await _getPlayerHeadshot(awayAssistLeader.player)}">`);
+	imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[1].team.id]}">`);
+	$('.team-leaders.away .leader.assists').append(imageDiv);
+	$('.team-leaders.away .leader.assists').append(`<div>${await _getPlayerName(awayAssistLeader.player)}</div>`);
+	$('.team-leaders.away .leader.assists').append(`<div>${awayAssistLeader.assists} AST</div>`);
+
+	// home
+	let homePointLeader = leaders.points.find((leader) => leader.team == gameData.header.competitions[0].competitors[0].team.id);
+	imageDiv = $('<div></div>');
+	imageDiv.append(`<img src="${await _getPlayerHeadshot(homePointLeader.player)}">`);
+	imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[0].team.id]}">`);
+	$('.team-leaders.home .leader.points').append(imageDiv);
+	$('.team-leaders.home .leader.points').append(`<div>${await _getPlayerName(homePointLeader.player)}</div>`);
+	$('.team-leaders.home .leader.points').append(`<div>${homePointLeader.points} PTS</div>`);
+
+	let homeReboundLeader = leaders.rebounds.find((leader) => leader.team == gameData.header.competitions[0].competitors[0].team.id);
+	imageDiv = $('<div></div>');
+	imageDiv.append(`<img src="${await _getPlayerHeadshot(homeReboundLeader.player)}">`);
+	imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[0].team.id]}">`);
+	$('.team-leaders.home .leader.rebounds').append(imageDiv);
+	$('.team-leaders.home .leader.rebounds').append(`<div>${await _getPlayerName(homeReboundLeader.player)}</div>`);
+	$('.team-leaders.home .leader.rebounds').append(`<div>${homeReboundLeader.rebounds} REB</div>`);
+
+	let homeAssistLeader = leaders.assists.find((leader) => leader.team == gameData.header.competitions[0].competitors[0].team.id);
+	imageDiv = $('<div></div>');
+	imageDiv.append(`<img src="${await _getPlayerHeadshot(homeAssistLeader.player)}">`);
+	imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[0].team.id]}">`);
+	$('.team-leaders.home .leader.assists').append(imageDiv);
+	$('.team-leaders.home .leader.assists').append(`<div>${await _getPlayerName(homeAssistLeader.player)}</div>`);
+	$('.team-leaders.home .leader.assists').append(`<div>${homeAssistLeader.assists} AST</div>`);
+}
+
+function getAllLeadersUntilNow(gameData, currentPlay) {
+	let pointLeaders = {};
+	let reboundLeaders = {};
+	let assistLeaders = {};
+
+	let playsUntilNow = gameData.plays.slice(0, currentPlay + 1);
+	playsUntilNow.forEach((play) => {
+		if (play.scoringPlay) {
+			// points
+			let player = play.participants[0].athlete.id;
+			let team = parseInt(play.team.id);
+			let points = play.scoreValue;
+
+			if (pointLeaders[player]) {
+				pointLeaders[player].points += points;
+			} else {
+				pointLeaders[player] = {
+					player: player,
+					team: team,
+					points: points,
+				};
+			}
+
+			// assists
+			player = play.participants[1]?.athlete.id;
+			if (!player) return;
+			team = parseInt(play.team.id);
+
+			if (assistLeaders[player]) {
+				assistLeaders[player].assists += 1;
+			} else {
+				assistLeaders[player] = {
+					player: player,
+					team: team,
+					assists: 1,
+				};
+			}
+		}
+	});
+
+	// rebounds
+	let reboundPlays = gameData.plays.slice(0, currentPlay + 1).filter((play) => [155, 156].includes(parseInt(play.type.id)));
+	reboundPlays.forEach((play) => {
+		let player = play.participants?.[0].athlete.id;
+		if (!player) return;
+		let team = parseInt(play.team.id);
+
+		if (reboundLeaders[player]) {
+			reboundLeaders[player].rebounds += 1;
+		} else {
+			reboundLeaders[player] = {
+				player: player,
+				team: team,
+				rebounds: 1,
+			};
+		}
+	});
+
+	// points
+	pointLeaders = Object.values(pointLeaders);
+	pointLeaders.sort((a, b) => b.points - a.points);
+	let teamIds = [];
+	let uniquePointLeaders = [];
+	pointLeaders.forEach((leader) => {
+		if (!teamIds.includes(leader.team)) {
+			teamIds.push(leader.team);
+			uniquePointLeaders.push(leader);
+		}
+	});
+
+	// rebounds
+	reboundLeaders = Object.values(reboundLeaders);
+	reboundLeaders.sort((a, b) => b.rebounds - a.rebounds);
+	teamIds = [];
+	let uniqueReboundLeaders = [];
+	reboundLeaders.forEach((leader) => {
+		if (!teamIds.includes(leader.team)) {
+			teamIds.push(leader.team);
+			uniqueReboundLeaders.push(leader);
+		}
+	});
+
+	// assists
+	assistLeaders = Object.values(assistLeaders);
+	assistLeaders.sort((a, b) => b.assists - a.assists);
+	teamIds = [];
+	let uniqueAssistLeaders = [];
+	assistLeaders.forEach((leader) => {
+		if (!teamIds.includes(leader.team)) {
+			teamIds.push(leader.team);
+			uniqueAssistLeaders.push(leader);
+		}
+	});
+
+	return {
+		points: uniquePointLeaders,
+		rebounds: uniqueReboundLeaders,
+		assists: uniqueAssistLeaders,
+	};
+}
+
+async function _getPlayerName(playerId) {
+	let name = playerNames[playerId];
+	if (!name) {
+		name = await getPlayerName(playerId);
+		playerNames[playerId] = name;
+	}
+
+	return name;
+}
+
+async function _getPlayerHeadshot(playerId) {
+	let image = playerImages[playerId];
+	if (!image) {
+		image = await getPlayerHeadshot(playerId);
+		playerImages[playerId] = image;
+	}
+
+	return image;
 }
 
 function adjustGameViewsHeight() {
