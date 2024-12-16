@@ -80,7 +80,7 @@ function updateQuarterlyScore(gameData, currentPlay) {
 async function updateTeamLeaders(gameData, currentPlay) {
 	let leaders = getAllLeadersUntilNow(gameData, currentPlay);
 
-	$('.team-leaders .leader').empty();
+	$('.team-leaders .leader').children(':not(:has(img))').remove();
 
 	let awayColor = teamColors[gameData.header.competitions[0].competitors[1].team.id];
 	let homeColor = teamColors[gameData.header.competitions[0].competitors[0].team.id];
@@ -88,54 +88,86 @@ async function updateTeamLeaders(gameData, currentPlay) {
 	$('.team-leaders.home').css('background', `linear-gradient(90deg, transparent 0%, #${homeColor}1A 3%, #${homeColor}91 100%)`);
 
 	// away
+	let imageDiv = null;
 	let awayPointLeader = leaders.points.find((leader) => leader.team == gameData.header.competitions[0].competitors[1].team.id);
-	let imageDiv = $('<div></div>');
-	imageDiv.append(`<img src="${await _getPlayerHeadshot(awayPointLeader.player)}" title="${await _getPlayerName(awayPointLeader.player)}">`);
-	imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[1].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[1].team.id]}">`);
+	if (awayPointLeader.player != $('.team-leaders.away .leader.points').attr('id')) {
+		$('.team-leaders.away .leader.points').children().remove();
+		imageDiv = $('<div></div>');
+		imageDiv.append(`<img src="${await _getPlayerHeadshot(awayPointLeader.player)}" title="${await _getPlayerName(awayPointLeader.player)}">`);
+		imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[1].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[1].team.id]}">`);
+	}
 	$('.team-leaders.away .leader.points').append(imageDiv);
 	$('.team-leaders.away .leader.points').append(`<div>${await _getPlayerName(awayPointLeader.player)}</div>`);
 	$('.team-leaders.away .leader.points').append(`<div>${awayPointLeader.points} PTS</div>`);
+	$('.team-leaders.away .leader.points').attr('id', awayPointLeader.player);
 
+	imageDiv = null;
 	let awayReboundLeader = leaders.rebounds.find((leader) => leader.team == gameData.header.competitions[0].competitors[1].team.id);
-	imageDiv = $('<div></div>');
-	imageDiv.append(`<img src="${await _getPlayerHeadshot(awayReboundLeader.player)}" title="${await _getPlayerName(awayReboundLeader.player)}">`);
-	imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[1].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[1].team.id]}">`);
+	if (awayReboundLeader.player != $('.team-leaders.away .leader.rebounds').attr('id')) {
+		$('.team-leaders.away .leader.rebounds').children().remove();
+		imageDiv = $('<div></div>');
+		imageDiv.append(`<img src="${await _getPlayerHeadshot(awayReboundLeader.player)}" title="${await _getPlayerName(awayReboundLeader.player)}">`);
+		imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[1].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[1].team.id]}">`);
+	}
 	$('.team-leaders.away .leader.rebounds').append(imageDiv);
 	$('.team-leaders.away .leader.rebounds').append(`<div>${await _getPlayerName(awayReboundLeader.player)}</div>`);
 	$('.team-leaders.away .leader.rebounds').append(`<div>${awayReboundLeader.rebounds} REB</div>`);
+	$('.team-leaders.away .leader.rebounds').attr('id', awayReboundLeader.player);
 
+	imageDiv = null;
 	let awayAssistLeader = leaders.assists.find((leader) => leader.team == gameData.header.competitions[0].competitors[1].team.id);
-	imageDiv = $('<div></div>');
-	imageDiv.append(`<img src="${await _getPlayerHeadshot(awayAssistLeader.player)}" title="${await _getPlayerName(awayAssistLeader.player)}">`);
-	imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[1].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[1].team.id]}">`);
+	if (awayAssistLeader.player != $('.team-leaders.away .leader.assists').attr('id')) {
+		$('.team-leaders.away .leader.assists').children().remove();
+		console.log('now');
+
+		imageDiv = $('<div></div>');
+		imageDiv.append(`<img src="${await _getPlayerHeadshot(awayAssistLeader.player)}" title="${await _getPlayerName(awayAssistLeader.player)}">`);
+		imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[1].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[1].team.id]}">`);
+	}
 	$('.team-leaders.away .leader.assists').append(imageDiv);
 	$('.team-leaders.away .leader.assists').append(`<div>${await _getPlayerName(awayAssistLeader.player)}</div>`);
 	$('.team-leaders.away .leader.assists').append(`<div>${awayAssistLeader.assists} AST</div>`);
+	$('.team-leaders.away .leader.assists').attr('id', awayAssistLeader.player);
 
 	// home
+	imageDiv = null;
 	let homePointLeader = leaders.points.find((leader) => leader.team == gameData.header.competitions[0].competitors[0].team.id);
-	imageDiv = $('<div></div>');
-	imageDiv.append(`<img src="${await _getPlayerHeadshot(homePointLeader.player)}" title="${await _getPlayerName(homePointLeader.player)}">`);
-	imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[0].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[0].team.id]}">`);
+	if (homePointLeader.player != $('.team-leaders.home .leader.points').attr('id')) {
+		$('.team-leaders.home .leader.points').children().remove();
+		imageDiv = $('<div></div>');
+		imageDiv.append(`<img src="${await _getPlayerHeadshot(homePointLeader.player)}" title="${await _getPlayerName(homePointLeader.player)}">`);
+		imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[0].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[0].team.id]}">`);
+	}
 	$('.team-leaders.home .leader.points').append(imageDiv);
 	$('.team-leaders.home .leader.points').append(`<div>${await _getPlayerName(homePointLeader.player)}</div>`);
 	$('.team-leaders.home .leader.points').append(`<div>${homePointLeader.points} PTS</div>`);
+	$('.team-leaders.home .leader.points').attr('id', homePointLeader.player);
 
+	imageDiv = null;
 	let homeReboundLeader = leaders.rebounds.find((leader) => leader.team == gameData.header.competitions[0].competitors[0].team.id);
-	imageDiv = $('<div></div>');
-	imageDiv.append(`<img src="${await _getPlayerHeadshot(homeReboundLeader.player)}" title="${await _getPlayerName(homeReboundLeader.player)}">`);
-	imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[0].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[0].team.id]}">`);
+	if (homeReboundLeader.player != $('.team-leaders.home .leader.rebounds').attr('id')) {
+		$('.team-leaders.home .leader.rebounds').children().remove();
+		imageDiv = $('<div></div>');
+		imageDiv.append(`<img src="${await _getPlayerHeadshot(homeReboundLeader.player)}" title="${await _getPlayerName(homeReboundLeader.player)}">`);
+		imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[0].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[0].team.id]}">`);
+	}
 	$('.team-leaders.home .leader.rebounds').append(imageDiv);
 	$('.team-leaders.home .leader.rebounds').append(`<div>${await _getPlayerName(homeReboundLeader.player)}</div>`);
 	$('.team-leaders.home .leader.rebounds').append(`<div>${homeReboundLeader.rebounds} REB</div>`);
+	$('.team-leaders.home .leader.rebounds').attr('id', homeReboundLeader.player);
 
+	imageDiv = null;
 	let homeAssistLeader = leaders.assists.find((leader) => leader.team == gameData.header.competitions[0].competitors[0].team.id);
-	imageDiv = $('<div></div>');
-	imageDiv.append(`<img src="${await _getPlayerHeadshot(homeAssistLeader.player)}" title="${await _getPlayerName(homeAssistLeader.player)}">`);
-	imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[0].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[0].team.id]}">`);
+	if (homeAssistLeader.player != $('.team-leaders.home .leader.assists').attr('id')) {
+		$('.team-leaders.home .leader.assists').children().remove();
+		imageDiv = $('<div></div>');
+		imageDiv.append(`<img src="${await _getPlayerHeadshot(homeAssistLeader.player)}" title="${await _getPlayerName(homeAssistLeader.player)}">`);
+		imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[0].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[0].team.id]}">`);
+	}
 	$('.team-leaders.home .leader.assists').append(imageDiv);
 	$('.team-leaders.home .leader.assists').append(`<div>${await _getPlayerName(homeAssistLeader.player)}</div>`);
 	$('.team-leaders.home .leader.assists').append(`<div>${homeAssistLeader.assists} AST</div>`);
+	$('.team-leaders.home .leader.assists').attr('id', homeAssistLeader.player);
 }
 
 function updateCumulativeScoreGraph(gameData, currentPlay) {
@@ -194,7 +226,7 @@ function updateCumulativeScoreGraph(gameData, currentPlay) {
 				scales: {
 					x: {
 						grid: {
-							display: false,
+							display: true,
 						},
 					},
 					y: {
@@ -218,7 +250,6 @@ function updateCumulativeScoreGraph(gameData, currentPlay) {
 				plugins: {
 					legend: {
 						display: true,
-						position: 'bottom',
 						labels: {
 							color: 'white',
 							font: {

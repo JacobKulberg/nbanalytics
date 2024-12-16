@@ -86,6 +86,8 @@
 	display: flex;
 	justify-content: space-evenly;
 	align-items: center;
+
+	margin-bottom: 3vw;
 }
 
 .team-leaders .leader {
@@ -152,5 +154,5 @@
 
 .cumulative-score,
 .win-probability {
-	padding: 3vw;
+	padding: 0px 3vw;
 }
