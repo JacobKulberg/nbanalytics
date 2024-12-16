@@ -57,8 +57,8 @@ $(async () => {
 			$('.play-text').text(await playToText(parseInt(gameData.plays.at(currentPlay).type.id), gameData.plays.at(currentPlay).participants, gameData.plays.at(currentPlay).team, gameData.plays.at(currentPlay).text));
 		}
 
-		updateAnalysis(gameData, currentPlay);
 		updatePlayByPlay(gameData, currentPlay);
+		updateAnalysis(gameData, currentPlay);
 	};
 
 	updateCourtRunner();

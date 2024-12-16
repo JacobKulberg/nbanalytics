@@ -142,6 +142,7 @@ body {
 	white-space: nowrap;
 	z-index: 2;
 	transition: text-shadow 300ms ease;
+	line-height: max(3vh, 5vw);
 }
 
 .scoreboard > .team > .name > .record {
@@ -154,7 +155,7 @@ body {
 }
 
 .scoreboard > .team > .score {
-	font-size: clamp(20px, max(5.5vw, 4.5vh), 100px);
+	font-size: clamp(20px, max(5.5vw, 3.5vh), 100px);
 	font-weight: bold;
 	text-shadow: 0 0 7px #000;
 	z-index: 2;

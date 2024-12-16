@@ -66,20 +66,22 @@
 	}
 }
 
-.game-analysis-view > h1 {
+.game-analysis-view h1 {
 	font-size: max(2.5vw, 3.5vh);
 	text-decoration: underline;
 	text-decoration-color: #d4a017;
 	text-align: center;
 
 	margin: 25px 0px 3px;
+}
 
+.game-analysis-view > h1 {
 	grid-column: 1 / -1;
 }
 
 .team-leaders {
 	width: 100%;
-	height: max(22vh, 150px);
+	height: max(25vh, 150px);
 
 	display: flex;
 	justify-content: space-evenly;
@@ -88,6 +90,8 @@
 
 .team-leaders .leader {
 	width: 30dvw;
+
+	position: relative;
 
 	display: flex;
 	flex-direction: column;
@@ -116,6 +120,9 @@
 
 	min-height: 20px;
 	height: 5.5vh;
+
+	-webkit-filter: drop-shadow(1px 1px 0 black) drop-shadow(1px -1px 0 black) drop-shadow(-1px -1px 0 black) drop-shadow(-1px 1px 0 black);
+	filter: drop-shadow(1px 1px 0 black) drop-shadow(1px -1px 0 black) drop-shadow(-1px -1px 0 black) drop-shadow(-1px 1px 0 black);
 }
 
 .team-leaders .leader div:not(:first-child) {
@@ -126,7 +133,7 @@
 
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	overflow-x: hidden;
+	overflow: hidden;
 
 	font-size: 1.5vmax;
 
@@ -141,4 +148,8 @@
 .team-leaders .leader div:last-child {
 	color: #d4a017;
 	font-size: max(1.75vw, 2vh);
+}
+
+.cumulative-score {
+	padding: 3vw;
 }
