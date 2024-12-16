@@ -1,12 +1,14 @@
 let playerNames = {};
 let playerImages = {};
 
-let chart = null;
+let cumulativeScoreGraph = null;
+let winProbabilityGraph = null;
 
 function updateAnalysis(gameData, currentPlay) {
 	updateQuarterlyScore(gameData, currentPlay);
 	updateTeamLeaders(gameData, currentPlay);
 	updateCumulativeScoreGraph(gameData, currentPlay);
+	updateWinProbabilityGraph(gameData, currentPlay);
 
 	adjustGameViewsHeight();
 }
@@ -160,17 +162,17 @@ function updateCumulativeScoreGraph(gameData, currentPlay) {
 		scoreColors.push(`#${teamColors[playsUntilNow[i].team.id]}`);
 	}
 
-	if (chart) {
-		chart.data.labels = labels;
-		chart.data.datasets[1].data = teamScores;
-		chart.data.datasets[1].backgroundColor = scoreColors;
-		chart.data.datasets[1].hoverBackgroundColor = scoreColors;
-		chart.update();
+	if (cumulativeScoreGraph) {
+		cumulativeScoreGraph.data.labels = labels;
+		cumulativeScoreGraph.data.datasets[1].data = teamScores;
+		cumulativeScoreGraph.data.datasets[1].backgroundColor = scoreColors;
+		cumulativeScoreGraph.data.datasets[1].hoverBackgroundColor = scoreColors;
+		cumulativeScoreGraph.update();
 	} else {
 		const ctx = $('.cumulative-score-graph');
 		ctx.height(500);
 
-		chart = new Chart(ctx, {
+		cumulativeScoreGraph = new Chart(ctx, {
 			type: 'bar',
 			data: {
 				labels: labels,
@@ -198,7 +200,7 @@ function updateCumulativeScoreGraph(gameData, currentPlay) {
 					y: {
 						beginAtZero: true,
 						grid: {
-							color: 'darkgray',
+							color: 'white',
 							drawOnChartArea: false,
 						},
 						ticks: {
@@ -242,7 +244,89 @@ function updateCumulativeScoreGraph(gameData, currentPlay) {
 					},
 					events: null,
 				},
-				devicePixelRatio: window.devicePixelRatio * 3 || 1,
+			},
+		});
+	}
+}
+
+function updateWinProbabilityGraph(gameData, currentPlay) {
+	if (!gameData.winprobability) return;
+
+	let playsUntilNow = gameData.plays.slice(0, currentPlay + 1);
+	playsUntilNow = playsUntilNow.filter((play) => play.scoringPlay);
+
+	let winProbabilities = gameData.winprobability.slice(0, currentPlay + 1).map((wp) => 2 * 100 * (0.5 - wp.homeWinPercentage));
+	let labels = winProbabilities.map(() => '');
+
+	if (winProbabilityGraph) {
+		winProbabilityGraph.data.labels = labels;
+		winProbabilityGraph.data.datasets[0].data = winProbabilities;
+		winProbabilityGraph.update();
+	} else {
+		const ctx = $('.win-probability-graph');
+		ctx.height(500);
+
+		winProbabilityGraph = new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: labels,
+				datasets: [
+					{
+						data: winProbabilities,
+						pointRadius: 0,
+						pointHitRadius: 0,
+						cubicInterpolationMode: 'monotone',
+						fill: true,
+						borderWidth: 4,
+						borderColor: 'rgba(0, 0, 0, 0.25)',
+						backgroundColor: (context) => {
+							const { chart } = context;
+							const { ctx, chartArea } = chart;
+							if (!chartArea) return null;
+
+							const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+							gradient.addColorStop(0, `#${teamColors[gameData.header.competitions[0].competitors[1].team.id]}`);
+							gradient.addColorStop(0.5, `#${teamColors[gameData.header.competitions[0].competitors[1].team.id]}`);
+							gradient.addColorStop(0.5, 'transparent');
+							gradient.addColorStop(0.5, `#${teamColors[gameData.header.competitions[0].competitors[0].team.id]}`);
+							gradient.addColorStop(1, `#${teamColors[gameData.header.competitions[0].competitors[0].team.id]}`);
+							return gradient;
+						},
+					},
+				],
+			},
+			axisY: {
+				tickLength: 0,
+			},
+			options: {
+				scales: {
+					y: {
+						beginAtZero: true,
+						min: -100,
+						max: 100,
+						ticks: {
+							maxTicksLimit: 2,
+							color: 'white',
+							font: {
+								size: 15,
+								family: "'Poppins', 'Calibri', sans-serif",
+								weight: 'bold',
+							},
+							callback: function (value) {
+								// Define custom tick text
+								if (value === 100) return `${teamAbbrs[gameData.header.competitions[0].competitors[1].team.id]} 100%`;
+								if (value === -100) return `${teamAbbrs[gameData.header.competitions[0].competitors[0].team.id]} 100%`;
+								return ''; // Hide other tick marks
+							},
+						},
+						position: 'right',
+					},
+				},
+				plugins: {
+					legend: {
+						display: false,
+					},
+				},
 			},
 		});
 	}

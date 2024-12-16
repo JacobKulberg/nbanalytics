@@ -150,6 +150,7 @@
 	font-size: max(1.75vw, 2vh);
 }
 
-.cumulative-score {
+.cumulative-score,
+.win-probability {
 	padding: 3vw;
 }
