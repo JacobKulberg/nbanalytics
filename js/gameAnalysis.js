@@ -4,6 +4,18 @@ let playerImages = {};
 let cumulativeScoreGraph = null;
 let winProbabilityGraph = null;
 
+let playsUntilNow = [];
+let playsUntilNowAll = [];
+
+let leaderIds = {
+	awayPoints: null,
+	awayRebounds: null,
+	awayAssists: null,
+	homePoints: null,
+	homeRebounds: null,
+	homeAssists: null,
+};
+
 function updateAnalysis(gameData, currentPlay) {
 	updateQuarterlyScore(gameData, currentPlay);
 	updateTeamLeaders(gameData, currentPlay);
@@ -44,7 +56,7 @@ function updateQuarterlyScore(gameData, currentPlay) {
 	let homeScores = [];
 	let awayScores = [];
 
-	let playsUntilNow = gameData.plays.slice(0, currentPlay + 1);
+	playsUntilNow = gameData.plays.slice(0, currentPlay + 1);
 	playsUntilNow = playsUntilNow.filter((play) => play.scoringPlay);
 
 	for (let quarter = 0; quarter < period; quarter++) {
@@ -80,7 +92,12 @@ function updateQuarterlyScore(gameData, currentPlay) {
 async function updateTeamLeaders(gameData, currentPlay) {
 	let leaders = getAllLeadersUntilNow(gameData, currentPlay);
 
-	$('.team-leaders .leader').children(':not(:has(img))').remove();
+	// remove children until first-child remains
+	$('.team-leaders .leader').each((index, element) => {
+		if ($(element).children().length > 1) {
+			$(element).children().slice(1).remove();
+		}
+	});
 
 	let awayColor = teamColors[gameData.header.competitions[0].competitors[1].team.id];
 	let homeColor = teamColors[gameData.header.competitions[0].competitors[0].team.id];
@@ -88,93 +105,111 @@ async function updateTeamLeaders(gameData, currentPlay) {
 	$('.team-leaders.home').css('background', `linear-gradient(90deg, transparent 0%, #${homeColor}1A 3%, #${homeColor}91 100%)`);
 
 	// away
-	let imageDiv = null;
 	let awayPointLeader = leaders.points.find((leader) => leader.team == gameData.header.competitions[0].competitors[1].team.id);
-	if (awayPointLeader.player != $('.team-leaders.away .leader.points').attr('id')) {
+	if (awayPointLeader?.player != leaderIds.awayPoints) {
 		$('.team-leaders.away .leader.points').children().remove();
-		imageDiv = $('<div></div>');
-		imageDiv.append(`<img src="${await _getPlayerHeadshot(awayPointLeader.player)}" title="${await _getPlayerName(awayPointLeader.player)}">`);
+		let imageDiv = $('<div></div>');
+		imageDiv.append(`<img src="${await _getPlayerHeadshot(awayPointLeader?.player)}" title="${await _getPlayerName(awayPointLeader?.player)}">`);
 		imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[1].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[1].team.id]}">`);
+		$('.team-leaders.away .leader.points').append(imageDiv);
 	}
-	$('.team-leaders.away .leader.points').append(imageDiv);
-	$('.team-leaders.away .leader.points').append(`<div>${await _getPlayerName(awayPointLeader.player)}</div>`);
-	$('.team-leaders.away .leader.points').append(`<div>${awayPointLeader.points} PTS</div>`);
-	$('.team-leaders.away .leader.points').attr('id', awayPointLeader.player);
+	if (awayPointLeader?.player) {
+		leaderIds.awayPoints = awayPointLeader?.player;
+		$('.team-leaders.away .leader.points').append(`<div>${await _getPlayerName(awayPointLeader?.player)}</div>`);
+		$('.team-leaders.away .leader.points').append(`<div>${awayPointLeader?.points} PTS</div>`);
+	}
 
-	imageDiv = null;
 	let awayReboundLeader = leaders.rebounds.find((leader) => leader.team == gameData.header.competitions[0].competitors[1].team.id);
-	if (awayReboundLeader.player != $('.team-leaders.away .leader.rebounds').attr('id')) {
+	if (awayReboundLeader?.player != leaderIds.awayRebounds) {
 		$('.team-leaders.away .leader.rebounds').children().remove();
-		imageDiv = $('<div></div>');
-		imageDiv.append(`<img src="${await _getPlayerHeadshot(awayReboundLeader.player)}" title="${await _getPlayerName(awayReboundLeader.player)}">`);
+		let imageDiv = $('<div></div>');
+		imageDiv.append(`<img src="${await _getPlayerHeadshot(awayReboundLeader?.player)}" title="${await _getPlayerName(awayReboundLeader?.player)}">`);
 		imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[1].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[1].team.id]}">`);
+		$('.team-leaders.away .leader.rebounds').append(imageDiv);
 	}
-	$('.team-leaders.away .leader.rebounds').append(imageDiv);
-	$('.team-leaders.away .leader.rebounds').append(`<div>${await _getPlayerName(awayReboundLeader.player)}</div>`);
-	$('.team-leaders.away .leader.rebounds').append(`<div>${awayReboundLeader.rebounds} REB</div>`);
-	$('.team-leaders.away .leader.rebounds').attr('id', awayReboundLeader.player);
+	if (awayReboundLeader?.player) {
+		leaderIds.awayRebounds = awayReboundLeader?.player;
+		$('.team-leaders.away .leader.rebounds').append(`<div>${await _getPlayerName(awayReboundLeader?.player)}</div>`);
+		$('.team-leaders.away .leader.rebounds').append(`<div>${awayReboundLeader?.rebounds} REB</div>`);
+	}
 
-	imageDiv = null;
 	let awayAssistLeader = leaders.assists.find((leader) => leader.team == gameData.header.competitions[0].competitors[1].team.id);
-	if (awayAssistLeader.player != $('.team-leaders.away .leader.assists').attr('id')) {
+	if (awayAssistLeader?.player != leaderIds.awayAssists) {
 		$('.team-leaders.away .leader.assists').children().remove();
-		console.log('now');
-
-		imageDiv = $('<div></div>');
-		imageDiv.append(`<img src="${await _getPlayerHeadshot(awayAssistLeader.player)}" title="${await _getPlayerName(awayAssistLeader.player)}">`);
+		let imageDiv = $('<div></div>');
+		imageDiv.append(`<img src="${await _getPlayerHeadshot(awayAssistLeader?.player)}" title="${await _getPlayerName(awayAssistLeader?.player)}">`);
 		imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[1].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[1].team.id]}">`);
+		$('.team-leaders.away .leader.assists').append(imageDiv);
 	}
-	$('.team-leaders.away .leader.assists').append(imageDiv);
-	$('.team-leaders.away .leader.assists').append(`<div>${await _getPlayerName(awayAssistLeader.player)}</div>`);
-	$('.team-leaders.away .leader.assists').append(`<div>${awayAssistLeader.assists} AST</div>`);
-	$('.team-leaders.away .leader.assists').attr('id', awayAssistLeader.player);
+	if (awayAssistLeader?.player) {
+		leaderIds.awayAssists = awayAssistLeader?.player;
+		$('.team-leaders.away .leader.assists').append(`<div>${await _getPlayerName(awayAssistLeader?.player)}</div>`);
+		$('.team-leaders.away .leader.assists').append(`<div>${awayAssistLeader?.assists} AST</div>`);
+	}
 
 	// home
-	imageDiv = null;
 	let homePointLeader = leaders.points.find((leader) => leader.team == gameData.header.competitions[0].competitors[0].team.id);
-	if (homePointLeader.player != $('.team-leaders.home .leader.points').attr('id')) {
+	if (homePointLeader?.player != leaderIds.homePoints) {
 		$('.team-leaders.home .leader.points').children().remove();
-		imageDiv = $('<div></div>');
-		imageDiv.append(`<img src="${await _getPlayerHeadshot(homePointLeader.player)}" title="${await _getPlayerName(homePointLeader.player)}">`);
+		let imageDiv = $('<div></div>');
+		imageDiv.append(`<img src="${await _getPlayerHeadshot(homePointLeader?.player)}" title="${await _getPlayerName(homePointLeader?.player)}">`);
 		imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[0].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[0].team.id]}">`);
+		$('.team-leaders.home .leader.points').append(imageDiv);
 	}
-	$('.team-leaders.home .leader.points').append(imageDiv);
-	$('.team-leaders.home .leader.points').append(`<div>${await _getPlayerName(homePointLeader.player)}</div>`);
-	$('.team-leaders.home .leader.points').append(`<div>${homePointLeader.points} PTS</div>`);
-	$('.team-leaders.home .leader.points').attr('id', homePointLeader.player);
+	if (homePointLeader?.player) {
+		leaderIds.homePoints = homePointLeader?.player;
+		$('.team-leaders.home .leader.points').append(`<div>${await _getPlayerName(homePointLeader?.player)}</div>`);
+		$('.team-leaders.home .leader.points').append(`<div>${homePointLeader?.points} PTS</div>`);
+	}
 
-	imageDiv = null;
 	let homeReboundLeader = leaders.rebounds.find((leader) => leader.team == gameData.header.competitions[0].competitors[0].team.id);
-	if (homeReboundLeader.player != $('.team-leaders.home .leader.rebounds').attr('id')) {
+	if (homeReboundLeader?.player != leaderIds.homeRebounds) {
 		$('.team-leaders.home .leader.rebounds').children().remove();
-		imageDiv = $('<div></div>');
-		imageDiv.append(`<img src="${await _getPlayerHeadshot(homeReboundLeader.player)}" title="${await _getPlayerName(homeReboundLeader.player)}">`);
+		let imageDiv = $('<div></div>');
+		imageDiv.append(`<img src="${await _getPlayerHeadshot(homeReboundLeader?.player)}" title="${await _getPlayerName(homeReboundLeader?.player)}">`);
 		imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[0].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[0].team.id]}">`);
+		$('.team-leaders.home .leader.rebounds').append(imageDiv);
 	}
-	$('.team-leaders.home .leader.rebounds').append(imageDiv);
-	$('.team-leaders.home .leader.rebounds').append(`<div>${await _getPlayerName(homeReboundLeader.player)}</div>`);
-	$('.team-leaders.home .leader.rebounds').append(`<div>${homeReboundLeader.rebounds} REB</div>`);
-	$('.team-leaders.home .leader.rebounds').attr('id', homeReboundLeader.player);
+	if (homeReboundLeader?.player) {
+		leaderIds.homeRebounds = homeReboundLeader?.player;
+		$('.team-leaders.home .leader.rebounds').append(`<div>${await _getPlayerName(homeReboundLeader?.player)}</div>`);
+		$('.team-leaders.home .leader.rebounds').append(`<div>${homeReboundLeader?.rebounds} REB</div>`);
+	}
 
-	imageDiv = null;
 	let homeAssistLeader = leaders.assists.find((leader) => leader.team == gameData.header.competitions[0].competitors[0].team.id);
-	if (homeAssistLeader.player != $('.team-leaders.home .leader.assists').attr('id')) {
+	if (homeAssistLeader?.player != leaderIds.homeAssists) {
 		$('.team-leaders.home .leader.assists').children().remove();
-		imageDiv = $('<div></div>');
-		imageDiv.append(`<img src="${await _getPlayerHeadshot(homeAssistLeader.player)}" title="${await _getPlayerName(homeAssistLeader.player)}">`);
+		let imageDiv = $('<div></div>');
+		imageDiv.append(`<img src="${await _getPlayerHeadshot(homeAssistLeader?.player)}" title="${await _getPlayerName(homeAssistLeader?.player)}">`);
 		imageDiv.append(`<img src="${teamLogos[gameData.header.competitions[0].competitors[0].team.id]}" title="${teamNames[gameData.header.competitions[0].competitors[0].team.id]}">`);
+		$('.team-leaders.home .leader.assists').append(imageDiv);
 	}
-	$('.team-leaders.home .leader.assists').append(imageDiv);
-	$('.team-leaders.home .leader.assists').append(`<div>${await _getPlayerName(homeAssistLeader.player)}</div>`);
-	$('.team-leaders.home .leader.assists').append(`<div>${homeAssistLeader.assists} AST</div>`);
-	$('.team-leaders.home .leader.assists').attr('id', homeAssistLeader.player);
+	if (homeAssistLeader?.player) {
+		leaderIds.homeAssists = homeAssistLeader?.player;
+		$('.team-leaders.home .leader.assists').append(`<div>${await _getPlayerName(homeAssistLeader?.player)}</div>`);
+		$('.team-leaders.home .leader.assists').append(`<div>${homeAssistLeader?.assists} AST</div>`);
+	}
 }
 
 function updateCumulativeScoreGraph(gameData, currentPlay) {
-	let playsUntilNow = gameData.plays.slice(0, currentPlay + 1);
+	playsUntilNow = gameData.plays.slice(0, currentPlay + 1);
 	playsUntilNow = playsUntilNow.filter((play) => play.scoringPlay);
 
+	if (playsUntilNow.length == 0) {
+		$('.cumulative-score-graph').css('opacity', 0);
+	} else {
+		$('.cumulative-score-graph').css('opacity', 1);
+	}
+
 	let labels = playsUntilNow.map(() => '');
+
+	let newPeriodIndexes = [];
+	for (let i = 0; i < playsUntilNow.length; i++) {
+		if (playsUntilNow[i]?.period.number != playsUntilNow[i - 1]?.period.number) {
+			newPeriodIndexes.push(i - newPeriodIndexes.length);
+		}
+	}
+	newPeriodIndexes.shift();
 
 	let teamScores = [];
 	let scoreColors = [];
@@ -192,13 +227,66 @@ function updateCumulativeScoreGraph(gameData, currentPlay) {
 		}
 
 		scoreColors.push(`#${teamColors[playsUntilNow[i].team.id]}`);
+
+		if (newPeriodIndexes.includes(i)) {
+			teamScores.push(0);
+			scoreColors.push('transparent');
+			labels.push('');
+		}
 	}
+
+	const periodMarkers = {
+		id: 'periodMarkers',
+		afterDraw: (chart) => {
+			const ctx = chart.ctx;
+			const xAxis = chart.scales.x;
+			const yAxis = chart.scales.y;
+
+			let periodPlays = playsUntilNow.filter((play) => play.period.number != 0);
+			let periods = periodPlays.map((play) => play.period.number);
+			periods = [...new Set(periods)];
+
+			periods.forEach((period) => {
+				let periodPlays = playsUntilNow.filter((play) => play.period.number == period);
+				let periodStart = playsUntilNow.indexOf(periodPlays[0]);
+				let periodEnd = playsUntilNow.indexOf(periodPlays[periodPlays.length - 1]);
+
+				let xStart = xAxis.getPixelForValue(periodStart);
+				let xEnd = xAxis.getPixelForValue(periodEnd + period - 1);
+
+				if (period != 1) {
+					ctx.save();
+					ctx.beginPath();
+					ctx.moveTo(xStart, yAxis.top);
+					ctx.lineTo(xStart, yAxis.bottom);
+					ctx.lineWidth = 2;
+					ctx.strokeStyle = 'white';
+					ctx.stroke();
+					ctx.closePath();
+					ctx.restore();
+				}
+
+				let periodStr = period;
+				if (period == 5) periodStr = 'OT';
+				else if (period >= 6) periodStr = `${period - 4}OT`;
+				else periodStr = `Q${periodStr}`;
+
+				ctx.fillStyle = 'white';
+				ctx.font = 'bold 15px "Poppins", "Calibri", sans-serif';
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'middle';
+
+				ctx.fillText(periodStr, (xStart + xEnd) / 2, yAxis.bottom + 10);
+			});
+		},
+	};
 
 	if (cumulativeScoreGraph) {
 		cumulativeScoreGraph.data.labels = labels;
 		cumulativeScoreGraph.data.datasets[1].data = teamScores;
 		cumulativeScoreGraph.data.datasets[1].backgroundColor = scoreColors;
 		cumulativeScoreGraph.data.datasets[1].hoverBackgroundColor = scoreColors;
+
 		cumulativeScoreGraph.update();
 	} else {
 		const ctx = $('.cumulative-score-graph');
@@ -226,7 +314,7 @@ function updateCumulativeScoreGraph(gameData, currentPlay) {
 				scales: {
 					x: {
 						grid: {
-							display: true,
+							display: false,
 						},
 					},
 					y: {
@@ -234,6 +322,8 @@ function updateCumulativeScoreGraph(gameData, currentPlay) {
 						grid: {
 							color: 'white',
 							drawOnChartArea: false,
+							tickLength: 0,
+							lineWidth: 0,
 						},
 						ticks: {
 							precision: 0,
@@ -276,6 +366,7 @@ function updateCumulativeScoreGraph(gameData, currentPlay) {
 					events: null,
 				},
 			},
+			plugins: [periodMarkers],
 		});
 	}
 }
@@ -283,15 +374,66 @@ function updateCumulativeScoreGraph(gameData, currentPlay) {
 function updateWinProbabilityGraph(gameData, currentPlay) {
 	if (!gameData.winprobability) return;
 
-	let playsUntilNow = gameData.plays.slice(0, currentPlay + 1);
-	playsUntilNow = playsUntilNow.filter((play) => play.scoringPlay);
+	playsUntilNowAll = gameData.plays.slice(0, currentPlay + 1);
+
+	if (playsUntilNowAll.length <= 1) {
+		$('.win-probability-graph').css('opacity', 0);
+	} else {
+		$('.win-probability-graph').css('opacity', 1);
+	}
 
 	let winProbabilities = gameData.winprobability.slice(0, currentPlay + 1).map((wp) => 2 * 100 * (0.5 - wp.homeWinPercentage));
 	let labels = winProbabilities.map(() => '');
 
+	const periodMarkers = {
+		id: 'periodMarkers',
+		afterDraw: (chart) => {
+			const ctx = chart.ctx;
+			const xAxis = chart.scales.x;
+			const yAxis = chart.scales.y;
+
+			let periodPlays = playsUntilNowAll.filter((play) => play.period.number != 0);
+			let periods = periodPlays.map((play) => play.period.number);
+			periods = [...new Set(periods)];
+
+			periods.forEach((period) => {
+				let periodPlays = playsUntilNowAll.filter((play) => play.period.number == period);
+				let periodStart = playsUntilNowAll.indexOf(periodPlays[0]);
+				let periodEnd = playsUntilNowAll.indexOf(periodPlays[periodPlays.length - 1]);
+
+				let xStart = xAxis.getPixelForValue(periodStart);
+				let xEnd = xAxis.getPixelForValue(periodEnd + period - 1);
+
+				if (period != 1) {
+					ctx.save();
+					ctx.beginPath();
+					ctx.moveTo(xStart, yAxis.top);
+					ctx.lineTo(xStart, yAxis.bottom);
+					ctx.lineWidth = 2;
+					ctx.strokeStyle = 'white';
+					ctx.stroke();
+					ctx.closePath();
+					ctx.restore();
+				}
+
+				let periodStr = period;
+				if (period == 5) periodStr = 'OT';
+				else if (period >= 6) periodStr = `${period - 4}OT`;
+				else periodStr = `Q${periodStr}`;
+
+				ctx.fillStyle = 'white';
+				ctx.font = 'bold 15px "Poppins", "Calibri", sans-serif';
+				ctx.textAlign = 'center';
+				ctx.textBaseline = 'middle';
+				ctx.fillText(periodStr, (xStart + xEnd) / 2, yAxis.bottom + 10);
+			});
+		},
+	};
+
 	if (winProbabilityGraph) {
 		winProbabilityGraph.data.labels = labels;
 		winProbabilityGraph.data.datasets[0].data = winProbabilities;
+
 		winProbabilityGraph.update();
 	} else {
 		const ctx = $('.win-probability-graph');
@@ -359,6 +501,7 @@ function updateWinProbabilityGraph(gameData, currentPlay) {
 					},
 				},
 			},
+			plugins: [periodMarkers],
 		});
 	}
 }
@@ -368,7 +511,7 @@ function getAllLeadersUntilNow(gameData, currentPlay) {
 	let reboundLeaders = {};
 	let assistLeaders = {};
 
-	let playsUntilNow = gameData.plays.slice(0, currentPlay + 1);
+	playsUntilNow = gameData.plays.slice(0, currentPlay + 1);
 	playsUntilNow.forEach((play) => {
 		if (play.scoringPlay) {
 			// points

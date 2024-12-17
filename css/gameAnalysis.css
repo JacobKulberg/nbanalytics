@@ -156,3 +156,8 @@
 .win-probability {
 	padding: 0px 3vw;
 }
+
+.cumulative-score-graph,
+.win-probability-graph {
+	transition: opacity 300ms ease;
+}
