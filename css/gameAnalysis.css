@@ -161,3 +161,26 @@
 .win-probability-graph {
 	transition: opacity 300ms ease;
 }
+
+.cumulative-score-spacer {
+	height: 4vh;
+	width: 100%;
+}
+
+.win-probability-percent-container {
+	width: 100%;
+	height: 8vh;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.win-probability-percent-img {
+	height: 100%;
+}
+
+.win-probability-percent {
+	font-size: 4vmax;
+	font-weight: bold;
+}

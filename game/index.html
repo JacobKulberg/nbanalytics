@@ -40,7 +40,7 @@
 				<i class="fa-solid fa-forward"></i>
 			</div>
 			<div class="team away">
-				<img class="logo" draggable="false"></img>
+				<img class="logo" draggable="false" />
 				<div class="name">
 					<div class="name-text"></div>
 					<div class="record"></div>
@@ -60,7 +60,7 @@
 					<div class="name-text"></div>
 					<div class="record"></div>
 				</div>
-				<img class="logo" draggable="false"></img>
+				<img class="logo" draggable="false" />
 			</div>
 		</div>
 
@@ -72,11 +72,9 @@
 				<div class="game-home-team option">Home</div>
 			</div>
 		</div>
-		
-		<div class="game-views">
-			<div class="game-play-by-play-view game-view">
 
-			</div>
+		<div class="game-views">
+			<div class="game-play-by-play-view game-view"></div>
 			<div class="game-analysis-view game-view">
 				<div class="quarterly-score">
 					<table>
@@ -109,11 +107,17 @@
 				<div class="cumulative-score">
 					<h1>Cumulative Score</h1>
 
+					<div class="cumulative-score-spacer"></div>
 					<canvas class="cumulative-score-graph"></canvas>
+					<div class="cumulative-score-spacer"></div>
 				</div>
 
 				<div class="win-probability">
-					<h1>Win Probability</h1>
+					<h1>Win Probability:</h1>
+					<div class="win-probability-percent-container">
+						<img class="win-probability-percent-img" />
+						<span class="win-probability-percent"></span>
+					</div>
 
 					<canvas class="win-probability-graph"></canvas>
 				</div>
@@ -126,13 +130,9 @@
 					- team stats comparison
 				-->
 			</div>
-			<div class="game-away-team-view game-view">
+			<div class="game-away-team-view game-view"></div>
+			<div class="game-home-team-view game-view"></div>
 
-			</div>
-			<div class="game-home-team-view game-view">
-
-			</div>
-			
 			<div class="game-view-scroll-up">
 				<i class="fa-solid fa-arrow-up"></i>
 			</div>

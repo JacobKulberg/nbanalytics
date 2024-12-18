@@ -504,6 +504,14 @@ function updateWinProbabilityGraph(gameData, currentPlay) {
 			plugins: [periodMarkers],
 		});
 	}
+
+	let homeWinPercentage = gameData.winprobability[currentPlay].homeWinPercentage;
+	let winningTeam = homeWinPercentage >= 0.5 ? gameData.header.competitions[0].competitors[0] : gameData.header.competitions[0].competitors[1];
+	let winningPercentage = homeWinPercentage >= 0.5 ? homeWinPercentage : 1 - homeWinPercentage;
+
+	$('.win-probability-percent-img').attr('src', `${teamLogos[winningTeam.id]}`);
+	$('.win-probability-percent-img').attr('title', `${teamNames[winningTeam.id]}`);
+	$('.win-probability-percent').text(`${Math.round(1000 * winningPercentage) / 10}%`);
 }
 
 function getAllLeadersUntilNow(gameData, currentPlay) {
