@@ -344,8 +344,10 @@ function adjustTeamNameTextSize(text, maxWidth, element) {
 }
 
 function updateStats() {
-	$('.scoreboard > .team.away > .name > .record').text(`(${gameData.header.competitions[0].competitors[1].record[0].summary})`);
-	$('.scoreboard > .team.home > .name > .record').text(`(${gameData.header.competitions[0].competitors[0].record[0].summary})`);
+	if (gameData.header.competitions[0].competitors[0].record && gameData.header.competitions[0].competitors[1].record) {
+		$('.scoreboard > .team.away > .name > .record').text(`(${gameData.header.competitions[0].competitors[1].record?.[0].summary})`);
+		$('.scoreboard > .team.home > .name > .record').text(`(${gameData.header.competitions[0].competitors[0].record?.[0].summary})`);
+	}
 }
 
 $('.skip-replay').on('click', () => {
