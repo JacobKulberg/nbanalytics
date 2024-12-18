@@ -512,6 +512,10 @@ function updateWinProbabilityGraph(gameData, currentPlay) {
 	$('.win-probability-percent-img').attr('src', `${teamLogos[winningTeam.id]}`);
 	$('.win-probability-percent-img').attr('title', `${teamNames[winningTeam.id]}`);
 	$('.win-probability-percent').text(`${Math.round(1000 * winningPercentage) / 10}%`);
+
+	let teamColor = teamColors[winningTeam.id];
+	$('.win-probability-percent').css('color', `#${teamColor}`);
+	$('.win-probability-percent').css('text-shadow', `0 0 7px #${teamColor}`);
 }
 
 function getAllLeadersUntilNow(gameData, currentPlay) {
@@ -641,5 +645,20 @@ function adjustGameViewsHeight() {
 }
 
 $(window).on('resize orientationchange', adjustGameViewsHeight);
+
+// apply different styles when only 1 column
+const gameAnalysisView = document.querySelector('.game-analysis-view');
+
+const observer = new ResizeObserver(() => {
+	const columnCount = getComputedStyle(gameAnalysisView).getPropertyValue('grid-template-columns').split(' ').length;
+
+	if (columnCount === 1) {
+		gameAnalysisView.classList.add('single-column');
+	} else {
+		gameAnalysisView.classList.remove('single-column');
+	}
+});
+
+observer.observe(gameAnalysisView);
 
 export { updateAnalysis };

@@ -266,11 +266,11 @@ function updateScoreboard() {
 		$('.scoreboard > .info > .time').css('text-shadow', '0 0 7px #96761c');
 		$('.play-text').css('opacity', '');
 
-		if (gameData.header.competitions[0].competitors[0].winner) {
+		if (gameData.header.competitions[0].competitors[0].winner && currentPlay == gameData.plays.length - 1) {
 			$('.scoreboard > .team.home .score').css('text-shadow', '0 0 5px white');
 			$('.scoreboard > .team.home .name .name-text').css('text-shadow', '0 0 5px white');
 			$('.scoreboard > .team.home .name .record').css('text-shadow', '0 0 5px white');
-		} else if (gameData.header.competitions[0].competitors[1].winner) {
+		} else if (gameData.header.competitions[0].competitors[1].winner && currentPlay == gameData.plays.length - 1) {
 			$('.scoreboard > .team.away .score').css('text-shadow', '0 0 5px white');
 			$('.scoreboard > .team.away .name .name-text').css('text-shadow', '0 0 5px white');
 			$('.scoreboard > .team.away .name .record').css('text-shadow', '0 0 5px white');

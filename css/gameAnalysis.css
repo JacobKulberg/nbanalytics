@@ -167,6 +167,10 @@
 	width: 100%;
 }
 
+.game-analysis-view.single-column .cumulative-score-spacer {
+	height: 0px;
+}
+
 .win-probability-percent-container {
 	width: 100%;
 	height: 8vh;
@@ -174,13 +178,17 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	gap: 15px;
 }
 
 .win-probability-percent-img {
 	height: 100%;
+
+	-webkit-filter: drop-shadow(1px 1px 0 black) drop-shadow(1px -1px 0 black) drop-shadow(-1px -1px 0 black) drop-shadow(-1px 1px 0 black);
+	filter: drop-shadow(1px 1px 0 black) drop-shadow(1px -1px 0 black) drop-shadow(-1px -1px 0 black) drop-shadow(-1px 1px 0 black);
 }
 
 .win-probability-percent {
-	font-size: 4vmax;
+	font-size: max(3vw, 5vh);
 	font-weight: bold;
 }
