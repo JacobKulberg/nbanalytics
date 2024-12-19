@@ -303,6 +303,7 @@ h1 {
 .team-name {
 	font-weight: bold;
 	text-shadow: 0 0 10px #000;
+	white-space: nowrap;
 }
 
 .team-name-text {
