@@ -16,12 +16,20 @@ let leaderIds = {
 	homeAssists: null,
 };
 
+let lastGameData = null;
+let lastCurrentPlay = null;
+
 function updateAnalysis(gameData, currentPlay) {
+	lastGameData = gameData;
+	lastCurrentPlay = currentPlay;
+
 	updateQuarterlyScore(gameData, currentPlay);
 	updateTeamLeaders(gameData, currentPlay);
 	updateCumulativeScoreGraph(gameData, currentPlay);
 	updateWinProbabilityGraph(gameData, currentPlay);
+	updateShotChart(gameData, currentPlay);
 
+	// TODO: update this once all elements are implemented
 	adjustGameViewsHeight();
 }
 
@@ -505,7 +513,10 @@ function updateWinProbabilityGraph(gameData, currentPlay) {
 		});
 	}
 
-	let homeWinPercentage = gameData.winprobability[currentPlay].homeWinPercentage;
+	let homeWinPercentage = gameData.winprobability[currentPlay]?.homeWinPercentage;
+	if (!homeWinPercentage) homeWinPercentage = gameData.header.competitions[0].competitors[0].winner ? 1 : 0;
+	else if (currentPlay == gameData.plays.length - 1) homeWinPercentage = gameData.header.competitions[0].competitors[0].winner ? 1 : gameData.header.competitions[0].competitors[1].winner ? 0 : homeWinPercentage;
+
 	let winningTeam = homeWinPercentage >= 0.5 ? gameData.header.competitions[0].competitors[0] : gameData.header.competitions[0].competitors[1];
 	let winningPercentage = homeWinPercentage >= 0.5 ? homeWinPercentage : 1 - homeWinPercentage;
 
@@ -518,6 +529,122 @@ function updateWinProbabilityGraph(gameData, currentPlay) {
 	$('.win-probability-percent').css('text-shadow', `0 0 7px #${teamColor}`);
 }
 
+function updateShotChart(gameData, currentPlay) {
+	let awayTeamLogo = teamLogos[gameData.header.competitions[0].competitors[1].team.id];
+	$('.shot-chart-toggles-container.away.wide img').attr('src', awayTeamLogo);
+	$('.shot-chart-toggles-container.away.wide img').css('border-bottom', `3px solid #${teamColors[gameData.header.competitions[0].competitors[1].team.id]}`);
+	$('.shot-chart-toggles-container.away .toggle input').css('accent-color', `#${teamColors[gameData.header.competitions[0].competitors[1].team.id]}`);
+
+	let homeTeamLogo = teamLogos[gameData.header.competitions[0].competitors[0].team.id];
+	$('.shot-chart-court-logo img').attr('src', homeTeamLogo);
+	$('.shot-chart-toggles-container.home.wide img').attr('src', homeTeamLogo);
+	$('.shot-chart-toggles-container.home.wide img').css('border-bottom', `3px solid #${teamColors[gameData.header.competitions[0].competitors[0].team.id]}`);
+	$('.shot-chart-toggles-container.home .toggle input').css('accent-color', `#${teamColors[gameData.header.competitions[0].competitors[0].team.id]}`);
+
+	$('.shot-chart-toggles-container.away:not(.wide) .abbr').text(teamAbbrs[gameData.header.competitions[0].competitors[1].team.id]);
+	$('.shot-chart-toggles-container.home:not(.wide) .abbr').css({
+		color: `#${teamColors[gameData.header.competitions[0].competitors[0].team.id]}`,
+		'text-shadow': `0 0 5px #${teamColors[gameData.header.competitions[0].competitors[0].team.id]}`,
+		'text-decoration-color': `#${teamColors[gameData.header.competitions[0].competitors[0].team.id]}`,
+	});
+
+	$('.shot-chart-toggles-container.home:not(.wide) .abbr').text(teamAbbrs[gameData.header.competitions[0].competitors[0].team.id]);
+	$('.shot-chart-toggles-container.away:not(.wide) .abbr').css({
+		color: `#${teamColors[gameData.header.competitions[0].competitors[1].team.id]}`,
+		'text-shadow': `0 0 5px #${teamColors[gameData.header.competitions[0].competitors[1].team.id]}`,
+		'text-decoration-color': `#${teamColors[gameData.header.competitions[0].competitors[1].team.id]}`,
+	});
+
+	let playsUntilNow = gameData.plays.slice(0, currentPlay + 1);
+	let shotPlays = playsUntilNow.filter((play) => play.shootingPlay);
+
+	let ctx = $('.shot-chart-canvas')[0].getContext('2d');
+
+	let dpi = window.devicePixelRatio || 1;
+	let height = $('.shot-chart-canvas').height() * dpi;
+	let width = $('.shot-chart-canvas').width() * dpi;
+
+	$('.shot-chart-canvas').attr('height', height);
+	$('.shot-chart-canvas').attr('width', width);
+
+	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+	shotPlays.sort((a, b) => a.scoringPlay - b.scoringPlay);
+
+	shotPlays.forEach((play) => {
+		let x = play.coordinate.x;
+		let y = play.coordinate.y;
+
+		if (play.type.id == 97 || play.type.id == 98 || play.type.id == 99 || play.type.id == 100 || play.type.id == 101 || play.type.id == 102 || play.type.id == 103 || play.type.id == 104 || play.type.id == 105 || play.type.id == 106 || play.type.id == 107 || play.type.id == 108 || play.type.id == 157 || play.type.id == 165 || play.type.id == 166) {
+			x = 25;
+			y = 18;
+		}
+
+		y = 40 - y;
+		x *= 15 / 50;
+		y *= 14 / 40;
+		x -= 7.5;
+
+		let isHomeTeam = play.team?.id === gameData.header.competitions[0].competitors[0].team.id;
+		if (!isHomeTeam) {
+			x *= -1;
+			y *= -1;
+		}
+
+		if (x < -100 || x > 100 || y < -100 || y > 100) return;
+
+		x = Math.min(7, Math.max(-7, x));
+		y = Math.min(13.5, Math.max(-13.5, y));
+
+		x *= (height / 100) * 6.75;
+		y *= (width / 100) * 3.5;
+
+		let made = play.scoringPlay || play.scoreValue > 0;
+		let awayMade = $('.game-analysis-view:not(.single-column) .shot-chart-toggles-container.away.wide .toggle.made input').is(':checked') || $('.game-analysis-view.single-column .shot-chart-toggles-container.away:not(.wide) .toggle.made input').is(':checked');
+		let homeMade = $('.game-analysis-view:not(.single-column) .shot-chart-toggles-container.home.wide .toggle.made input').is(':checked') || $('.game-analysis-view.single-column .shot-chart-toggles-container.home:not(.wide) .toggle.made input').is(':checked');
+		let awayMissed = $('.game-analysis-view:not(.single-column) .shot-chart-toggles-container.away.wide .toggle.missed input').is(':checked') || $('.game-analysis-view.single-column .shot-chart-toggles-container.away:not(.wide) .toggle.missed input').is(':checked');
+		let homeMissed = $('.game-analysis-view:not(.single-column) .shot-chart-toggles-container.home.wide .toggle.missed input').is(':checked') || $('.game-analysis-view.single-column .shot-chart-toggles-container.home:not(.wide) .toggle.missed input').is(':checked');
+
+		// change both sets of toggles
+		$('.shot-chart-toggles-container.away .toggle.made input').prop('checked', awayMade);
+		$('.shot-chart-toggles-container.away .toggle.missed input').prop('checked', awayMissed);
+		$('.shot-chart-toggles-container.home .toggle.made input').prop('checked', homeMade);
+		$('.shot-chart-toggles-container.home .toggle.missed input').prop('checked', homeMissed);
+
+		if (made && ((isHomeTeam && homeMade) || (!isHomeTeam && awayMade))) {
+			ctx.beginPath();
+			ctx.arc(y + width / 2, x + height / 2, 7 * dpi * 0.00065 * Math.max($(window).width(), $(window).height()), 0, 2 * Math.PI);
+			ctx.fillStyle = `#${teamColors[play.team.id]}`;
+			ctx.fill();
+			ctx.closePath();
+
+			// border
+			ctx.beginPath();
+			ctx.arc(y + width / 2, x + height / 2, 7 * dpi * 0.00065 * Math.max($(window).width(), $(window).height()), 0, 2 * Math.PI);
+			ctx.strokeStyle = 'black';
+			ctx.lineWidth = 1.5 * dpi * 0.00065 * Math.max($(window).width(), $(window).height());
+			ctx.stroke();
+			ctx.closePath();
+		} else if (!made && ((isHomeTeam && homeMissed) || (!isHomeTeam && awayMissed))) {
+			// square
+			ctx.beginPath();
+			ctx.rect(y + width / 2 - 7, x + height / 2 - 7, 14 * dpi * 0.00065 * Math.max($(window).width(), $(window).height()), 14 * dpi * 0.00065 * Math.max($(window).width(), $(window).height()));
+			ctx.fillStyle = `#${teamColors[play.team.id]}`;
+			ctx.fill();
+			ctx.closePath();
+
+			// border
+			ctx.beginPath();
+			ctx.rect(y + width / 2 - 7, x + height / 2 - 7, 14 * dpi * 0.00065 * Math.max($(window).width(), $(window).height()), 14 * dpi * 0.00065 * Math.max($(window).width(), $(window).height()));
+			ctx.strokeStyle = 'black';
+			ctx.lineWidth = 1.5 * dpi * 0.00065 * Math.max($(window).width(), $(window).height());
+			ctx.stroke();
+			ctx.closePath();
+		}
+	});
+}
+
+// helpers
 function getAllLeadersUntilNow(gameData, currentPlay) {
 	let pointLeaders = {};
 	let reboundLeaders = {};
@@ -644,7 +771,11 @@ function adjustGameViewsHeight() {
 	$('.game-views').css('height', `${height}px`);
 }
 
-$(window).on('resize orientationchange', adjustGameViewsHeight);
+setInterval(adjustGameViewsHeight, 50);
+
+$('.shot-chart-toggles-container .toggle input').on('change', () => {
+	updateShotChart(lastGameData, lastCurrentPlay);
+});
 
 // apply different styles when only 1 column
 const gameAnalysisView = document.querySelector('.game-analysis-view');

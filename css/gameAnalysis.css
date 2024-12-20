@@ -192,3 +192,202 @@
 	font-size: max(3vw, 5vh);
 	font-weight: bold;
 }
+
+.game-analysis-view:not(.single-column) .shot-chart-toggles-container:not(.wide) {
+	display: none;
+}
+
+.shot-chart-toggles-container-container {
+	width: 100%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.shot-chart-toggles-container:not(.wide) {
+	width: 50%;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	padding: 0px 0px 2vmax;
+
+	grid-column: 1 / -1;
+
+	font-weight: bold;
+	font-size: 2.5vmax;
+}
+
+.shot-chart-toggles-container:not(.wide) .abbr {
+	text-align: center;
+	text-decoration: underline;
+
+	font-size: 3vmax;
+}
+
+.shot-chart-toggles-container:not(.wide) .shot-chart-toggles {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75vmax;
+}
+
+.shot-chart-toggles-container:not(.wide) .toggle {
+	display: flex;
+	align-items: center;
+	gap: 1.25vmax;
+}
+
+.shot-chart-toggles-container:not(.wide) input {
+	height: 3.5vmax;
+	width: 3.5vmax;
+}
+
+.shot-chart-container {
+	grid-column: 1 / -1;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.shot-chart-legend-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 2vmax;
+
+	padding: 1.5vh;
+	margin-bottom: 1vh;
+
+	grid-column: 1 / -1;
+}
+
+.game-analysis-view.single-column .shot-chart-legend-container {
+	border: 2px dashed white;
+}
+
+.legend {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5vmax;
+
+	font-size: max(1.5vw, 2vh);
+	font-weight: bold;
+}
+
+.legend div {
+	width: max(2.25vw, 2.5vh);
+	height: max(2.25vw, 2.5vh);
+
+	background-color: #403d71;
+	border: 0.15vmax solid white;
+}
+
+.legend .made {
+	border-radius: 100%;
+}
+
+.shot-chart-court-container {
+	position: relative;
+
+	width: 47vmax;
+	height: 25vmax;
+
+	justify-self: center;
+
+	grid-column: 1 / -1;
+
+	background-image: url('/assets/images/shot_chart_court.svg');
+	background-size: cover;
+	background-position: center;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.shot-chart {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	height: 100%;
+}
+
+.shot-chart-canvas {
+	width: 100%;
+	height: 100%;
+}
+
+.shot-chart-court-logo {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	translate: -50% -50%;
+
+	height: 5vmax;
+	aspect-ratio: 1;
+}
+
+.shot-chart-court-logo img {
+	width: 100%;
+	height: 100%;
+}
+
+.shot-chart-toggles-container.wide {
+	min-width: 12.5vmax;
+	min-height: 80%;
+
+	background-color: #403d71;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.shot-chart-toggles-container.wide img {
+	height: 7vmax;
+	aspect-ratio: 1;
+
+	padding-bottom: 5px;
+	margin-bottom: 15px;
+}
+
+.shot-chart-toggles-container.away.wide {
+	border-radius: 30px 0px 0px 30px;
+}
+
+.shot-chart-toggles-container.home.wide {
+	border-radius: 0px 30px 30px 0px;
+}
+
+.shot-chart-toggles-container.wide input {
+	height: 1.75vmax;
+	width: 1.75vmax;
+}
+
+.shot-chart-toggles-container.wide .toggle {
+	font-size: 1.5vmax;
+	font-weight: bold;
+
+	display: flex;
+	align-items: center;
+	gap: 1vmax;
+}
+
+.shot-chart-toggles {
+	display: flex;
+	flex-direction: column;
+	gap: 0.1vmax;
+}
+
+.game-analysis-view.single-column .shot-chart-toggles-container.wide {
+	display: none;
+}

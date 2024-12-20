@@ -121,11 +121,87 @@
 					<canvas class="win-probability-graph"></canvas>
 				</div>
 
+				<h1>Shot Chart</h1>
+
+				<div class="shot-chart-container">
+					<div class="shot-chart-toggles-container-container">
+						<div class="shot-chart-toggles-container away">
+							<div class="abbr"></div>
+							<div class="shot-chart-toggles">
+								<div class="toggle made">
+									<input type="checkbox" checked />
+									<span>Made</span>
+								</div>
+								<div class="toggle missed">
+									<input type="checkbox" checked />
+									<span>Missed</span>
+								</div>
+							</div>
+						</div>
+						<div class="shot-chart-toggles-container home">
+							<div class="abbr"></div>
+							<div class="shot-chart-toggles">
+								<div class="toggle made">
+									<input type="checkbox" checked />
+									<span>Made</span>
+								</div>
+								<div class="toggle missed">
+									<input type="checkbox" checked />
+									<span>Missed</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="shot-chart-legend-container">
+						<div class="legend">
+							<div class="made"></div>
+							<span>Made</span>
+						</div>
+						<div class="legend">
+							<div class="missed"></div>
+							<span>Missed</span>
+						</div>
+					</div>
+
+					<div class="shot-chart-court-container">
+						<div class="shot-chart-court-logo">
+							<img />
+						</div>
+
+						<div class="shot-chart">
+							<div class="shot-chart-toggles-container away wide">
+								<img />
+								<div class="shot-chart-toggles">
+									<div class="toggle made">
+										<input type="checkbox" checked />
+										<span>Made</span>
+									</div>
+									<div class="toggle missed">
+										<input type="checkbox" checked />
+										<span>Missed</span>
+									</div>
+								</div>
+							</div>
+							<canvas class="shot-chart-canvas"></canvas>
+							<div class="shot-chart-toggles-container home wide">
+								<img />
+								<div class="shot-chart-toggles">
+									<div class="toggle made">
+										<input type="checkbox" checked />
+										<span>Made</span>
+									</div>
+									<div class="toggle missed">
+										<input type="checkbox" checked />
+										<span>Missed</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<!--
-					- point leaders
-					- cumulative score
-					- win probability graph
-					- shot chart
 					- team stats comparison
 				-->
 			</div>
