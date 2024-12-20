@@ -771,8 +771,6 @@ function adjustGameViewsHeight() {
 	$('.game-views').css('height', `${height}px`);
 }
 
-setInterval(adjustGameViewsHeight, 50);
-
 $('.shot-chart-toggles-container .toggle input').on('change', () => {
 	updateShotChart(lastGameData, lastCurrentPlay);
 });
