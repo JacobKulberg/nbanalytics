@@ -194,6 +194,11 @@ async function updateCourt() {
 function setScoreboard() {
 	let awayColor = teamColors[gameData.header.competitions[0].competitors[1].team.id];
 	let homeColor = teamColors[gameData.header.competitions[0].competitors[0].team.id];
+
+	if (areColorsSimilar(awayColor, homeColor)) {
+		awayColor = teamColorsAlt[gameData.header.competitions[0].competitors[1].team.id];
+	}
+
 	$('.scoreboard > .team.away').css('background', `linear-gradient(90deg, #${awayColor}90 0%, #${awayColor}40 100%`);
 	$('.scoreboard > .info').css('background', `linear-gradient(90deg, #${awayColor}40 0%, #${homeColor}40 100%)`);
 	$('.scoreboard > .team.home').css('background', `linear-gradient(90deg, #${homeColor}40 0%, #${homeColor}90 100%)`);

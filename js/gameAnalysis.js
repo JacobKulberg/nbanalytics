@@ -19,9 +19,25 @@ let leaderIds = {
 let lastGameData = null;
 let lastCurrentPlay = null;
 
+let awayColor = '';
+let homeColor = '';
+
 function updateAnalysis(gameData, currentPlay) {
 	lastGameData = gameData;
 	lastCurrentPlay = currentPlay;
+
+	awayColor = teamColors[gameData.header.competitions[0].competitors[1].team.id];
+	homeColor = teamColors[gameData.header.competitions[0].competitors[0].team.id];
+	if (areColorsSimilar(awayColor, homeColor)) {
+		awayColor = teamColorsAlt[gameData.header.competitions[0].competitors[1].team.id];
+	}
+
+	if (areColorsSimilar(awayColor, '020026')) {
+		awayColor = 'ffffff';
+	}
+	if (areColorsSimilar(homeColor, '020026')) {
+		awayColor = 'ffffff';
+	}
 
 	updateQuarterlyScore(gameData, currentPlay);
 	updateTeamLeaders(gameData, currentPlay);
@@ -36,9 +52,6 @@ function updateAnalysis(gameData, currentPlay) {
 function updateQuarterlyScore(gameData, currentPlay) {
 	let awayAbbr = teamAbbrs[gameData.header.competitions[0].competitors[1].team.id];
 	let homeAbbr = teamAbbrs[gameData.header.competitions[0].competitors[0].team.id];
-
-	let awayColor = teamColors[gameData.header.competitions[0].competitors[1].team.id];
-	let homeColor = teamColors[gameData.header.competitions[0].competitors[0].team.id];
 
 	$('.quarterly-score .away-team-abbr').text(awayAbbr);
 	$('.quarterly-score .home-team-abbr').text(homeAbbr);
@@ -107,8 +120,6 @@ async function updateTeamLeaders(gameData, currentPlay) {
 		}
 	});
 
-	let awayColor = teamColors[gameData.header.competitions[0].competitors[1].team.id];
-	let homeColor = teamColors[gameData.header.competitions[0].competitors[0].team.id];
 	$('.team-leaders.away').css('background', `linear-gradient(90deg, #${awayColor}91 0%, #${awayColor}1A 97%, transparent 100%)`);
 	$('.team-leaders.home').css('background', `linear-gradient(90deg, transparent 0%, #${homeColor}1A 3%, #${homeColor}91 100%)`);
 
@@ -234,7 +245,8 @@ function updateCumulativeScoreGraph(gameData, currentPlay) {
 			}
 		}
 
-		scoreColors.push(`#${teamColors[playsUntilNow[i].team.id]}`);
+		let isHomeTeam = playsUntilNow[i].team.id == gameData.header.competitions[0].competitors[0].team.id;
+		isHomeTeam ? scoreColors.push(`#${homeColor}`) : scoreColors.push(`#${awayColor}`);
 
 		if (newPeriodIndexes.includes(i)) {
 			teamScores.push(0);
@@ -356,7 +368,7 @@ function updateCumulativeScoreGraph(gameData, currentPlay) {
 								weight: 'bold',
 							},
 							generateLabels: (chart) => {
-								let labelColors = [`#${teamColors[gameData.header.competitions[0].competitors[1].team.id]}`, `#${teamColors[gameData.header.competitions[0].competitors[0].team.id]}`];
+								let labelColors = [`#${awayColor}`, `#${homeColor}`];
 
 								const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
 								labels.forEach((label, index) => {
@@ -466,11 +478,11 @@ function updateWinProbabilityGraph(gameData, currentPlay) {
 							if (!chartArea) return null;
 
 							const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-							gradient.addColorStop(0, `#${teamColors[gameData.header.competitions[0].competitors[1].team.id]}`);
-							gradient.addColorStop(0.5, `#${teamColors[gameData.header.competitions[0].competitors[1].team.id]}`);
+							gradient.addColorStop(0, `#${awayColor}`);
+							gradient.addColorStop(0.5, `#${awayColor}`);
 							gradient.addColorStop(0.5, 'transparent');
-							gradient.addColorStop(0.5, `#${teamColors[gameData.header.competitions[0].competitors[0].team.id]}`);
-							gradient.addColorStop(1, `#${teamColors[gameData.header.competitions[0].competitors[0].team.id]}`);
+							gradient.addColorStop(0.5, `#${homeColor}`);
+							gradient.addColorStop(1, `#${homeColor}`);
 							return gradient;
 						},
 					},
@@ -524,7 +536,8 @@ function updateWinProbabilityGraph(gameData, currentPlay) {
 	$('.win-probability-percent-img').attr('title', `${teamNames[winningTeam.id]}`);
 	$('.win-probability-percent').text(`${Math.round(1000 * winningPercentage) / 10}%`);
 
-	let teamColor = teamColors[winningTeam.id];
+	let isHomeTeam = winningTeam.id == gameData.header.competitions[0].competitors[0].team.id;
+	let teamColor = isHomeTeam ? homeColor : awayColor;
 	$('.win-probability-percent').css('color', `#${teamColor}`);
 	$('.win-probability-percent').css('text-shadow', `0 0 7px #${teamColor}`);
 }
@@ -532,27 +545,27 @@ function updateWinProbabilityGraph(gameData, currentPlay) {
 function updateShotChart(gameData, currentPlay) {
 	let awayTeamLogo = teamLogos[gameData.header.competitions[0].competitors[1].team.id];
 	$('.shot-chart-toggles-container.away.wide img').attr('src', awayTeamLogo);
-	$('.shot-chart-toggles-container.away.wide img').css('border-bottom', `3px solid #${teamColors[gameData.header.competitions[0].competitors[1].team.id]}`);
-	$('.shot-chart-toggles-container.away .toggle input').css('accent-color', `#${teamColors[gameData.header.competitions[0].competitors[1].team.id]}`);
+	$('.shot-chart-toggles-container.away.wide img').css('border-bottom', `3px solid #${awayColor}`);
+	$('.shot-chart-toggles-container.away .toggle input').css('accent-color', `#${awayColor}`);
 
 	let homeTeamLogo = teamLogos[gameData.header.competitions[0].competitors[0].team.id];
 	$('.shot-chart-court-logo img').attr('src', homeTeamLogo);
 	$('.shot-chart-toggles-container.home.wide img').attr('src', homeTeamLogo);
-	$('.shot-chart-toggles-container.home.wide img').css('border-bottom', `3px solid #${teamColors[gameData.header.competitions[0].competitors[0].team.id]}`);
-	$('.shot-chart-toggles-container.home .toggle input').css('accent-color', `#${teamColors[gameData.header.competitions[0].competitors[0].team.id]}`);
-
-	$('.shot-chart-toggles-container.away:not(.wide) .abbr').text(teamAbbrs[gameData.header.competitions[0].competitors[1].team.id]);
-	$('.shot-chart-toggles-container.home:not(.wide) .abbr').css({
-		color: `#${teamColors[gameData.header.competitions[0].competitors[0].team.id]}`,
-		'text-shadow': `0 0 5px #${teamColors[gameData.header.competitions[0].competitors[0].team.id]}`,
-		'text-decoration-color': `#${teamColors[gameData.header.competitions[0].competitors[0].team.id]}`,
-	});
+	$('.shot-chart-toggles-container.home.wide img').css('border-bottom', `3px solid #${homeColor}`);
+	$('.shot-chart-toggles-container.home .toggle input').css('accent-color', `#${homeColor}`);
 
 	$('.shot-chart-toggles-container.home:not(.wide) .abbr').text(teamAbbrs[gameData.header.competitions[0].competitors[0].team.id]);
+	$('.shot-chart-toggles-container.home:not(.wide) .abbr').css({
+		color: `#${homeColor}`,
+		'text-shadow': `0 0 5px #${homeColor}`,
+		'text-decoration-color': `#${homeColor}`,
+	});
+
+	$('.shot-chart-toggles-container.away:not(.wide) .abbr').text(teamAbbrs[gameData.header.competitions[0].competitors[1].team.id]);
 	$('.shot-chart-toggles-container.away:not(.wide) .abbr').css({
-		color: `#${teamColors[gameData.header.competitions[0].competitors[1].team.id]}`,
-		'text-shadow': `0 0 5px #${teamColors[gameData.header.competitions[0].competitors[1].team.id]}`,
-		'text-decoration-color': `#${teamColors[gameData.header.competitions[0].competitors[1].team.id]}`,
+		color: `#${awayColor}`,
+		'text-shadow': `0 0 5px #${awayColor}`,
+		'text-decoration-color': `#${awayColor}`,
 	});
 
 	let playsUntilNow = gameData.plays.slice(0, currentPlay + 1);
@@ -614,7 +627,7 @@ function updateShotChart(gameData, currentPlay) {
 		if (made && ((isHomeTeam && homeMade) || (!isHomeTeam && awayMade))) {
 			ctx.beginPath();
 			ctx.arc(y + width / 2, x + height / 2, 7 * dpi * 0.00065 * Math.max($(window).width(), $(window).height()), 0, 2 * Math.PI);
-			ctx.fillStyle = `#${teamColors[play.team.id]}`;
+			ctx.fillStyle = isHomeTeam ? `#${homeColor}` : `#${awayColor}`;
 			ctx.fill();
 			ctx.closePath();
 
@@ -629,7 +642,7 @@ function updateShotChart(gameData, currentPlay) {
 			// square
 			ctx.beginPath();
 			ctx.rect(y + width / 2 - 7, x + height / 2 - 7, 14 * dpi * 0.00065 * Math.max($(window).width(), $(window).height()), 14 * dpi * 0.00065 * Math.max($(window).width(), $(window).height()));
-			ctx.fillStyle = `#${teamColors[play.team.id]}`;
+			ctx.fillStyle = isHomeTeam ? `#${homeColor}` : `#${awayColor}`;
 			ctx.fill();
 			ctx.closePath();
 

@@ -214,6 +214,39 @@ const teamColors = {
 	30: '008ca8', // Charlotte Hornets
 };
 
+const teamColorsAlt = {
+	1: 'fdb927', // Atlanta Hawks
+	2: 'ffffff', // Boston Celtics
+	3: 'b4975a', // New Orleans Pelicans
+	4: '000000', // Chicago Bulls
+	5: 'bc945c', // Cleveland Cavaliers
+	6: 'bbc4ca', // Dallas Mavericks
+	7: 'fec524', // Denver Nuggets
+	8: 'c8102e', // Detroit Pistons
+	9: '1d428a', // Golden State Warriors
+	10: '000000', // Houston Rockets
+	11: 'fdbb30', // Indiana Pacers
+	12: 'c8102e', // Los Angeles Clippers
+	13: 'fdb927', // Los Angeles Lakers
+	14: '000000', // Miami Heat
+	15: 'eee1c6', // Milwaukee Bucks
+	16: '79bc43', // Minnesota Timberwolves
+	17: 'ffffff', // Brooklyn Nets
+	18: 'f58426', // New York Knicks
+	19: 'c4ced4', // Orlando Magic
+	20: 'e01234', // Philadelphia 76ers
+	21: 'e56020', // Phoenix Suns
+	22: '000000', // Portland Trail Blazers
+	23: '6a7a82', // Sacramento Kings
+	24: '000000', // San Antonio Spurs
+	25: 'ef3b24', // Oklahoma City Thunder
+	26: 'fff21f', // Utah Jazz
+	27: '002b5c', // Washington Wizards
+	28: '000000', // Toronto Raptors
+	29: '12173f', // Memphis Grizzles
+	30: '1d1060', // Charlotte Hornets
+};
+
 const teamLogos = {
 	1: 'https://a.espncdn.com/i/teamlogos/nba/500/atl.png', // Atlanta Hawks
 	2: 'https://cdn.nba.com/logos/nba/1610612738/primary/L/logo.svg', // Boston Celtics
@@ -436,4 +469,18 @@ function getPlayerName(playerID) {
 				reject(error);
 			});
 	});
+}
+
+// are two colors 10% different from each other
+function areColorsSimilar(rgb1, rgb2) {
+	let r1 = parseInt(rgb1.substring(0, 2), 16);
+	let g1 = parseInt(rgb1.substring(2, 4), 16);
+	let b1 = parseInt(rgb1.substring(4, 6), 16);
+	let r2 = parseInt(rgb2.substring(0, 2), 16);
+	let g2 = parseInt(rgb2.substring(2, 4), 16);
+	let b2 = parseInt(rgb2.substring(4, 6), 16);
+
+	let d = Math.sqrt(Math.pow(r1 - r2, 2) + Math.pow(g1 - g2, 2) + Math.pow(b1 - b2, 2));
+	let p = d / Math.sqrt(3 * Math.pow(255, 2));
+	return p <= 0.15;
 }

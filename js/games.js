@@ -68,107 +68,111 @@ async function createGames() {
 		$(gameScores).addClass('game-scores');
 		$(gameDiv).append(gameScores);
 
-		let homeTeam = document.createElement('div');
-		$(homeTeam).addClass('team-home');
-		$(homeTeam).css('background', `linear-gradient(90deg, #${teamColors[game.competitions[0].competitors[1].team.id]} 0%, transparent 100%)`);
-		$(gameScores).append(homeTeam);
-
 		let awayTeam = document.createElement('div');
-		$(awayTeam).addClass('team-away');
-		$(awayTeam).css('background', `linear-gradient(90deg, #${teamColors[game.competitions[0].competitors[0].team.id]} 0%, transparent 100%)`);
+		$(awayTeam).addClass('team-home');
+		if (areColorsSimilar(teamColors[game.competitions[0].competitors[1].team.id], teamColors[game.competitions[0].competitors[0].team.id])) {
+			$(awayTeam).css('background', `linear-gradient(90deg, #${teamColorsAlt[game.competitions[0].competitors[1].team.id]} 0%, transparent 100%)`);
+		} else {
+			$(awayTeam).css('background', `linear-gradient(90deg, #${teamColors[game.competitions[0].competitors[1].team.id]} 0%, transparent 100%)`);
+		}
 		$(gameScores).append(awayTeam);
 
-		let homeTeamID = document.createElement('div');
-		$(homeTeamID).addClass('team-id');
-		$(homeTeam).append(homeTeamID);
+		let homeTeam = document.createElement('div');
+		$(homeTeam).addClass('team-away');
+		$(homeTeam).css('background', `linear-gradient(90deg, #${teamColors[game.competitions[0].competitors[0].team.id]} 0%, transparent 100%)`);
+		$(gameScores).append(homeTeam);
 
 		let awayTeamID = document.createElement('div');
 		$(awayTeamID).addClass('team-id');
 		$(awayTeam).append(awayTeamID);
 
-		let homeTeamLogo = document.createElement('div');
-		$(homeTeamLogo).addClass('team-logo');
-		$(homeTeamID).append(homeTeamLogo);
+		let homeTeamID = document.createElement('div');
+		$(homeTeamID).addClass('team-id');
+		$(homeTeam).append(homeTeamID);
 
 		let awayTeamLogo = document.createElement('div');
 		$(awayTeamLogo).addClass('team-logo');
 		$(awayTeamID).append(awayTeamLogo);
 
-		let homeTeamLogoImg = document.createElement('img');
-		$(homeTeamLogoImg).attr('src', teamLogos[game.competitions[0].competitors[1].team.id] || `${game.competitions[0].competitors[1].team.logo}`);
-		$(homeTeamLogoImg).attr('title', teamNames[game.competitions[0].competitors[1].team.id]);
-		$(homeTeamLogoImg).attr('draggable', false);
-		$(homeTeamLogo).append(homeTeamLogoImg);
+		let homeTeamLogo = document.createElement('div');
+		$(homeTeamLogo).addClass('team-logo');
+		$(homeTeamID).append(homeTeamLogo);
 
 		let awayTeamLogoImg = document.createElement('img');
-		$(awayTeamLogoImg).attr('src', teamLogos[game.competitions[0].competitors[0].team.id] || `${game.competitions[0].competitors[0].team.logo}`);
-		$(awayTeamLogoImg).attr('title', teamNames[game.competitions[0].competitors[0].team.id]);
+		$(awayTeamLogoImg).attr('src', teamLogos[game.competitions[0].competitors[1].team.id] || `${game.competitions[0].competitors[1].team.logo}`);
+		$(awayTeamLogoImg).attr('title', teamNames[game.competitions[0].competitors[1].team.id]);
 		$(awayTeamLogoImg).attr('draggable', false);
 		$(awayTeamLogo).append(awayTeamLogoImg);
 
-		let homeTeamName = document.createElement('div');
-		$(homeTeamName).addClass('team-name');
-		$(homeTeamID).append(homeTeamName);
+		let homeTeamLogoImg = document.createElement('img');
+		$(homeTeamLogoImg).attr('src', teamLogos[game.competitions[0].competitors[0].team.id] || `${game.competitions[0].competitors[0].team.logo}`);
+		$(homeTeamLogoImg).attr('title', teamNames[game.competitions[0].competitors[0].team.id]);
+		$(homeTeamLogoImg).attr('draggable', false);
+		$(homeTeamLogo).append(homeTeamLogoImg);
 
 		let awayTeamName = document.createElement('div');
 		$(awayTeamName).addClass('team-name');
 		$(awayTeamID).append(awayTeamName);
 
-		let homeTeamNameText = document.createElement('div');
-		$(homeTeamNameText).addClass('team-name-text');
-		$(homeTeamNameText).text(game.competitions[0].competitors[1].team.shortDisplayName);
-		$(homeTeamName).append(homeTeamNameText);
+		let homeTeamName = document.createElement('div');
+		$(homeTeamName).addClass('team-name');
+		$(homeTeamID).append(homeTeamName);
 
 		let awayTeamNameText = document.createElement('div');
 		$(awayTeamNameText).addClass('team-name-text');
-		$(awayTeamNameText).text(game.competitions[0].competitors[0].team.shortDisplayName);
+		$(awayTeamNameText).text(game.competitions[0].competitors[1].team.shortDisplayName);
 		$(awayTeamName).append(awayTeamNameText);
 
-		if ($(gameDiv).find('.team-name .team-record-sub').length == 0) {
-			let homeTeamRecordSub = document.createElement('div');
-			$(homeTeamRecordSub).addClass('team-record-sub');
-			$(homeTeamName).append(homeTeamRecordSub);
+		let homeTeamNameText = document.createElement('div');
+		$(homeTeamNameText).addClass('team-name-text');
+		$(homeTeamNameText).text(game.competitions[0].competitors[0].team.shortDisplayName);
+		$(homeTeamName).append(homeTeamNameText);
 
+		if ($(gameDiv).find('.team-name .team-record-sub').length == 0) {
 			let awayTeamRecordSub = document.createElement('div');
 			$(awayTeamRecordSub).addClass('team-record-sub');
 			$(awayTeamName).append(awayTeamRecordSub);
 
+			let homeTeamRecordSub = document.createElement('div');
+			$(homeTeamRecordSub).addClass('team-record-sub');
+			$(homeTeamName).append(homeTeamRecordSub);
+
 			if (game.status.type.name != 'STATUS_SCHEDULED' && game.status.type.name != 'STATUS_POSTPONED') {
 				if (game.competitions[0].competitors[0].records && game.competitions[0].competitors[1].records) {
-					$(homeTeamRecordSub).text(`(${game.competitions[0].competitors[1].records[0].summary})`);
-					$(awayTeamRecordSub).text(`(${game.competitions[0].competitors[0].records[0].summary})`);
+					$(awayTeamRecordSub).text(`(${game.competitions[0].competitors[1].records[0].summary})`);
+					$(homeTeamRecordSub).text(`(${game.competitions[0].competitors[0].records[0].summary})`);
 				}
 			}
 		}
 
 		if (game.status.type.name == 'STATUS_SCHEDULED' || game.status.type.name == 'STATUS_POSTPONED') {
-			let homeTeamRecord = document.createElement('div');
-			$(homeTeamRecord).addClass('team-record');
-			$(homeTeamRecord).text(game.competitions[0].competitors[1].records?.[0].summary);
-			$(homeTeam).append(homeTeamRecord);
-
 			let awayTeamRecord = document.createElement('div');
 			$(awayTeamRecord).addClass('team-record');
-			$(awayTeamRecord).text(game.competitions[0].competitors[0].records?.[0].summary);
+			$(awayTeamRecord).text(game.competitions[0].competitors[1].records?.[0].summary);
 			$(awayTeam).append(awayTeamRecord);
-		} else {
-			let homeTeamScore = document.createElement('div');
-			$(homeTeamScore).addClass('team-score');
-			$(homeTeamScore).text(game.competitions[0].competitors[1].score);
-			$(homeTeam).append(homeTeamScore);
 
+			let homeTeamRecord = document.createElement('div');
+			$(homeTeamRecord).addClass('team-record');
+			$(homeTeamRecord).text(game.competitions[0].competitors[0].records?.[0].summary);
+			$(homeTeam).append(homeTeamRecord);
+		} else {
 			let awayTeamScore = document.createElement('div');
 			$(awayTeamScore).addClass('team-score');
-			$(awayTeamScore).text(game.competitions[0].competitors[0].score);
+			$(awayTeamScore).text(game.competitions[0].competitors[1].score);
 			$(awayTeam).append(awayTeamScore);
+
+			let homeTeamScore = document.createElement('div');
+			$(homeTeamScore).addClass('team-score');
+			$(homeTeamScore).text(game.competitions[0].competitors[0].score);
+			$(homeTeam).append(homeTeamScore);
 
 			if (game.status.type.completed) {
 				if (game.competitions[0].competitors[1].winner) {
-					$(homeTeam).addClass('game-winner');
-					$(awayTeam).addClass('game-loser');
-				} else {
 					$(awayTeam).addClass('game-winner');
 					$(homeTeam).addClass('game-loser');
+				} else {
+					$(homeTeam).addClass('game-winner');
+					$(awayTeam).addClass('game-loser');
 				}
 			}
 		}
@@ -401,15 +405,15 @@ async function updateGameData() {
 			if ($(gameDiv).find('.team-record').length > 0) {
 				$(gameDiv).find('.team-record').remove();
 
-				let homeTeamScore = document.createElement('div');
-				$(homeTeamScore).addClass('team-score');
-				$(homeTeamScore).text(0);
-				$(gameDiv).find('.team-home').append(homeTeamScore);
-
 				let awayTeamScore = document.createElement('div');
 				$(awayTeamScore).addClass('team-score');
 				$(awayTeamScore).text(0);
-				$(gameDiv).find('.team-away').append(awayTeamScore);
+				$(gameDiv).find('.team-home').append(awayTeamScore);
+
+				let homeTeamScore = document.createElement('div');
+				$(homeTeamScore).addClass('team-score');
+				$(homeTeamScore).text(0);
+				$(gameDiv).find('.team-away').append(homeTeamScore);
 			}
 
 			if (gameDiv.find('.game-time').length > 0) {
@@ -457,20 +461,20 @@ async function updateGameData() {
 			$(gameDiv).find('.game-time').removeClass('pregame');
 
 			if ($(gameDiv).find('.team-name .team-record-sub').length == 0) {
-				let homeTeamRecordSub = document.createElement('div');
-				$(homeTeamRecordSub).addClass('team-record-sub');
-				$(gameDiv).find('.team-home .team-name').append(homeTeamRecordSub);
-
 				let awayTeamRecordSub = document.createElement('div');
 				$(awayTeamRecordSub).addClass('team-record-sub');
-				$(gameDiv).find('.team-away .team-name').append(awayTeamRecordSub);
+				$(gameDiv).find('.team-home .team-name').append(awayTeamRecordSub);
+
+				let homeTeamRecordSub = document.createElement('div');
+				$(homeTeamRecordSub).addClass('team-record-sub');
+				$(gameDiv).find('.team-away .team-name').append(homeTeamRecordSub);
 			}
 
-			let homeTeamScore = $(gameDiv).find('.team-home .team-score');
-			$(homeTeamScore).text(game.competitions[0].competitors[1].score);
+			let awayTeamScore = $(gameDiv).find('.team-home .team-score');
+			$(awayTeamScore).text(game.competitions[0].competitors[1].score);
 
-			let awayTeamScore = $(gameDiv).find('.team-away .team-score');
-			$(awayTeamScore).text(game.competitions[0].competitors[0].score);
+			let homeTeamScore = $(gameDiv).find('.team-away .team-score');
+			$(homeTeamScore).text(game.competitions[0].competitors[0].score);
 
 			if (game.competitions[0].competitors[0].records && game.competitions[0].competitors[1].records) {
 				$(gameDiv).find('.team-record-sub').css('margin-top', '7px');
