@@ -612,7 +612,9 @@ function setCourtViewportHeight() {
 	let pixelRatio = window.devicePixelRatio || 1;
 	let y = ((1 - (vector.y * 0.5 + 0.5)) * renderer.domElement.height) / pixelRatio;
 
-	$('#court').css('height', `${y + window.innerHeight / 20}px`);
+	if ($('#court').height() != 0) {
+		$('#court').css('height', `${y + window.innerHeight / 20}px`);
+	}
 }
 setCourtViewportHeight();
 

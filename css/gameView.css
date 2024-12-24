@@ -41,6 +41,13 @@ body {
 	display: flex;
 	justify-content: center;
 	height: 500px;
+
+	transition: height 500ms ease-in-out;
+}
+
+#court canvas {
+	height: 500px;
+	transition: height 500ms ease-in-out;
 }
 
 .play-text {

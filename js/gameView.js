@@ -263,13 +263,16 @@ function updateScoreboard() {
 		$('.scoreboard > .info > .time').css('color', '');
 		$('.scoreboard > .info > .time').css('text-shadow', '');
 		$('.play-text').css('opacity', '0');
+
+		$('#court').css('height', '');
+		$('#court canvas').css('height', '');
 	} else if (play.type.id == 402 && gameData.header.competitions[0].status.type.shortDetail.includes('Final')) {
 		clock = gameData.header.competitions[0].status.type.shortDetail;
 		$('.scoreboard > .info > .live-status').css('opacity', '0');
 		$('.scoreboard > .info > .live-status').css('max-height', '0px');
 		$('.scoreboard > .info > .time').css('color', '#d4a017');
 		$('.scoreboard > .info > .time').css('text-shadow', '0 0 7px #96761c');
-		$('.play-text').css('opacity', '');
+		$('.play-text').css('opacity', '0');
 
 		if (gameData.header.competitions[0].competitors[0].winner && currentPlay == gameData.plays.length - 1) {
 			$('.scoreboard > .team.home .score').css('text-shadow', '0 0 10px white');
@@ -288,6 +291,9 @@ function updateScoreboard() {
 			$('.scoreboard > .team.away .name .name-text').css('text-shadow', '0 0 10px white');
 			$('.scoreboard > .team.away .name .record').css('text-shadow', '0 0 10px white');
 		}
+
+		$('#court').css('height', '0px');
+		$('#court canvas').css('height', '0px');
 	} else {
 		$('.scoreboard > .info > .live-status').css('opacity', '');
 		$('.scoreboard > .info > .live-status').css('max-height', '');
@@ -303,6 +309,9 @@ function updateScoreboard() {
 		seconds = seconds.toString().padStart(2, '0');
 
 		clock = `${period} - ${minutes}:${seconds}`;
+
+		$('#court').css('height', '');
+		$('#court canvas').css('height', '');
 	}
 
 	if (play.type.id == 402 && !hasBeenLoaded) {
@@ -310,6 +319,15 @@ function updateScoreboard() {
 
 		$('.scoreboard > .info > .live-status').css('transition', 'unset');
 		$('.scoreboard > .info > .time').css('transition', 'unset');
+
+		$('#court').css('transition', 'unset');
+		$('#court canvas').css('transition', 'unset');
+		$('#court').css('height', '0px');
+		$('#court canvas').css('height', '0px');
+		setTimeout(() => {
+			$('#court').css('transition', '');
+			$('#court canvas').css('transition', '');
+		}, 0);
 	}
 
 	hasBeenLoaded = true;
