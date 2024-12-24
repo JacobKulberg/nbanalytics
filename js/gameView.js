@@ -272,13 +272,21 @@ function updateScoreboard() {
 		$('.play-text').css('opacity', '');
 
 		if (gameData.header.competitions[0].competitors[0].winner && currentPlay == gameData.plays.length - 1) {
-			$('.scoreboard > .team.home .score').css('text-shadow', '0 0 5px white');
-			$('.scoreboard > .team.home .name .name-text').css('text-shadow', '0 0 5px white');
-			$('.scoreboard > .team.home .name .record').css('text-shadow', '0 0 5px white');
+			$('.scoreboard > .team.home .score').css('text-shadow', '0 0 10px white');
+			$('.scoreboard > .team.home .name .name-text').css('text-shadow', '0 0 10px white');
+			$('.scoreboard > .team.home .name .record').css('text-shadow', '0 0 10px white');
+
+			$('.scoreboard > .team.away .score').css('color', '#ddd');
+			$('.scoreboard > .team.away .name .name-text').css('color', '#ddd');
+			$('.scoreboard > .team.away .name .record').css('color', '#ddd');
 		} else if (gameData.header.competitions[0].competitors[1].winner && currentPlay == gameData.plays.length - 1) {
-			$('.scoreboard > .team.away .score').css('text-shadow', '0 0 5px white');
-			$('.scoreboard > .team.away .name .name-text').css('text-shadow', '0 0 5px white');
-			$('.scoreboard > .team.away .name .record').css('text-shadow', '0 0 5px white');
+			$('.scoreboard > .team.home .score').css('color', '#ddd');
+			$('.scoreboard > .team.home .name .name-text').css('color', '#ddd');
+			$('.scoreboard > .team.home .name .record').css('color', '#ddd');
+
+			$('.scoreboard > .team.away .score').css('text-shadow', '0 0 10px white');
+			$('.scoreboard > .team.away .name .name-text').css('text-shadow', '0 0 10px white');
+			$('.scoreboard > .team.away .name .record').css('text-shadow', '0 0 10px white');
 		}
 	} else {
 		$('.scoreboard > .info > .live-status').css('opacity', '');
