@@ -356,10 +356,12 @@ function updateScoreboard() {
 }
 
 function adjustTeamNameTextSize(text, maxWidth, element) {
+	maxWidth -= 10;
+
 	const $span = $('<span></span>').text(text).css('visibility', 'hidden').appendTo('body');
 	$span.css('font-weight', 'bold');
 
-	let fontSize = 200;
+	let fontSize = 100;
 	$span.css('font-size', fontSize + 'px');
 
 	while ($span.outerWidth(true) > maxWidth && fontSize > 1) {
