@@ -118,6 +118,8 @@ scene.add(hoop2);
 // Resize the canvas when the window is resized
 let windowWidth = $(window).width();
 $(window).on('resize orientationchange', (e) => {
+	if ($('#court').height() == 0) return;
+
 	if (windowWidth == $(window).width()) return;
 	windowWidth = $(window).width();
 

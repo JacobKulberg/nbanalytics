@@ -906,6 +906,8 @@ async function _getPlayerHeadshot(playerId) {
 }
 
 function adjustGameViewsHeight() {
+	if (!$('.game-analysis.option').hasClass('active')) return;
+
 	let height = $('.game-analysis-view').outerHeight(true);
 	$('.game-views').css('height', `${height}px`);
 }
@@ -918,6 +920,8 @@ $('.shot-chart-toggles-container .toggle input').on('change', () => {
 const gameAnalysisView = document.querySelector('.game-analysis-view');
 
 const observer = new ResizeObserver(() => {
+	adjustGameViewsHeight();
+
 	const columnCount = getComputedStyle(gameAnalysisView).getPropertyValue('grid-template-columns').split(' ').length;
 
 	if (columnCount === 1) {
