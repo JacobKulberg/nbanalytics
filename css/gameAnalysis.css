@@ -391,3 +391,45 @@
 .game-analysis-view.single-column .shot-chart-toggles-container.wide {
 	display: none;
 }
+
+.team-stats-comparison-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+
+	font-weight: bold;
+	font-size: max(1.75vw, 3vh);
+}
+
+.team-stats-comparison-container > span {
+	text-decoration: underline;
+}
+
+.team-stats-comparison-container .progress-bar-container {
+	width: 100%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 2vmax;
+
+	margin-bottom: 3vmax;
+}
+
+.team-stats-comparison-container .progress-bar-container span {
+	min-width: 10%;
+
+	font-size: max(2vw, 3.5vh);
+}
+
+.team-stats-comparison-container .progress-bar-container span:first-child {
+	text-align: right;
+}
+
+.team-stats-comparison-container .progress-bar-container .progress-bar {
+	min-width: 60%;
+	height: 5vh;
+
+	border-radius: 2.5vh;
+}

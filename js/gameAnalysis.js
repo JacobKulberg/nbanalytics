@@ -3,6 +3,7 @@ let playerImages = {};
 
 let cumulativeScoreGraph = null;
 let winProbabilityGraph = null;
+let teamStatsComparisonGraph = null;
 
 let playsUntilNow = [];
 let playsUntilNowAll = [];
@@ -36,7 +37,7 @@ function updateAnalysis(gameData, currentPlay) {
 		awayColor = 'ffffff';
 	}
 	if (areColorsSimilar(homeColor, '020026')) {
-		awayColor = 'ffffff';
+		homeColor = 'ffffff';
 	}
 
 	updateQuarterlyScore(gameData, currentPlay);
@@ -44,6 +45,7 @@ function updateAnalysis(gameData, currentPlay) {
 	updateCumulativeScoreGraph(gameData, currentPlay);
 	updateWinProbabilityGraph(gameData, currentPlay);
 	updateShotChart(gameData, currentPlay);
+	updateTeamStatsComparison(gameData, currentPlay);
 
 	// TODO: update this once all elements are implemented
 	adjustGameViewsHeight();
@@ -546,12 +548,14 @@ function updateShotChart(gameData, currentPlay) {
 	let awayTeamLogo = teamLogos[gameData.header.competitions[0].competitors[1].team.id];
 	$('.shot-chart-toggles-container.away.wide img').attr('src', awayTeamLogo);
 	$('.shot-chart-toggles-container.away.wide img').css('border-bottom', `3px solid #${awayColor}`);
+	$('.shot-chart-toggles-container.away.wide').css('border-bottom', `3px solid #${awayColor}`);
 	$('.shot-chart-toggles-container.away .toggle input').css('accent-color', `#${awayColor}`);
 
 	let homeTeamLogo = teamLogos[gameData.header.competitions[0].competitors[0].team.id];
 	$('.shot-chart-court-logo img').attr('src', homeTeamLogo);
 	$('.shot-chart-toggles-container.home.wide img').attr('src', homeTeamLogo);
 	$('.shot-chart-toggles-container.home.wide img').css('border-bottom', `3px solid #${homeColor}`);
+	$('.shot-chart-toggles-container.home.wide').css('border-bottom', `3px solid #${homeColor}`);
 	$('.shot-chart-toggles-container.home .toggle input').css('accent-color', `#${homeColor}`);
 
 	$('.shot-chart-toggles-container.home:not(.wide) .abbr').text(teamAbbrs[gameData.header.competitions[0].competitors[0].team.id]);
@@ -655,6 +659,128 @@ function updateShotChart(gameData, currentPlay) {
 			ctx.closePath();
 		}
 	});
+}
+
+function updateTeamStatsComparison(gameData, currentPlay) {
+	let labels = ['FG', '3FG', 'FT', 'Rebounds', 'Defensive Rebounds', 'Offensive Rebounds', 'Assists', 'Steals', 'Blocks', 'Turnovers', 'Points off Turnovers', 'Fastbreak Points', 'Points in Paint', 'Personal Fouls', 'Technical Fouls'];
+
+	let homeStats = Object.values(gameData.boxscore.teams[1].statistics);
+	let awayStats = Object.values(gameData.boxscore.teams[0].statistics);
+
+	$('.team-stats-comparison-container span').remove();
+	$('.team-stats-comparison-container div').remove();
+
+	for (let i = 0; i < homeStats.length; i++) {
+		let homeValue = 0;
+		let awayValue = 0;
+
+		let parentNum = 0;
+
+		switch (labels[i]) {
+			case 'FG':
+				homeValue = parseInt(homeStats[0].displayValue.substring(0, homeStats[0].displayValue.indexOf('-')));
+				awayValue = parseInt(awayStats[0].displayValue.substring(0, awayStats[0].displayValue.indexOf('-')));
+				break;
+			case '3FG':
+				homeValue = parseInt(homeStats[2].displayValue.substring(0, homeStats[2].displayValue.indexOf('-')));
+				awayValue = parseInt(awayStats[2].displayValue.substring(0, awayStats[2].displayValue.indexOf('-')));
+				break;
+			case 'FT':
+				homeValue = parseInt(homeStats[4].displayValue.substring(0, homeStats[4].displayValue.indexOf('-')));
+				awayValue = parseInt(awayStats[4].displayValue.substring(0, awayStats[4].displayValue.indexOf('-')));
+				break;
+			case 'Rebounds':
+				homeValue = parseInt(homeStats[6].displayValue);
+				awayValue = parseInt(awayStats[6].displayValue);
+				break;
+			case 'Offensive Rebounds':
+				homeValue = parseInt(homeStats[7].displayValue);
+				awayValue = parseInt(awayStats[7].displayValue);
+				parentNum = 1;
+				break;
+			case 'Defensive Rebounds':
+				homeValue = parseInt(homeStats[8].displayValue);
+				awayValue = parseInt(awayStats[8].displayValue);
+				parentNum = 1;
+				break;
+			case 'Assists':
+				homeValue = parseInt(homeStats[9].displayValue);
+				awayValue = parseInt(awayStats[9].displayValue);
+				break;
+			case 'Steals':
+				homeValue = parseInt(homeStats[10].displayValue);
+				awayValue = parseInt(awayStats[10].displayValue);
+				break;
+			case 'Blocks':
+				homeValue = parseInt(homeStats[11].displayValue);
+				awayValue = parseInt(awayStats[11].displayValue);
+				break;
+			case 'Turnovers':
+				homeValue = parseInt(homeStats[12].displayValue);
+				awayValue = parseInt(awayStats[12].displayValue);
+				break;
+			case 'Technical Fouls':
+				homeValue = parseInt(homeStats[15].displayValue);
+				awayValue = parseInt(awayStats[15].displayValue);
+				parentNum = 1;
+				break;
+			case 'Points off Turnovers':
+				homeValue = parseInt(homeStats[18].displayValue);
+				awayValue = parseInt(awayStats[18].displayValue);
+				parentNum = 1;
+				break;
+			case 'Fastbreak Points':
+				homeValue = parseInt(homeStats[19].displayValue);
+				awayValue = parseInt(awayStats[19].displayValue);
+				parentNum = 1;
+				break;
+			case 'Points in Paint':
+				homeValue = parseInt(homeStats[20].displayValue);
+				awayValue = parseInt(awayStats[20].displayValue);
+				parentNum = 1;
+				break;
+			case 'Personal Fouls':
+				homeValue = parseInt(homeStats[21].displayValue);
+				awayValue = parseInt(awayStats[21].displayValue);
+				parentNum = 1;
+				break;
+			default:
+				continue;
+		}
+
+		let span = $(`<span>${labels[i]}</span>`);
+		let progressBarContainer = $('<div class="progress-bar-container"></div>');
+		let progressBar = $('<div class="progress-bar"></div>');
+		progressBar.css('color', `#fff`);
+		if (awayValue == 0) {
+			progressBar.css('background', `#${homeColor}`);
+		} else if (homeValue == 0) {
+			progressBar.css('background', `#${awayColor}`);
+		} else {
+			progressBar.css('background', `linear-gradient(to right, #${awayColor} ${(awayValue / (homeValue + awayValue)) * 100}%, white ${(awayValue / (homeValue + awayValue)) * 100}%, white ${(awayValue / (homeValue + awayValue)) * 100 + 0.5}%, #${homeColor} ${(awayValue / (homeValue + awayValue)) * 100 + 0.5}%)`);
+		}
+
+		let awayValueSpan = $(`<span>${awayValue}</span>`);
+		let homeValueSpan = $(`<span>${homeValue}</span>`);
+
+		awayValueSpan.css('color', `#${awayColor}`);
+		awayValueSpan.css('text-shadow', `0 0 5px #${awayColor}`);
+
+		homeValueSpan.css('color', `#${homeColor}`);
+		homeValueSpan.css('text-shadow', `0 0 5px #${homeColor}`);
+
+		progressBarContainer.prepend(awayValueSpan);
+		progressBarContainer.append(progressBar);
+		progressBarContainer.append(homeValueSpan);
+
+		if (parentNum == 1) {
+			$('.team-stats-comparison-container.second').append(span);
+			$('.team-stats-comparison-container.second').append(progressBarContainer);
+		} else {
+			$('.team-stats-comparison-container.first').append(span);
+			$('.team-stats-comparison-container.first').append(progressBarContainer);
+		}
+	}
 }
 
 // helpers
