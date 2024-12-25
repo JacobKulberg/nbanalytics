@@ -226,9 +226,15 @@ function updateScoreboard() {
 	if (!gameData.plays) {
 		$('#court').css('height', '0px');
 		$('#court canvas').css('height', '0px');
+
+		$('.game-options-container').css('display', 'none');
+		$('.game-views').css('display', 'none');
 	} else {
 		$('#court').css('height', '');
 		$('#court canvas').css('height', '');
+
+		$('.game-options-container').css('display', '');
+		$('.game-views').css('display', '');
 	}
 
 	let play = gameData.plays?.at(currentPlay);
