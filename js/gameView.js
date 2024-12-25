@@ -223,20 +223,30 @@ function setScoreboard() {
 
 let hasBeenLoaded = false;
 function updateScoreboard() {
-	if (!gameData.plays || currentPlay == gameData.plays.length - 1) {
+	if (!gameData.plays) {
 		requestAnimationFrame(() => {
 			$('#court').css('transition', 'unset');
 			$('#court canvas').css('transition', 'unset');
+			$('#court')[0].offsetHeight; // flush css changes
 			$('#court').css('height', '0px');
 			$('#court canvas').css('height', '0px');
 		});
 
 		$('.game-options-container').css('display', 'none');
 		$('.game-views').css('display', 'none');
+	} else if (currentPlay == gameData.plays.length - 1) {
+		requestAnimationFrame(() => {
+			$('#court').css('transition', 'unset');
+			$('#court canvas').css('transition', 'unset');
+			$('#court')[0].offsetHeight; // flush css changes
+			$('#court').css('height', '0px');
+			$('#court canvas').css('height', '0px');
+		});
 	} else {
 		requestAnimationFrame(() => {
 			$('#court').css('transition', '');
 			$('#court canvas').css('transition', '');
+			$('#court')[0].offsetHeight; // flush css changes
 			$('#court').css('height', '');
 			$('#court canvas').css('height', '');
 		});
@@ -314,6 +324,7 @@ function updateScoreboard() {
 		requestAnimationFrame(() => {
 			$('#court').css('transition', 'height 500ms ease-in-out');
 			$('#court canvas').css('transition', 'height 500ms ease-in-out');
+			$('#court')[0].offsetHeight; // flush css changes
 			$('#court').css('height', '0px');
 			$('#court canvas').css('height', '0px');
 			setTimeout(() => {
@@ -340,6 +351,7 @@ function updateScoreboard() {
 		requestAnimationFrame(() => {
 			$('#court').css('transition', '');
 			$('#court canvas').css('transition', '');
+			$('#court')[0].offsetHeight; // flush css changes
 			$('#court').css('height', '');
 			$('#court canvas').css('height', '');
 		});
@@ -354,6 +366,7 @@ function updateScoreboard() {
 		requestAnimationFrame(() => {
 			$('#court').css('transition', 'unset');
 			$('#court canvas').css('transition', 'unset');
+			$('#court')[0].offsetHeight; // flush css changes
 			$('#court').css('height', '0px');
 			$('#court canvas').css('height', '0px');
 		});
