@@ -235,7 +235,7 @@ function updateScoreboard() {
 		$('.game-options-container').css('opacity', '0');
 		$('.game-views').css('opacity', '0');
 		$('.game-not-started').css('opacity', '1');
-	} else if (currentPlay == gameData.plays.length - 1) {
+	} else if (currentPlay == gameData.plays.length - 1 && gameData.header.competitions[0].status.type.shortDetail.includes('Final')) {
 		requestAnimationFrame(() => {
 			$('#court').css('transition', 'unset');
 			$('#court canvas').css('transition', 'unset');
