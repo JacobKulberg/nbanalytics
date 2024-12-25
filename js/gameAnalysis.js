@@ -662,7 +662,7 @@ function updateShotChart(gameData, currentPlay) {
 }
 
 function updateTeamStatsComparison(gameData, currentPlay) {
-	let labels = ['FG', '3FG', 'FT', 'Rebounds', 'Defensive Rebounds', 'Offensive Rebounds', 'Assists', 'Steals', 'Blocks', 'Turnovers', 'Points off Turnovers', 'Fastbreak Points', 'Points in Paint', 'Personal Fouls', 'Technical Fouls'];
+	let labels = ['FGM', '3PM', 'FTM', 'Rebounds', 'Defensive Rebounds', 'Offensive Rebounds', 'Assists', 'Steals', 'Blocks', 'Turnovers', 'Points off Turnovers', 'Fastbreak Points', 'Points in Paint', 'Personal Fouls', 'Technical Fouls'];
 
 	let homeStats = Object.values(gameData.boxscore.teams[1].statistics);
 	let awayStats = Object.values(gameData.boxscore.teams[0].statistics);
@@ -677,15 +677,15 @@ function updateTeamStatsComparison(gameData, currentPlay) {
 		let parentNum = 0;
 
 		switch (labels[i]) {
-			case 'FG':
+			case 'FGM':
 				homeValue = parseInt(homeStats[0].displayValue.substring(0, homeStats[0].displayValue.indexOf('-')));
 				awayValue = parseInt(awayStats[0].displayValue.substring(0, awayStats[0].displayValue.indexOf('-')));
 				break;
-			case '3FG':
+			case '3PM':
 				homeValue = parseInt(homeStats[2].displayValue.substring(0, homeStats[2].displayValue.indexOf('-')));
 				awayValue = parseInt(awayStats[2].displayValue.substring(0, awayStats[2].displayValue.indexOf('-')));
 				break;
-			case 'FT':
+			case 'FTM':
 				homeValue = parseInt(homeStats[4].displayValue.substring(0, homeStats[4].displayValue.indexOf('-')));
 				awayValue = parseInt(awayStats[4].displayValue.substring(0, awayStats[4].displayValue.indexOf('-')));
 				break;
