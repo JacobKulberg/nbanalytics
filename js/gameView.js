@@ -232,8 +232,9 @@ function updateScoreboard() {
 			$('#court canvas').css('height', '0px');
 		});
 
-		$('.game-options-container').css('display', 'none');
-		$('.game-views').css('display', 'none');
+		$('.game-options-container').css('opacity', '0');
+		$('.game-views').css('opacity', '0');
+		$('.game-not-started').css('opacity', '1');
 	} else if (currentPlay == gameData.plays.length - 1) {
 		requestAnimationFrame(() => {
 			$('#court').css('transition', 'unset');
@@ -242,6 +243,10 @@ function updateScoreboard() {
 			$('#court').css('height', '0px');
 			$('#court canvas').css('height', '0px');
 		});
+
+		$('.game-options-container').css('opacity', '');
+		$('.game-views').css('opacity', '');
+		$('.game-not-started').css('opacity', '');
 	} else {
 		requestAnimationFrame(() => {
 			$('#court').css('transition', '');
@@ -251,8 +256,9 @@ function updateScoreboard() {
 			$('#court canvas').css('height', '');
 		});
 
-		$('.game-options-container').css('display', '');
-		$('.game-views').css('display', '');
+		$('.game-options-container').css('opacity', '');
+		$('.game-views').css('opacity', '');
+		$('.game-not-started').css('opacity', '');
 	}
 
 	let play = gameData.plays?.at(currentPlay);

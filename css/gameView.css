@@ -416,3 +416,23 @@ body {
 		transform: rotate(345deg);
 	}
 }
+
+.game-not-started {
+	height: calc(100dvh - min(20vmin, 175px));
+	width: 100%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	font-size: max(4vw, 2.75vh);
+	font-weight: bold;
+
+	position: absolute;
+	top: min(20vmin, 175px);
+	left: 0;
+
+	z-index: -1;
+
+	opacity: 0;
+}
