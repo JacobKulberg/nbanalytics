@@ -33,7 +33,7 @@ if (window.location.hash == '#play-by-play') {
 	$('.game-home-team-view').addClass('active');
 }
 
-let currentPlay = 450; //gameData.plays?.length - 1 || -1;
+let currentPlay = gameData.plays?.length - 1 || -1;
 
 let updateCourtRunner;
 $(async () => {
@@ -321,10 +321,11 @@ function updateScoreboard() {
 			$('.scoreboard > .team.away .name .record').css('text-shadow', '0 0 10px white');
 		}
 
-		requestAnimationFrame(() => {
-			// scroll down by 500px, no animation
-			$('html, body').scrollTop($('html, body').scrollTop() - 500);
+		if ($('#court').height() > 0) {
+			$('html, body').scrollTop($('html, body').scrollTop() - $('#court').outerHeight(true));
+		}
 
+		requestAnimationFrame(() => {
 			$('#court').css('transition', 'unset');
 			$('#court canvas').css('transition', 'unset');
 			$('#court')[0].offsetHeight; // flush css changes

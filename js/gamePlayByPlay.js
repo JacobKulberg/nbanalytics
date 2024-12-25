@@ -175,7 +175,7 @@ async function updatePlayByPlay(gameData, currentPlay) {
 
 			await $('body').append(playByPlayItem);
 			await $('body').append(playByPlayTempItem);
-			let heightDifference = (await playByPlayTempItem.outerHeight()) - (await playByPlayItem.outerHeight());
+			let heightDifference = (await playByPlayTempItem.outerHeight(true)) - (await playByPlayItem.outerHeight(true));
 
 			await playByPlayItem.remove();
 			await playByPlayTempItem.remove();
