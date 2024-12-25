@@ -223,15 +223,23 @@ function setScoreboard() {
 
 let hasBeenLoaded = false;
 function updateScoreboard() {
-	if (!gameData.plays) {
-		$('#court').css('height', '0px');
-		$('#court canvas').css('height', '0px');
+	if (!gameData.plays || currentPlay == gameData.plays.length - 1) {
+		requestAnimationFrame(() => {
+			$('#court').css('transition', 'unset');
+			$('#court canvas').css('transition', 'unset');
+			$('#court').css('height', '0px');
+			$('#court canvas').css('height', '0px');
+		});
 
 		$('.game-options-container').css('display', 'none');
 		$('.game-views').css('display', 'none');
 	} else {
-		$('#court').css('height', '');
-		$('#court canvas').css('height', '');
+		requestAnimationFrame(() => {
+			$('#court').css('transition', '');
+			$('#court canvas').css('transition', '');
+			$('#court').css('height', '');
+			$('#court canvas').css('height', '');
+		});
 
 		$('.game-options-container').css('display', '');
 		$('.game-views').css('display', '');
@@ -303,14 +311,16 @@ function updateScoreboard() {
 			$('.scoreboard > .team.away .name .record').css('text-shadow', '0 0 10px white');
 		}
 
-		$('#court').css('transition', 'height 500ms ease-in-out');
-		$('#court canvas').css('transition', 'height 500ms ease-in-out');
-		$('#court').css('height', '0px');
-		$('#court canvas').css('height', '0px');
-		setTimeout(() => {
-			$('#court').css('transition', '');
-			$('#court canvas').css('transition', '');
-		}, 500);
+		requestAnimationFrame(() => {
+			$('#court').css('transition', 'height 500ms ease-in-out');
+			$('#court canvas').css('transition', 'height 500ms ease-in-out');
+			$('#court').css('height', '0px');
+			$('#court canvas').css('height', '0px');
+			setTimeout(() => {
+				$('#court').css('transition', '');
+				$('#court canvas').css('transition', '');
+			}, 500);
+		});
 	} else {
 		$('.scoreboard > .info > .live-status').css('opacity', '');
 		$('.scoreboard > .info > .live-status').css('max-height', '');
@@ -327,8 +337,12 @@ function updateScoreboard() {
 
 		clock = `${period} - ${minutes}:${seconds}`;
 
-		$('#court').css('height', '');
-		$('#court canvas').css('height', '');
+		requestAnimationFrame(() => {
+			$('#court').css('transition', '');
+			$('#court canvas').css('transition', '');
+			$('#court').css('height', '');
+			$('#court canvas').css('height', '');
+		});
 	}
 
 	if (play.type.id == 402 && !hasBeenLoaded) {
@@ -337,8 +351,12 @@ function updateScoreboard() {
 		$('.scoreboard > .info > .live-status').css('transition', 'unset');
 		$('.scoreboard > .info > .time').css('transition', 'unset');
 
-		$('#court').css('height', '0px');
-		$('#court canvas').css('height', '0px');
+		requestAnimationFrame(() => {
+			$('#court').css('transition', 'unset');
+			$('#court canvas').css('transition', 'unset');
+			$('#court').css('height', '0px');
+			$('#court canvas').css('height', '0px');
+		});
 	}
 
 	hasBeenLoaded = true;
