@@ -40,11 +40,6 @@ body {
 #court {
 	display: flex;
 	justify-content: center;
-	height: 500px;
-}
-
-#court canvas {
-	height: 500px;
 }
 
 .play-text {
