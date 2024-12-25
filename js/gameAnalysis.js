@@ -748,6 +748,14 @@ function updateTeamStatsComparison(gameData, currentPlay) {
 				continue;
 		}
 
+		let awayValueSpan = $(`<span>${awayValue}</span>`);
+		let homeValueSpan = $(`<span>${homeValue}</span>`);
+
+		if (awayValue == 0 && homeValue == 0) {
+			awayValue = 1;
+			homeValue = 1;
+		}
+
 		let span = $(`<span>${labels[i]}</span>`);
 		let progressBarContainer = $('<div class="progress-bar-container"></div>');
 		let progressBar = $('<div class="progress-bar"></div>');
@@ -759,9 +767,6 @@ function updateTeamStatsComparison(gameData, currentPlay) {
 		} else {
 			progressBar.css('background', `linear-gradient(to right, #${awayColor} ${(awayValue / (homeValue + awayValue)) * 100}%, white ${(awayValue / (homeValue + awayValue)) * 100}%, white ${(awayValue / (homeValue + awayValue)) * 100 + 0.5}%, #${homeColor} ${(awayValue / (homeValue + awayValue)) * 100 + 0.5}%)`);
 		}
-
-		let awayValueSpan = $(`<span>${awayValue}</span>`);
-		let homeValueSpan = $(`<span>${homeValue}</span>`);
 
 		awayValueSpan.css('color', `#${awayColor}`);
 		awayValueSpan.css('text-shadow', `0 0 5px #${awayColor}`);
