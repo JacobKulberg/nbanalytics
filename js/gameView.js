@@ -223,7 +223,7 @@ function setScoreboard() {
 
 let hasBeenLoaded = false;
 function updateScoreboard() {
-	if (!gameData.plays) {
+	if (!gameData.plays || gameData.plays.length == 0) {
 		requestAnimationFrame(() => {
 			$('#court').css('transition', 'unset');
 			$('#court canvas').css('transition', 'unset');

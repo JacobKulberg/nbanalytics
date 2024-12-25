@@ -59,7 +59,7 @@ function updateQuarterlyScore(gameData, currentPlay) {
 	$('.quarterly-score .home-team-abbr').text(homeAbbr);
 
 	// add periods
-	let period = parseInt(gameData.plays[currentPlay].period.number);
+	let period = parseInt(gameData.plays[currentPlay]?.period.number);
 	$('.quarterly-score tr:first-child').html('<th></th>');
 	$('.quarterly-score tr:nth-child(2)').html(`<th style="color: #${awayColor}; text-shadow: 0 0 3px #${awayColor};">${awayAbbr}</th>`);
 	$('.quarterly-score tr:nth-child(3)').html(`<th style="color: #${homeColor}; text-shadow: 0 0 3px #${homeColor};">${homeAbbr}</th>`);
