@@ -46,6 +46,8 @@ $(async () => {
 			updateStats();
 		}, 0);
 
+		updateGameNotStartedText(gameData.header.competitions[0].status.type.detail);
+
 		if (!(gameData.plays && gameData.plays.at(currentPlay))) return;
 
 		if (currentPlay < gameData.plays.length - 1) {
@@ -487,6 +489,52 @@ function scrollToTop() {
 
 	let height = $(`.${c}-view`).height();
 	$('.game-views').css('height', height + 'px');
+}
+
+function updateGameNotStartedText(dateString) {
+	// Parse the date string to remove ordinal suffixes like 'st', 'nd', 'rd', 'th'
+	const cleanedDateString = dateString.replace(/(\d+)(st|nd|rd|th)/, '$1');
+
+	// Get the current date and time
+	const now = new Date();
+
+	// Create a temporary date object using the cleaned string
+	let tempDate = new Date(
+		cleanedDateString
+			.replace('at', '') // Remove "at" for better parsing
+			.replace('EST', 'GMT-0500') // Replace time zone abbreviation with offset
+	);
+
+	if (isNaN(tempDate)) {
+		return;
+	}
+
+	// Adjust year to ensure the date is in the future if necessary
+	tempDate.setFullYear(now.getFullYear());
+
+	// If the parsed date is earlier than now and is not today, set it to the next year
+	if (tempDate < now && tempDate.toDateString() !== now.toDateString()) {
+		tempDate.setFullYear(now.getFullYear() + 1);
+	}
+
+	// Calculate the difference in milliseconds
+	const diffMs = tempDate - now;
+
+	// Convert milliseconds to days, hours, and minutes
+	const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+	const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+	const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+	// Construct the formatted string based on conditions
+	if (diffDays <= 0 && diffHours <= 0 && diffMinutes <= 0) {
+		$('.game-not-started span').text('Starting soon...');
+	} else if (diffDays === 0 && diffHours === 0) {
+		$('.game-not-started span').text(`Starting in ${diffMinutes}min...`);
+	} else if (diffDays === 0) {
+		$('.game-not-started span').text(`Starting in ${diffHours}hr, ${diffMinutes}min...`);
+	} else {
+		$('.game-not-started span').text(`Starting in ${diffDays}d, ${diffHours}hr, ${diffMinutes}min...`);
+	}
 }
 
 $(window)
