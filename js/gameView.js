@@ -529,11 +529,11 @@ function updateGameNotStartedText(dateString) {
 	if (diffDays <= 0 && diffHours <= 0 && diffMinutes <= 0) {
 		$('.game-not-started span').text('Starting soon...');
 	} else if (diffDays === 0 && diffHours === 0) {
-		$('.game-not-started span').text(`Starting in ${diffMinutes}min...`);
+		$('.game-not-started span').html(`Starting in ${diffMinutes}<span>min</span>...`);
 	} else if (diffDays === 0) {
-		$('.game-not-started span').text(`Starting in ${diffHours}hr, ${diffMinutes}min...`);
+		$('.game-not-started span').html(`Starting in ${diffHours}<span>hr</span> ${diffMinutes}<span>min</span>...`);
 	} else {
-		$('.game-not-started span').text(`Starting in ${diffDays}d, ${diffHours}hr, ${diffMinutes}min...`);
+		$('.game-not-started span').html(`Starting in ${diffDays}<span>d</span> ${diffHours}<span>hr</span> ${diffMinutes}<span>min</span>...`);
 	}
 }
 

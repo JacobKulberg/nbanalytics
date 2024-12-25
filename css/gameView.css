@@ -431,3 +431,13 @@ body {
 
 	opacity: 0;
 }
+
+.game-not-started > span > span {
+	color: #aaa;
+	font-size: max(3.5vw, 2.5vh);
+	margin-right: 0.75vw;
+}
+
+.game-not-started > span > span:last-child {
+	margin-right: 0px;
+}
