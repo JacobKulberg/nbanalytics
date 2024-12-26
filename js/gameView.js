@@ -496,15 +496,15 @@ function updateGameNotStartedText(dateString) {
 
 	let diffDays = date.diff(moment(), 'days');
 	let diffHours = date.diff(moment(), 'hours');
-	let diffMinutes = date.diff(moment(), 'minutes');
+	let diffMinutes = date.diff(moment(), 'minutes') + 1;
 
 	if (date.isBefore(moment())) {
 		$('.game-not-started span').text('Starting soon...');
 	} else if (date.isSame(moment(), 'day')) {
 		if (date.isBefore(moment().add(1, 'hour'))) {
-			$('.game-not-started span').html(`Starting in ${diffMinutes}<span>min</span>...`);
+			$('.game-not-started span').html(`Starting in ${diffMinutes % 60}<span>min</span>...`);
 		} else {
-			$('.game-not-started span').html(`Starting in ${diffHours}<span>hr</span> ${diffMinutes % 60}<span>min</span>...`);
+			$('.game-not-started span').html(`Starting in ${diffHours % 24}<span>hr</span> ${diffMinutes % 60}<span>min</span>...`);
 		}
 	} else {
 		$('.game-not-started span').html(`Starting in ${diffDays}<span>d</span> ${diffHours % 24}<span>hr</span> ${diffMinutes % 60}<span>min</span>...`);
