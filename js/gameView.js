@@ -46,7 +46,7 @@ $(async () => {
 			updateStats();
 		}, 0);
 
-		updateGameNotStartedText(gameData.header.competitions[0].status.type.detail);
+		updateGameNotStartedText(gameData.header.competitions[0].date);
 
 		if (!(gameData.plays && gameData.plays.at(currentPlay))) return;
 
@@ -492,48 +492,22 @@ function scrollToTop() {
 }
 
 function updateGameNotStartedText(dateString) {
-	// Parse the date string to remove ordinal suffixes like 'st', 'nd', 'rd', 'th'
-	const cleanedDateString = dateString.replace(/(\d+)(st|nd|rd|th)/, '$1');
+	let date = moment(dateString).tz(Intl.DateTimeFormat().resolvedOptions().timeZone);
 
-	// Get the current date and time
-	const now = new Date();
+	let diffDays = date.diff(moment(), 'days');
+	let diffHours = date.diff(moment(), 'hours');
+	let diffMinutes = date.diff(moment(), 'minutes');
 
-	// Create a temporary date object using the cleaned string
-	let tempDate = new Date(
-		cleanedDateString
-			.replace('at', '') // Remove "at" for better parsing
-			.replace('EST', 'GMT-0500') // Replace time zone abbreviation with offset
-	);
-
-	if (isNaN(tempDate)) {
-		return;
-	}
-
-	// Adjust year to ensure the date is in the future if necessary
-	tempDate.setFullYear(now.getFullYear());
-
-	// If the parsed date is earlier than now and is not today, set it to the next year
-	if (tempDate < now && tempDate.toDateString() !== now.toDateString()) {
-		tempDate.setFullYear(now.getFullYear() + 1);
-	}
-
-	// Calculate the difference in milliseconds
-	const diffMs = tempDate - now;
-
-	// Convert milliseconds to days, hours, and minutes
-	const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-	const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-	const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-
-	// Construct the formatted string based on conditions
-	if (diffDays <= 0 && diffHours <= 0 && diffMinutes <= 0) {
+	if (date.isBefore(moment())) {
 		$('.game-not-started span').text('Starting soon...');
-	} else if (diffDays === 0 && diffHours === 0) {
-		$('.game-not-started span').html(`Starting in ${diffMinutes}<span>min</span>...`);
-	} else if (diffDays === 0) {
-		$('.game-not-started span').html(`Starting in ${diffHours}<span>hr</span> ${diffMinutes}<span>min</span>...`);
+	} else if (date.isSame(moment(), 'day')) {
+		if (date.isBefore(moment().add(1, 'hour'))) {
+			$('.game-not-started span').html(`Starting in ${diffMinutes}<span>min</span>...`);
+		} else {
+			$('.game-not-started span').html(`Starting in ${diffHours}<span>hr</span> ${diffMinutes % 60}<span>min</span>...`);
+		}
 	} else {
-		$('.game-not-started span').html(`Starting in ${diffDays}<span>d</span> ${diffHours}<span>hr</span> ${diffMinutes}<span>min</span>...`);
+		$('.game-not-started span').html(`Starting in ${diffDays}<span>d</span> ${diffHours % 24}<span>hr</span> ${diffMinutes % 60}<span>min</span>...`);
 	}
 }
 
