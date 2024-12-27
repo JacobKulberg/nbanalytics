@@ -19,6 +19,19 @@ if (!window.location.hash) {
 	history.replaceState(null, null, '#play-by-play');
 }
 
+let awayColor = teamColors[gameData.header.competitions[0].competitors[1].team.id];
+let homeColor = teamColors[gameData.header.competitions[0].competitors[0].team.id];
+if (areColorsSimilar(awayColor, homeColor)) {
+	awayColor = teamColorsAlt[gameData.header.competitions[0].competitors[1].team.id];
+}
+
+if (areColorsSimilar(awayColor, '020026')) {
+	awayColor = 'ffffff';
+}
+if (areColorsSimilar(homeColor, '020026')) {
+	homeColor = 'ffffff';
+}
+
 if (window.location.hash == '#play-by-play') {
 	$('.game-play-by-play').addClass('active');
 	$('.game-play-by-play-view').addClass('active');
@@ -28,9 +41,15 @@ if (window.location.hash == '#play-by-play') {
 } else if (window.location.hash == '#away') {
 	$('.game-away-team').addClass('active');
 	$('.game-away-team-view').addClass('active');
+
+	$('.game-away-team').css('color', `#${awayColor}`);
+	$('.game-away-team').css('text-shadow', `0 0 7px #${awayColor}`);
 } else if (window.location.hash == '#home') {
 	$('.game-home-team').addClass('active');
 	$('.game-home-team-view').addClass('active');
+
+	$('.game-home-team').css('color', `#${homeColor}`);
+	$('.game-home-team').css('text-shadow', `0 0 7px #${homeColor}`);
 }
 
 let currentPlay = gameData.plays?.length - 1 || -1;
@@ -74,6 +93,7 @@ $(async () => {
 
 	updateScoreboard();
 	updateStats();
+	updateOptions();
 });
 
 async function updateCourt() {
@@ -433,6 +453,14 @@ function updateStats() {
 	}
 }
 
+function updateOptions() {
+	let awayAbbr = teamAbbrs[gameData.header.competitions[0].competitors[1].team.id];
+	let homeAbbr = teamAbbrs[gameData.header.competitions[0].competitors[0].team.id];
+
+	$('.game-away-team').text(awayAbbr);
+	$('.game-home-team').text(homeAbbr);
+}
+
 $('.skip-replay').on('click', () => {
 	currentPlay = gameData.plays.length - 1;
 	trajectoryPoints.length = 0;
@@ -480,7 +508,20 @@ function scrollToTop() {
 	}
 
 	$('.game-options > .option').removeClass('active');
+	$('.game-options > .option').css({
+		color: '',
+		'text-shadow': '',
+	});
+
 	$(this).addClass('active');
+
+	if ($(this).hasClass('game-away-team')) {
+		$(this).css('color', `#${awayColor}`);
+		$(this).css('text-shadow', `0 0 7px #${awayColor}`);
+	} else if ($(this).hasClass('game-home-team')) {
+		$(this).css('color', `#${homeColor}`);
+		$(this).css('text-shadow', `0 0 7px #${homeColor}`);
+	}
 
 	$('.game-view').removeClass('active');
 	let c = $(this).attr('class').split(' ')[0];
