@@ -1,6 +1,7 @@
 import { scene, world, playerGroup, ball, ballBody, redX, trajectoryTube, shootBasket, addPlayer, setCourtLogo, jumpBall, disableJumpBall, trajectoryPoints } from './court.js';
 import { updatePlayByPlay } from './gamePlayByPlay.js';
 import { updateAnalysis } from './gameAnalysis.js';
+import { updateTeamStats } from './gameTeamStats.js';
 
 let searchParams = new URLSearchParams(window.location.search);
 let gameID = searchParams.get('id');
@@ -39,17 +40,17 @@ if (window.location.hash == '#play-by-play') {
 	$('.game-analysis').addClass('active');
 	$('.game-analysis-view').addClass('active');
 } else if (window.location.hash == '#away') {
-	$('.game-away-team').addClass('active');
-	$('.game-away-team-view').addClass('active');
+	$('.game-team.away').addClass('active');
+	$('.game-team-view.away').addClass('active');
 
-	$('.game-away-team').css('color', `#${awayColor}`);
-	$('.game-away-team').css('text-shadow', `0 0 7px #${awayColor}`);
+	$('.game-team.away').css('color', `#${awayColor}`);
+	$('.game-team.away').css('text-shadow', `0 0 7px #${awayColor}`);
 } else if (window.location.hash == '#home') {
-	$('.game-home-team').addClass('active');
-	$('.game-home-team-view').addClass('active');
+	$('.game-team.home').addClass('active');
+	$('.game-team-view.home').addClass('active');
 
-	$('.game-home-team').css('color', `#${homeColor}`);
-	$('.game-home-team').css('text-shadow', `0 0 7px #${homeColor}`);
+	$('.game-team.home').css('color', `#${homeColor}`);
+	$('.game-team.home').css('text-shadow', `0 0 7px #${homeColor}`);
 }
 
 let currentPlay = gameData.plays?.length - 1 || -1;
@@ -80,6 +81,7 @@ $(async () => {
 
 		updatePlayByPlay(gameData, currentPlay);
 		updateAnalysis(gameData, currentPlay);
+		updateTeamStats(gameData, currentPlay);
 	};
 
 	updateCourtRunner();
@@ -457,8 +459,8 @@ function updateOptions() {
 	let awayAbbr = teamAbbrs[gameData.header.competitions[0].competitors[1].team.id];
 	let homeAbbr = teamAbbrs[gameData.header.competitions[0].competitors[0].team.id];
 
-	$('.game-away-team').text(awayAbbr);
-	$('.game-home-team').text(homeAbbr);
+	$('.game-team.away').text(awayAbbr);
+	$('.game-team.home').text(homeAbbr);
 }
 
 $('.skip-replay').on('click', () => {
@@ -499,12 +501,16 @@ function scrollToTop() {
 		case 'game-analysis':
 			history.replaceState(null, null, '#analysis');
 			break;
-		case 'game-away-team':
-			history.replaceState(null, null, '#away');
-			break;
-		case 'game-home-team':
-			history.replaceState(null, null, '#home');
-			break;
+		case 'game-team':
+			if ($(this).hasClass('away')) {
+				history.replaceState(null, null, '#away');
+				break;
+			}
+		case 'game-team':
+			if ($(this).hasClass('home')) {
+				history.replaceState(null, null, '#home');
+				break;
+			}
 	}
 
 	$('.game-options > .option').removeClass('active');
@@ -515,16 +521,21 @@ function scrollToTop() {
 
 	$(this).addClass('active');
 
-	if ($(this).hasClass('game-away-team')) {
+	if ($(this).hasClass('game-team away')) {
 		$(this).css('color', `#${awayColor}`);
 		$(this).css('text-shadow', `0 0 7px #${awayColor}`);
-	} else if ($(this).hasClass('game-home-team')) {
+	} else if ($(this).hasClass('game-team home')) {
 		$(this).css('color', `#${homeColor}`);
 		$(this).css('text-shadow', `0 0 7px #${homeColor}`);
 	}
 
 	$('.game-view').removeClass('active');
 	let c = $(this).attr('class').split(' ')[0];
+
+	if (c == 'game-team') {
+		if ($(this).hasClass('away')) c = 'away.game-team';
+		if ($(this).hasClass('home')) c = 'home.game-team';
+	}
 
 	$(`.${c}-view`).addClass('active');
 
@@ -577,10 +588,10 @@ $(window)
 			$('.game-analysis').addClass('active');
 			$('.game-analysis-view').addClass('active');
 		} else if (hash == '#away') {
-			$('.game-away-team').addClass('active');
-			$('.game-away-team-view').addClass('active');
+			$('.game-team.away').addClass('active');
+			$('.game-team-view.away').addClass('active');
 		} else if (hash == '#home') {
-			$('.game-home-team').addClass('active');
-			$('.game-home-team-view').addClass('active');
+			$('.game-team.home').addClass('active');
+			$('.game-team-view.home').addClass('active');
 		}
 	});

@@ -29,6 +29,7 @@
 		<link rel="stylesheet" href="../css/gameView.css" />
 		<link rel="stylesheet" href="../css/gamePlayByPlay.css" />
 		<link rel="stylesheet" href="../css/gameAnalysis.css" />
+		<link rel="stylesheet" href="../css/gameTeamStats.css" />
 	</head>
 	<body>
 		<div id="court">
@@ -68,8 +69,8 @@
 			<div class="game-options">
 				<div class="game-play-by-play option">Play-By-Play</div>
 				<div class="game-analysis option">Analysis</div>
-				<div class="game-away-team option">Away</div>
-				<div class="game-home-team option">Home</div>
+				<div class="game-team away option">Away</div>
+				<div class="game-team home option">Home</div>
 			</div>
 		</div>
 
@@ -205,8 +206,24 @@
 				<div class="team-stats-comparison-container first"></div>
 				<div class="team-stats-comparison-container second"></div>
 			</div>
-			<div class="game-away-team-view game-view"></div>
-			<div class="game-home-team-view game-view"></div>
+			<div class="game-team-view game-view away">
+				<div class="team-summary">
+					<img class="team-logo"></img>
+					<div class="team-stats"></div>
+				</div>
+				<div class="player-summaries">
+					<table></table>
+				</div>
+			</div>
+			<div class="game-team-view game-view home">
+				<div class="team-summary">
+					<img class="team-logo"></img>
+					<div class="team-stats"></div>
+				</div>
+				<div class="player-summaries">
+					<table></table>
+				</div>
+			</div>
 
 			<div class="game-view-scroll-up">
 				<i class="fa-solid fa-arrow-up"></i>
@@ -227,6 +244,7 @@
 		<script src="../js/court.js" type="module"></script>
 		<script src="../js/gameView.js" type="module"></script>
 		<script src="../js/gameAnalysis.js" type="module"></script>
+		<script src="../js/gameTeamStats.js" type="module"></script>
 		<script src="../js/gamePlayByPlay.js" type="module"></script>
 	</body>
 </html>
