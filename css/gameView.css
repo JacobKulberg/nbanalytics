@@ -12,17 +12,18 @@
 	user-select: none;
 }
 
-body::-webkit-scrollbar {
+*::-webkit-scrollbar {
 	width: 8px;
+	height: 8px;
 }
 
-body::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
 	background: #234a61;
 	border-radius: 100px;
-	margin: 30px 0;
+	margin: 30px 30px;
 }
 
-body::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
 	background-color: #9dbdd0;
 	border-radius: 100px;
 }
