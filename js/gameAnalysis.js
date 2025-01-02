@@ -547,6 +547,7 @@ function updateWinProbabilityGraph(gameData, currentPlay) {
 function updateShotChart(gameData, currentPlay) {
 	let awayTeamLogo = teamLogos[gameData.header.competitions[0].competitors[1].team.id];
 	$('.shot-chart-toggles-container.away.wide img').attr('src', awayTeamLogo);
+	$('.shot-chart-toggles-container.away.wide img').attr('title', teamNames[gameData.header.competitions[0].competitors[1].team.id]);
 	$('.shot-chart-toggles-container.away.wide img').css('border-bottom', `3px solid #${awayColor}`);
 	$('.shot-chart-toggles-container.away.wide').css('border', `3px solid #${awayColor}`);
 	$('.shot-chart-toggles-container.away .toggle input').css('accent-color', `#${areColorsSimilar(awayColor, 'ffffff') ? '555555' : awayColor}`);
@@ -554,6 +555,7 @@ function updateShotChart(gameData, currentPlay) {
 	let homeTeamLogo = teamLogos[gameData.header.competitions[0].competitors[0].team.id];
 	$('.shot-chart-court-logo img').attr('src', homeTeamLogo);
 	$('.shot-chart-toggles-container.home.wide img').attr('src', homeTeamLogo);
+	$('.shot-chart-toggles-container.home.wide img').attr('title', teamNames[gameData.header.competitions[0].competitors[0].team.id]);
 	$('.shot-chart-toggles-container.home.wide img').css('border-bottom', `3px solid #${homeColor}`);
 	$('.shot-chart-toggles-container.home.wide').css('border', `3px solid #${homeColor}`);
 	$('.shot-chart-toggles-container.home .toggle input').css('accent-color', `#${areColorsSimilar(homeColor, 'ffffff') ? '555555' : homeColor}`);

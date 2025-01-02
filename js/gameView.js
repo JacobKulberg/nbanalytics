@@ -316,6 +316,23 @@ function updateScoreboard() {
 	else if (period >= 6) period = `${period - 4}OT`;
 	else period = `Q${period}`;
 
+	if (play.type.id == 402 && !hasBeenLoaded) {
+		$('.play-text').css('opacity', '0');
+
+		$('.scoreboard > .info > .live-status').css('transition', 'unset');
+		$('.scoreboard > .info > .time').css('transition', 'unset');
+
+		requestAnimationFrame(() => {
+			$('#court').css('transition', 'unset');
+			$('#court canvas').css('transition', 'unset');
+			$('#court')[0].offsetHeight; // flush css changes
+			$('#court').css('height', '0px');
+			$('#court canvas').css('height', '0px');
+		});
+	}
+
+	hasBeenLoaded = true;
+
 	let clock = play.clock.displayValue;
 	if (play.type.id == 412) {
 		clock = `End of ${period}`;
@@ -386,23 +403,6 @@ function updateScoreboard() {
 			$('#court canvas').css('height', '');
 		});
 	}
-
-	if (play.type.id == 402 && !hasBeenLoaded) {
-		$('.play-text').css('opacity', '0');
-
-		$('.scoreboard > .info > .live-status').css('transition', 'unset');
-		$('.scoreboard > .info > .time').css('transition', 'unset');
-
-		requestAnimationFrame(() => {
-			$('#court').css('transition', 'unset');
-			$('#court canvas').css('transition', 'unset');
-			$('#court')[0].offsetHeight; // flush css changes
-			$('#court').css('height', '0px');
-			$('#court canvas').css('height', '0px');
-		});
-	}
-
-	hasBeenLoaded = true;
 
 	$('.scoreboard > .info > .time').text(clock);
 
