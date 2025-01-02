@@ -79,9 +79,9 @@ $(async () => {
 			$('.play-text').text(await playToText(parseInt(gameData.plays.at(currentPlay).type.id), gameData.plays.at(currentPlay).participants, gameData.plays.at(currentPlay).team, gameData.plays.at(currentPlay).text));
 		}
 
-		updatePlayByPlay(gameData, currentPlay);
-		updateAnalysis(gameData, currentPlay);
-		updateTeamStats(gameData, currentPlay);
+		if ($('.game-play-by-play-view').hasClass('active')) updatePlayByPlay(gameData, currentPlay);
+		if ($('.game-analysis-view').hasClass('active')) updateAnalysis(gameData, currentPlay);
+		if ($('.game-team-view.away').hasClass('active') || $('.game-team-view.home').hasClass('active')) updateTeamStats(gameData, currentPlay);
 	};
 
 	updateCourtRunner();
@@ -483,32 +483,46 @@ $(window).on('resize orientationchange', () => {
 $('.game-options > .option').on('click', scrollToTop);
 $('.game-view-scroll-up').on('click touchstart', scrollToTop);
 
+let isScrolling = false;
 function scrollToTop() {
 	// scroll to header
-	$('html, body').animate(
-		{
-			scrollTop: $('#court').height() + 1,
-		},
-		300
-	);
+	if (!isScrolling) {
+		$('html, body').animate(
+			{
+				scrollTop: $('#court').height() + 1,
+			},
+			300
+		);
+
+		isScrolling = true;
+
+		setTimeout(() => {
+			isScrolling = false;
+		}, 300);
+	}
 
 	if (!$(this).hasClass('option')) return;
+	if ($(this).hasClass('active')) return;
 
 	switch ($(this)[0].className.split(' ')[0]) {
 		case 'game-play-by-play':
 			history.replaceState(null, null, '#play-by-play');
+			updatePlayByPlay(gameData, currentPlay);
 			break;
 		case 'game-analysis':
 			history.replaceState(null, null, '#analysis');
+			updateAnalysis(gameData, currentPlay);
 			break;
 		case 'game-team':
 			if ($(this).hasClass('away')) {
 				history.replaceState(null, null, '#away');
+				updateTeamStats(gameData, currentPlay);
 				break;
 			}
 		case 'game-team':
 			if ($(this).hasClass('home')) {
 				history.replaceState(null, null, '#home');
+				updateTeamStats(gameData, currentPlay);
 				break;
 			}
 	}
