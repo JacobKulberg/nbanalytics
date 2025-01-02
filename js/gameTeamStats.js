@@ -21,8 +21,8 @@ function updateTeamSummary(gameData, currentPlay) {
 		let homeValue = 0;
 		let awayValue = 0;
 
-		let homeValueExtra = '‎';
-		let awayValueExtra = '‎';
+		let homeValueExtra = '&#8205;';
+		let awayValueExtra = '&#8205;';
 
 		switch (labels[i]) {
 			case 'FGM':
@@ -131,8 +131,8 @@ function updateTeamSummary(gameData, currentPlay) {
 		$(`.game-team-view.home .team-summary .team-stats .team-summary-item:nth-child(${i + 1}) .team-summary-item-label`).text(labels[i]);
 		$(`.game-team-view.away .team-summary .team-stats .team-summary-item:nth-child(${i + 1}) .team-summary-item-label`).text(labels[i]);
 
-		$(`.game-team-view.home .team-summary .team-stats .team-summary-item:nth-child(${i + 1}) .team-summary-item-extra`).text(homeValueExtra);
-		$(`.game-team-view.away .team-summary .team-stats .team-summary-item:nth-child(${i + 1}) .team-summary-item-extra`).text(awayValueExtra);
+		$(`.game-team-view.home .team-summary .team-stats .team-summary-item:nth-child(${i + 1}) .team-summary-item-extra`).html(homeValueExtra);
+		$(`.game-team-view.away .team-summary .team-stats .team-summary-item:nth-child(${i + 1}) .team-summary-item-extra`).html(awayValueExtra);
 	}
 }
 

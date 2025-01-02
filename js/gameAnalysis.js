@@ -549,14 +549,14 @@ function updateShotChart(gameData, currentPlay) {
 	$('.shot-chart-toggles-container.away.wide img').attr('src', awayTeamLogo);
 	$('.shot-chart-toggles-container.away.wide img').css('border-bottom', `3px solid #${awayColor}`);
 	$('.shot-chart-toggles-container.away.wide').css('border', `3px solid #${awayColor}`);
-	$('.shot-chart-toggles-container.away .toggle input').css('accent-color', `#${awayColor}`);
+	$('.shot-chart-toggles-container.away .toggle input').css('accent-color', `#${areColorsSimilar(awayColor, 'ffffff') ? '555555' : awayColor}`);
 
 	let homeTeamLogo = teamLogos[gameData.header.competitions[0].competitors[0].team.id];
 	$('.shot-chart-court-logo img').attr('src', homeTeamLogo);
 	$('.shot-chart-toggles-container.home.wide img').attr('src', homeTeamLogo);
 	$('.shot-chart-toggles-container.home.wide img').css('border-bottom', `3px solid #${homeColor}`);
 	$('.shot-chart-toggles-container.home.wide').css('border', `3px solid #${homeColor}`);
-	$('.shot-chart-toggles-container.home .toggle input').css('accent-color', `#${homeColor}`);
+	$('.shot-chart-toggles-container.home .toggle input').css('accent-color', `#${areColorsSimilar(homeColor, 'ffffff') ? '555555' : homeColor}`);
 
 	$('.shot-chart-toggles-container.home:not(.wide) .abbr').text(teamAbbrs[gameData.header.competitions[0].competitors[0].team.id]);
 	$('.shot-chart-toggles-container.home:not(.wide) .abbr').css({
