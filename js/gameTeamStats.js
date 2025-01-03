@@ -1,8 +1,6 @@
 function updateTeamStats(gameData, currentPlay) {
 	updateTeamSummary(gameData, currentPlay);
 	updatePlayerStats(gameData, currentPlay);
-
-	adjustGameViewsHeight();
 }
 
 function updateTeamSummary(gameData, currentPlay) {
@@ -240,6 +238,9 @@ async function updatePlayerStats(gameData, currentPlay) {
 		$('.game-team-view.away .player-summaries').scrollLeft(currentScroll1);
 	}
 
+	$('.game-team-view.away').addClass('filled');
+	adjustGameViewsHeight();
+
 	// home team
 	tempPlayerSummaries = $('<div class="player-summaries"></div>');
 	await Promise.all(
@@ -330,6 +331,9 @@ async function updatePlayerStats(gameData, currentPlay) {
 
 		$('.game-team-view.home .player-summaries').scrollLeft(currentScroll2);
 	}
+
+	$('.game-team-view.home').addClass('filled');
+	adjustGameViewsHeight();
 }
 
 function adjustGameViewsHeight() {
