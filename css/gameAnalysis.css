@@ -101,6 +101,10 @@
 	align-items: center;
 }
 
+.team-leaders .leader div:has(img):not(:first-of-type) {
+	display: none;
+}
+
 .team-leaders .leader div:first-child:has(img) {
 	position: relative;
 }
