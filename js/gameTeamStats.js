@@ -200,7 +200,8 @@ async function updatePlayerStats(gameData, currentPlay) {
 			});
 
 			if (reorderedStats.every((stat) => stat === undefined)) {
-				playerSummaryStats.html('<div class="player-summary-dnp">Did not play</div>');
+				let dnpText = gameData.header.competitions[0].status.type.completed ? 'Did not play' : 'Has not played';
+				playerSummaryStats.html(`<div class="player-summary-dnp">${dnpText}</div>`);
 			}
 
 			playerSummary.data('minutes', parseInt(reorderedStats[0] || 0));
@@ -294,7 +295,8 @@ async function updatePlayerStats(gameData, currentPlay) {
 			});
 
 			if (reorderedStats.every((stat) => stat === undefined)) {
-				playerSummaryStats.html('<div class="player-summary-dnp">Did not play</div>');
+				let dnpText = gameData.header.competitions[0].status.type.completed ? 'Did not play' : 'Has not played';
+				playerSummaryStats.html(`<div class="player-summary-dnp">${dnpText}</div>`);
 			}
 
 			playerSummary.data('minutes', parseInt(reorderedStats[0] || 0));
