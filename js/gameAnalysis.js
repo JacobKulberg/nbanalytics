@@ -47,7 +47,6 @@ function updateAnalysis(gameData, currentPlay) {
 	updateShotChart(gameData, currentPlay);
 	updateTeamStatsComparison(gameData, currentPlay);
 
-	// TODO: update this once all elements are implemented
 	adjustGameViewsHeight();
 }
 
