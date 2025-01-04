@@ -159,6 +159,7 @@ async function updatePlayerStats(gameData, currentPlay) {
 
 			// Set headshot source and wait for it to load
 			playerSummaryHeadshot.attr('src', await getPlayerHeadshot(athlete.athlete.id));
+			playerSummaryHeadshot.attr('title', athlete.athlete.displayName);
 			await waitForImageLoad(playerSummaryHeadshot[0]); // Wait for the image to load
 
 			playerSummaryName.text(athlete.athlete.displayName);
@@ -254,6 +255,7 @@ async function updatePlayerStats(gameData, currentPlay) {
 
 			// Set headshot source and wait for it to load
 			playerSummaryHeadshot.attr('src', await getPlayerHeadshot(athlete.athlete.id));
+			playerSummaryHeadshot.attr('title', athlete.athlete.displayName);
 			await waitForImageLoad(playerSummaryHeadshot[0]); // Wait for the image to load
 
 			playerSummaryName.text(athlete.athlete.displayName);
