@@ -257,6 +257,7 @@ function updateScoreboard() {
 		});
 
 		$('.game-options-container').css('opacity', '0');
+		$('.game-options-container').css('pointer-events', 'none');
 		$('.game-views').css('opacity', '0');
 		$('.game-not-started').css('opacity', '1');
 	} else if (currentPlay == gameData.plays.length - 1 && gameData.header.competitions[0].status.type.shortDetail.includes('Final')) {
@@ -269,6 +270,7 @@ function updateScoreboard() {
 		});
 
 		$('.game-options-container').css('opacity', '');
+		$('.game-options-container').css('pointer-events', '');
 		$('.game-views').css('opacity', '');
 		$('.game-not-started').css('opacity', '');
 	} else {
@@ -281,6 +283,7 @@ function updateScoreboard() {
 		});
 
 		$('.game-options-container').css('opacity', '');
+		$('.game-options-container').css('pointer-events', '');
 		$('.game-views').css('opacity', '');
 		$('.game-not-started').css('opacity', '');
 	}
