@@ -563,14 +563,28 @@ function scrollToTop() {
 function updateGameNotStartedText(dateString) {
 	let date = moment(dateString).tz(Intl.DateTimeFormat().resolvedOptions().timeZone);
 
-	let diffDays = date.diff(moment(), 'days');
-	let diffHours = date.diff(moment(), 'hours');
-	let diffMinutes = date.diff(moment(), 'minutes') + 1;
+	let now = moment();
+	let totalSeconds = date.diff(now, 'seconds');
 
-	if (date.isBefore(moment())) {
+	// Calculate time components
+	let diffDays = Math.floor(totalSeconds / (24 * 3600)); // Total days
+	let diffHours = Math.floor((totalSeconds % (24 * 3600)) / 3600); // Remaining hours
+	let diffMinutes = Math.ceil((totalSeconds % 3600) / 60); // Remaining minutes (rounded up)
+
+	// Handle edge cases where minutes roll into hours
+	if (diffMinutes === 60) {
+		diffHours++;
+		diffMinutes = 0;
+	}
+	if (diffHours === 24) {
+		diffDays++;
+		diffHours = 0;
+	}
+
+	if (date.isBefore(now)) {
 		$('.game-not-started span').text('Starting soon...');
-	} else if (date.isSame(moment(), 'day')) {
-		if (date.isBefore(moment().add(1, 'hour'))) {
+	} else if (diffDays == 0) {
+		if (diffHours == 0) {
 			$('.game-not-started span').html(`Starting in ${diffMinutes % 60}<span>min</span>...`);
 		} else {
 			$('.game-not-started span').html(`Starting in ${diffHours % 24}<span>hr</span> ${diffMinutes % 60}<span>min</span>...`);
