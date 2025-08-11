@@ -50,12 +50,12 @@ async function createGames() {
 		$(gameDiv).on('click', function (e) {
 			$('body').css('pointer-events', 'none');
 			if (e.pointerType === 'mouse') {
-				window.location.href = `game/?id=${game.id}`;
+				window.location.href = `/projects/nbanalytics/game/?id=${game.id}`;
 				$('body').css('pointer-events', '');
 			} else {
 				$(gameDiv).addClass('game-hovered');
 				setTimeout(() => {
-					window.location.href = `game/?id=${game.id}`;
+					window.location.href = `/projects/nbanalytics/game/?id=${game.id}`;
 					$('body').css('pointer-events', '');
 					setTimeout(() => {
 						$(gameDiv).removeClass('game-hovered');

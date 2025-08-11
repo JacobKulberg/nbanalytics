@@ -306,7 +306,7 @@
 
 	grid-column: 1 / -1;
 
-	background-image: url('/assets/images/shot_chart_court.svg');
+	background-image: url('/projects/nbanalytics/assets/images/shot_chart_court.svg');
 	background-size: cover;
 	background-position: center;
 
@@ -325,7 +325,8 @@
 }
 
 .shot-chart-canvas {
-	width: 100%;
+	min-width: 100%;
+	max-width: 100%;
 	height: 100%;
 }
 

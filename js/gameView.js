@@ -7,13 +7,13 @@ let searchParams = new URLSearchParams(window.location.search);
 let gameID = searchParams.get('id');
 
 if (!gameID) {
-	window.location.href = '/';
+	window.location.href = '/projects/nbanalytics/';
 }
 
 let gameData = await getSpecificGameData(gameID);
 
 if (gameData.header.competitions[0].competitors[0].id < 1 || gameData.header.competitions[0].competitors[0].id > 30 || gameData.header.competitions[0].competitors[1].id < 1 || gameData.header.competitions[0].competitors[1].id > 30) {
-	window.location.href = '/';
+	window.location.href = '/projects/nbanalytics/';
 }
 
 if (!window.location.hash) {
@@ -32,6 +32,9 @@ if (areColorsSimilar(awayColor, '020026')) {
 if (areColorsSimilar(homeColor, '020026')) {
 	homeColor = 'ffffff';
 }
+
+let title = `${teamAbbrs[gameData.header.competitions[0].competitors[1].team.id]} @ ${teamAbbrs[gameData.header.competitions[0].competitors[0].team.id]}`;
+document.title = title;
 
 if (window.location.hash == '#play-by-play') {
 	$('.game-play-by-play').addClass('active');
