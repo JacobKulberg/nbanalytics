@@ -15,6 +15,7 @@ A JavaScript-driven web app for interactive NBA game analytics.
 ## Getting started
 ~~~bash
 git clone https://github.com/JacobKulberg/nbanalytics.git
+cd nbanalytics
 ~~~
 - Open `index.html` to browse games.
 - Click into a game to open `game/index.html` for the dashboard.
