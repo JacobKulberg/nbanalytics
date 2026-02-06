@@ -1,4 +1,4 @@
-# NBA Analytics
+# NBAnalytics
 
 A JavaScript-driven web app for interactive NBA game analytics.
 
